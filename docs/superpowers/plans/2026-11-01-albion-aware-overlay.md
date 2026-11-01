@@ -2135,7 +2135,7 @@ def test_time_ago_formats_seconds_minutes_hours():
     assert time_ago(100.0, 0.0) == "-"
     assert time_ago(100.0, 88.0) == "12s"
     assert time_ago(200.0, 20.0) == "3m"
-    assert time_ago(7200.0, 0.0) == "2h"
+    assert time_ago(7300.0, 100.0) == "2h"
 ```
 
 - [ ] **Step 2: 运行测试确认失败**
