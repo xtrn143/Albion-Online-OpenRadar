@@ -27,7 +27,7 @@ Name: "chinesesimplified"; MessagesFile: "compiler:Languages\ChineseSimplified.i
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
 
 [Files]
-Source: "..\dist\AlbionAware.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\dist\AlbionAware\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\data\items.min.json"; DestDir: "{app}\data"; Flags: ignoreversion
 Source: "..\OpenRadar\*"; DestDir: "{app}\OpenRadar"; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
 Source: "LICENSES\*"; DestDir: "{app}\LICENSES"; Flags: ignoreversion
