@@ -25,6 +25,40 @@ def test_display_name_strips_enchant_suffix(tmp_path):
     assert db.display_name(1) == "MAIN SWORD"
 
 
+def test_bundled_icon_is_used_before_cache_and_network(tmp_path):
+    db = make_db(tmp_path)
+    bundled = tmp_path / "icons"
+    bundled.mkdir()
+    (bundled / "T6_MAIN_SWORD.png").write_bytes(b"fake-png")
+    calls = []
+
+    def fetch(url, dest):
+        calls.append(url)
+        return False
+
+    cache = IconCache(tmp_path / "cache", db, fetch=fetch, bundled=bundled)
+    assert cache.get(1) == bundled / "T6_MAIN_SWORD.png"
+    assert cache.path_for(1) == bundled / "T6_MAIN_SWORD.png"
+    assert calls == []
+
+
+def test_bundled_miss_falls_back_to_download(tmp_path):
+    db = make_db(tmp_path)
+    bundled = tmp_path / "icons"
+    bundled.mkdir()
+    seen = {}
+
+    def fetch(url, dest):
+        seen["url"] = url
+        dest.write_bytes(b"fake-png")
+        return True
+
+    cache = IconCache(tmp_path / "cache", db, fetch=fetch, bundled=bundled)
+    assert cache.path_for(1) is None
+    assert cache.get(1) == tmp_path / "cache" / "T6_MAIN_SWORD.png"
+    assert seen["url"].endswith("T6_MAIN_SWORD.png")
+
+
 def test_slot_mapping_covers_all_detail_panel_slots():
     assert EQUIP_SLOTS["mainhand"] == 0
     assert EQUIP_SLOTS["bag"] == 7

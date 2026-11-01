@@ -86,33 +86,45 @@ class ItemDatabase:
 
 
 class IconCache:
-    def __init__(self, cache_dir: str | Path, db: ItemDatabase, fetch=None, size: int = 60):
+    def __init__(self, cache_dir: str | Path, db: ItemDatabase, fetch=None,
+                 size: int = 60, bundled: str | Path | None = None):
         self.cache_dir = Path(cache_dir)
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         self.db = db
         self.size = size
+        # 随包分发的离线图标目录（只读，命中后再走用户缓存或下载）
+        self.bundled = Path(bundled) if bundled else None
         # fetch 可注入（测试用），默认走 requests
         self._fetch = fetch or self._http_fetch
+
+    def _locate(self, unique: str) -> Path | None:
+        name = f"{_slug(unique)}.png"
+        if self.bundled is not None:
+            candidate = self.bundled / name
+            if candidate.exists():
+                return candidate
+        dest = self.cache_dir / name
+        return dest if dest.exists() else None
 
     def get(self, item_id: int) -> Path:
         unique = self.db.unique_name(item_id)
         if not unique:
             return self.placeholder("unknown")
+        found = self._locate(unique)
+        if found is not None:
+            return found
         dest = self.cache_dir / f"{_slug(unique)}.png"
-        if dest.exists():
-            return dest
         url = RENDER_URL.format(name=_slug(unique))
         if self._fetch(url, dest) and dest.exists():
             return dest
         return self.placeholder(self._category(item_id))
 
     def path_for(self, item_id: int) -> Path | None:
-        """已缓存的图标路径；未缓存返回 None（不触发下载）。"""
+        """本机可用的图标路径；没有返回 None（不触发下载）。"""
         unique = self.db.unique_name(item_id)
         if not unique:
             return None
-        dest = self.cache_dir / f"{_slug(unique)}.png"
-        return dest if dest.exists() else None
+        return self._locate(unique)
 
     def placeholder_for(self, item_id: int) -> Path:
         """按物品类别返回占位图路径（必要时生成）。"""

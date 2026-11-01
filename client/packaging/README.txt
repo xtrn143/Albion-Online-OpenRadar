@@ -15,4 +15,5 @@ AlbionAware 使用说明 / Usage
 反馈 / Feedback: https://portaler.pages.dev/
 
 包含 OpenRadar（MIT，作者 Nouuu，官方未修改二进制）。
+物品图标已随包内置（data/icons），全程离线可用，不需要联网。
 本程序不含 Npcap，不注入游戏、不读写游戏内存、不修改游戏文件。

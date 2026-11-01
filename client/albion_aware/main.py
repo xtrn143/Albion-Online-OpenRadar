@@ -83,8 +83,11 @@ class AlbionAwareApp:
         self.data_dir = user_data_dir(app_dir)
         self.config = Config(self.data_dir / "config.json")
         self.i18n = I18n(self.config.language())
-        self.db = _load_items(_resource_dir(app_dir))
-        self.icons = IconCache(self.data_dir / "cache" / "icons", self.db)
+        resource_dir = _resource_dir(app_dir)
+        self.db = _load_items(resource_dir)
+        bundled_icons = resource_dir / "data" / "icons"
+        self.icons = IconCache(self.data_dir / "cache" / "icons", self.db,
+                               bundled=bundled_icons if bundled_icons.is_dir() else None)
         self.store = PlayerStore(
             self_name=self.config.get("self_name", ""),
             timeout=float(self.config.get("player_timeout", 60)),

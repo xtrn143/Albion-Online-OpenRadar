@@ -10,6 +10,12 @@ LICENSES/AlbionAware-MIT.txt.
 Npcap is NOT bundled. It is installed separately from the official Npcap
 installer (https://npcap.com), which has its own redistribution terms.
 
+Item icons in data/icons are artwork rendered by Sandbox Interactive's official
+service at render.albiononline.com. All rights to that artwork belong to
+Sandbox Interactive GmbH; it is included only so the overlay can show which
+equipment a player is wearing, and this project is not affiliated with or
+endorsed by Sandbox Interactive.
+
 Neither AlbionAware nor OpenRadar injects into the game process, reads game
 memory, or modifies game files. Both work only by reading the game's network
 traffic on your own computer.
