@@ -1,6 +1,7 @@
 """启动器：Npcap/雷达/网卡检测、零流量判断与首启向导。"""
 import subprocess
 import time
+from pathlib import Path
 
 FEEDBACK_URL = "https://portaler.pages.dev/"
 
@@ -87,6 +88,30 @@ def wait_radar_ready(base_url: str, timeout: float = 30.0, interval: float = 1.0
             return True
         sleep(interval)
     return False
+
+
+def radar_running(base_url: str, session=None) -> bool:
+    return radar_state(base_url, session) is not None
+
+
+def start_radar(radar_dir: str | Path, popen=subprocess.Popen) -> bool:
+    exe = Path(radar_dir) / "OpenRadar.exe"
+    if not exe.exists():
+        return False
+    try:
+        popen([str(exe)], cwd=str(Path(radar_dir)))
+    except (OSError, subprocess.SubprocessError):
+        return False
+    return True
+
+
+def ensure_radar(base_url: str, radar_dir: str | Path, session=None,
+                 popen=subprocess.Popen, timeout: float = 30.0,
+                 sleep=time.sleep, clock=time.monotonic) -> bool:
+    if radar_running(base_url, session):
+        return True
+    start_radar(radar_dir, popen=popen)
+    return wait_radar_ready(base_url, timeout=timeout, session=session, sleep=sleep, clock=clock)
 
 
 def wizard_needed(config) -> bool:

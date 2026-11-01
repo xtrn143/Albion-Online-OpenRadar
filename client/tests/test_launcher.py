@@ -6,6 +6,7 @@ from albion_aware.launcher import (
     npcap_installed,
     npcap_running,
     select_all_interfaces,
+    start_radar,
     wait_radar_ready,
     wizard_needed,
 )
@@ -140,3 +141,14 @@ def test_wizard_needed_until_onboarded(tmp_path):
     assert wizard_needed(config) is True
     config.set("onboarded", True)
     assert wizard_needed(config) is False
+
+
+def test_start_radar_launches_bundled_binary(tmp_path):
+    (tmp_path / "OpenRadar.exe").write_bytes(b"MZ")
+    launched = []
+    assert start_radar(tmp_path, popen=lambda args, cwd=None: launched.append((args, cwd))) is True
+    assert launched[0][0] == [str(tmp_path / "OpenRadar.exe")]
+
+
+def test_start_radar_returns_false_when_binary_missing(tmp_path):
+    assert start_radar(tmp_path, popen=lambda args, cwd=None: None) is False

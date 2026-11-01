@@ -1,6 +1,8 @@
 # client/albion_aware/main.py
 """装配层：配置、解析、玩家表、悬浮窗、托盘与热键。"""
 import sys
+import threading
+import time
 import webbrowser
 from pathlib import Path
 
@@ -12,6 +14,13 @@ from PIL import Image, ImageTk
 from albion_aware import __version__
 from albion_aware.config import Config
 from albion_aware.detail_panel import DetailPanel, equipment_entries
+from albion_aware.diagnostics import (
+    DiagnosticsWindow,
+    detect_accelerator,
+    parse_process_names,
+    report_lines,
+    running_tasklist,
+)
 from albion_aware.event_parser import (
     PartyEvent,
     PlayerLeft,
@@ -22,7 +31,17 @@ from albion_aware.event_parser import (
 )
 from albion_aware.i18n import I18n
 from albion_aware.icons import IconCache, ItemDatabase
-from albion_aware.launcher import FEEDBACK_URL, run_wizard, wizard_needed
+from albion_aware.launcher import (
+    FEEDBACK_URL,
+    ensure_radar,
+    list_interfaces,
+    npcap_installed,
+    npcap_running,
+    radar_state,
+    run_wizard,
+    select_all_interfaces,
+    wizard_needed,
+)
 from albion_aware.models import View
 from albion_aware.overlay import OverlayWindow
 from albion_aware.party import PartyList
@@ -62,6 +81,10 @@ class AlbionAwareApp:
         self._flash_pending = False
         self._events: list[list] = []
         self._actions: list[tuple] = []
+        self._connected_at = None
+        self._ever_received = False
+        self._diag_shown = False
+        self._diag_window = None
 
         self.window = OverlayWindow(
             i18n=self.i18n,
@@ -105,6 +128,7 @@ class AlbionAwareApp:
         self._queue_action(self._mark_selected)
 
     def _on_frames(self, frames) -> None:
+        self._ever_received = True
         events = []
         for frame in frames:
             events.extend(parse_message(frame))
@@ -113,6 +137,8 @@ class AlbionAwareApp:
 
     def _on_state(self, state: str) -> None:
         self._state = state
+        if state == "connected" and self._connected_at is None:
+            self._connected_at = time.time()
 
     # ---------- 主线程 --------------
     def _drain(self) -> None:
@@ -127,7 +153,41 @@ class AlbionAwareApp:
         self.window.set_status(self._state == "connected")
         if dirty:
             self._refresh()
+        self._check_silence()
         self.window.root.after(100, self._drain)
+
+    def _check_silence(self) -> None:
+        if self._diag_shown or self._ever_received or self._connected_at is None:
+            return
+        if time.time() - self._connected_at < 60.0:
+            return
+        self._diag_shown = True
+        self._open_diagnostics()
+
+    def _open_diagnostics(self) -> None:
+        accelerator = detect_accelerator(parse_process_names(running_tasklist()))
+        self._diag_window = DiagnosticsWindow(
+            self.window.root, self.i18n, self._diagnostic_report,
+            lambda: select_all_interfaces(self.config.get("radar.base_url", "http://localhost:5001")),
+            accelerator=accelerator,
+        )
+
+    def _diagnostic_report(self) -> list[str]:
+        base_url = self.config.get("radar.base_url", "http://localhost:5001")
+        return report_lines(
+            npcap_installed=npcap_installed(),
+            npcap_running=npcap_running(),
+            radar_status="ok" if radar_state(base_url) is not None else "unreachable",
+            interface_count=len(list_interfaces(base_url)),
+            accelerator=detect_accelerator(parse_process_names(running_tasklist())),
+        )
+
+    def _ensure_radar(self) -> None:
+        try:
+            ensure_radar(self.config.get("radar.base_url", "http://localhost:5001"),
+                         self.app_dir / "OpenRadar")
+        except Exception:
+            pass
 
     def _apply(self, events) -> bool:
         before = {player.id for player in self._rows}
@@ -274,6 +334,8 @@ class AlbionAwareApp:
         self._refresh()
 
     def _quit(self) -> None:
+        if self._diag_window is not None:
+            self._diag_window.close()
         self.client.stop()
         self.hotkeys.stop()
         try:
@@ -288,6 +350,7 @@ class AlbionAwareApp:
             self._reload_from_config()
         if wizard_needed(self.config):
             return  # 用户关闭了向导窗口且未填写，不进入主循环
+        threading.Thread(target=self._ensure_radar, name="radar-launcher", daemon=True).start()
         self.client.start()
         self.hotkeys.start()
         try:
