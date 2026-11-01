@@ -261,6 +261,7 @@ class AlbionAwareApp:
         if self._flash_pending:
             self._flash_pending = False
             self.window.flash()
+            self._play_sound()
 
     def _item_power(self, player):
         return self.db.average_ip(player.equip)
@@ -346,6 +347,24 @@ class AlbionAwareApp:
         self.config.set("overlay.opacity", float(value))
         self.config.save()
 
+    def _toggle_sound(self) -> None:
+        enabled = not bool(self.config.get("overlay.sound", True))
+        self.config.set("overlay.sound", enabled)
+        self.config.save()
+
+    def _play_sound(self) -> None:
+        if not bool(self.config.get("overlay.sound", True)) or sys.platform != "win32":
+            return
+
+        def beep() -> None:
+            try:
+                import winsound
+                winsound.Beep(880, 120)
+            except Exception:
+                pass
+
+        threading.Thread(target=beep, daemon=True).start()
+
     def _toggle_visible(self) -> None:
         self.window.toggle_visible()
 
@@ -383,6 +402,8 @@ class AlbionAwareApp:
             "click_through": lambda: self._queue_action(self._toggle_click_through),
             "reset_position": lambda: self._queue_action(self.window.reset_position),
             "set_opacity": lambda value: self._queue_action(self._set_opacity, value),
+            "toggle_sound": lambda: self._queue_action(self._toggle_sound),
+            "sound_on": lambda: bool(self.config.get("overlay.sound", True)),
             "feedback": lambda: self._queue_action(self._open_feedback),
             "about": lambda: self._queue_action(self._show_about),
             "set_language": lambda setting: self._queue_action(self._set_language, setting),

@@ -3,15 +3,19 @@ import tkinter as tk
 
 import albion_aware.win32_ext as win32
 
-WIDTH = 78
+WIDTH = 94
 ROW_H = 36
 ICON_SIZE = 32
 PAD = 4
 BORDER = 2
+GLOW_LAYERS = 6          # 由外向内递减的红光层数
+GLOW_STEP = 2
 BG = "#141414"
-FLASH_ON = "#ff3b30"
-FLASH_STEPS = 10
-FLASH_INTERVAL_MS = 200
+GLOW_LIT = ("#ff4b3e", "#e0331f", "#b52616", "#83200f", "#4e170b", "#261210")
+GLOW_DIM = ("#1a0f0d", "#18100e", "#17100f", "#161010", "#151212", "#141414")
+FLASH_STEPS = 6
+FLASH_INTERVAL_MS = 150
+ALERT_HOLD_MS = 5000     # 闪完后保持红光的时间
 DRAG_THRESHOLD = 4      # 位移小于该像素仍视为点击
 
 IP_GREY = "#d6d6d6"
@@ -49,7 +53,15 @@ class OverlayWindow:
         self.root.attributes("-topmost", True)
         self.root.configure(bg=BG)
 
-        self.border = tk.Frame(self.root, bg=BG, padx=BORDER, pady=BORDER)
+        self._glow = []
+        parent = self.root
+        for _ in range(GLOW_LAYERS):
+            layer = tk.Frame(parent, bg=BG, padx=GLOW_STEP, pady=GLOW_STEP)
+            layer.pack(fill="both", expand=True)
+            self._glow.append(layer)
+            parent = layer
+
+        self.border = tk.Frame(parent, bg=BG, padx=BORDER, pady=BORDER)
         self.border.pack(fill="both", expand=True)
         self.status = tk.Label(self.border, text="●", bg=BG, fg=STATUS_OFF,
                                font=("Segoe UI", 5), anchor="e")
@@ -57,7 +69,7 @@ class OverlayWindow:
         self.inner = tk.Frame(self.border, bg=BG)
         self.inner.pack(fill="both", expand=True)
 
-        for widget in (self.border, self.inner, self.status):
+        for widget in (*self._glow, self.border, self.inner, self.status):
             widget.bind("<ButtonPress-1>", self._start_drag)
             widget.bind("<B1-Motion>", self._drag)
             widget.bind("<ButtonRelease-1>", self._end_drag)
@@ -70,6 +82,7 @@ class OverlayWindow:
         self._images = []
         self._click_through = False
         self._opacity = 1.0
+        self._paint_glow(GLOW_DIM)
 
         self.root.update_idletasks()
         self._apply_styles()
@@ -86,7 +99,8 @@ class OverlayWindow:
         self._on_drag_end(*self._pos)
 
     def _resize(self, row_count: int) -> None:
-        height = PAD * 2 + max(row_count, 1) * ROW_H + 8  # +8 为顶部状态点
+        glow = GLOW_LAYERS * GLOW_STEP * 2
+        height = PAD * 2 + max(row_count, 1) * ROW_H + 8 + glow  # +8 为顶部状态点
         if self._pos is not None:
             x, y = self._pos
         else:
@@ -140,6 +154,11 @@ class OverlayWindow:
         self._resize(1)
 
     # ---------- 闪烁 ----------
+    def _paint_glow(self, colors) -> None:
+        for layer, color in zip(self._glow, colors):
+            layer.configure(bg=color)
+        self.border.configure(bg=colors[-1])
+
     def flash(self) -> None:
         if self._flash_job is not None:
             self.root.after_cancel(self._flash_job)
@@ -148,12 +167,17 @@ class OverlayWindow:
 
     def _flash_tick(self) -> None:
         if self._flash_step >= FLASH_STEPS:
-            self.border.configure(bg=BG)
-            self._flash_job = None
+            self._flash_job = self.root.after(ALERT_HOLD_MS, self._glow_dim)
             return
-        self.border.configure(bg=FLASH_ON if self._flash_step % 2 == 0 else BG)
+        lit = self._flash_step % 2 == 0
+        self._paint_glow(GLOW_LIT if lit else GLOW_DIM)
         self._flash_step += 1
         self._flash_job = self.root.after(FLASH_INTERVAL_MS, self._flash_tick)
+
+    def _glow_dim(self) -> None:
+        self._paint_glow(GLOW_DIM)
+        self._flash_job = None
+        self._flash_step = 0
 
     # ---------- 系统行为 ----------
     def _apply_styles(self) -> None:

@@ -7,6 +7,7 @@
   "tray.click_through": "Click-through",
   "tray.reset_position": "Reset position",
   "tray.opacity": "Opacity",
+  "tray.sound": "Alert sound",
   "tray.language": "Language",
   "tray.language.auto": "Follow system",
   "tray.language.zh": "中文",

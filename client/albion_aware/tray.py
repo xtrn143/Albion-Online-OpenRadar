@@ -22,6 +22,8 @@ def build_tray(i18n, actions: dict) -> pystray.Icon:
         pystray.MenuItem(i18n.t("tray.show"), wrap("toggle_visible"), default=True),
         pystray.MenuItem(i18n.t("tray.click_through"), wrap("click_through")),
         pystray.MenuItem(i18n.t("tray.reset_position"), wrap("reset_position")),
+        pystray.MenuItem(i18n.t("tray.sound"), wrap("toggle_sound"),
+                         checked=lambda _item: bool(actions.get("sound_on", lambda: False)())),
         pystray.MenuItem(i18n.t("tray.opacity"), pystray.Menu(
             pystray.MenuItem("100%", wrap("set_opacity", 1.0)),
             pystray.MenuItem("90%", wrap("set_opacity", 0.9)),

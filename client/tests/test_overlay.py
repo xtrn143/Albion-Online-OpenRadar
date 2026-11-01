@@ -1,4 +1,4 @@
-from albion_aware.overlay import PAD, ROW_H, WIDTH, OverlayWindow, format_ip, ip_color
+from albion_aware.overlay import GLOW_LAYERS, GLOW_STEP, PAD, ROW_H, WIDTH, OverlayWindow, format_ip, ip_color
 
 
 class _FakeRoot:
@@ -16,7 +16,8 @@ def test_resize_keeps_negative_position():
     window.place_at(-120, 300)
     assert window._pos == (-120, 300)
     window._resize(6)
-    assert window.root.geometries[-1] == f"{WIDTH}x{PAD * 2 + 6 * ROW_H + 8}+-120+300"
+    glow = GLOW_LAYERS * GLOW_STEP * 2
+    assert window.root.geometries[-1] == f"{WIDTH}x{PAD * 2 + 6 * ROW_H + 8 + glow}+-120+300"
 
 
 def test_ip_color_thresholds():
@@ -96,3 +97,20 @@ def test_set_opacity_applies_alpha():
     window = _drag_window()
     window.set_opacity(0.9)
     assert window.root.attributes_calls == [("-alpha", 0.9)]
+
+
+class _FakeFrame:
+    def __init__(self):
+        self.bg = None
+
+    def configure(self, **kwargs):
+        self.bg = kwargs.get("bg")
+
+
+def test_glow_paints_every_layer():
+    window = OverlayWindow.__new__(OverlayWindow)
+    window._glow = [_FakeFrame() for _ in range(6)]
+    window.border = _FakeFrame()
+    window._paint_glow(("#ff4b3e", "#e0331f", "#b52616", "#83200f", "#4e170b", "#261210"))
+    assert [frame.bg for frame in window._glow] == ["#ff4b3e", "#e0331f", "#b52616", "#83200f", "#4e170b", "#261210"]
+    assert window.border.bg == "#261210"
