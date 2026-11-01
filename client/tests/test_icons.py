@@ -1,6 +1,9 @@
 import json
 
-from albion_aware.icons import COMBAT_SLOTS, EQUIP_SLOTS, IconCache, ItemDatabase
+from PIL import Image
+
+from albion_aware.icons import (COMBAT_SLOTS, EQUIP_SLOTS, IconCache, ItemDatabase,
+                               draw_enchant_badge, enchant_level)
 
 
 def make_db(tmp_path):
@@ -57,6 +60,21 @@ def test_bundled_miss_falls_back_to_download(tmp_path):
     assert cache.path_for(1) is None
     assert cache.get(1) == tmp_path / "cache" / "T6_MAIN_SWORD.png"
     assert seen["url"].endswith("T6_MAIN_SWORD.png")
+
+
+def test_enchant_level_parsed_from_unique_name():
+    assert enchant_level("T6_MAIN_SWORD@3") == 3
+    assert enchant_level("T4_MAIN_SWORD") == 0
+    assert enchant_level(None) == 0
+
+
+def test_badge_draws_in_lower_corner_without_resizing():
+    image = Image.new("RGBA", (48, 48), (0, 0, 0, 0))
+    result = draw_enchant_badge(image, 3)
+    assert result.size == (48, 48)
+    assert result.getpixel((44, 44))[3] > 0
+    assert result.getpixel((4, 4))[3] == 0
+    assert draw_enchant_badge(image, 0) is image
 
 
 def test_slot_mapping_covers_all_detail_panel_slots():

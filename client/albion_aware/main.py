@@ -31,7 +31,7 @@ from albion_aware.event_parser import (
     parse_message,
 )
 from albion_aware.i18n import I18n
-from albion_aware.icons import IconCache, ItemDatabase
+from albion_aware.icons import IconCache, ItemDatabase, draw_enchant_badge, enchant_level
 from albion_aware.launcher import (
     FEEDBACK_URL,
     ensure_radar,
@@ -286,6 +286,8 @@ class AlbionAwareApp:
         try:
             image = Image.open(path)
             image.thumbnail((size, size))
+            # 右下角补附魔等级角标（官方图该处本来就是留空的）
+            image = draw_enchant_badge(image, enchant_level(self.db.unique_name(item_id)))
             photo = ImageTk.PhotoImage(image, master=self.window.root)
         except Exception:
             photo = None

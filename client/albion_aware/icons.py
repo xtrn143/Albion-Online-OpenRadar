@@ -2,16 +2,64 @@
 import json
 import re
 import urllib.parse
+from functools import lru_cache
 from pathlib import Path
 
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 
 # 官方渲染服务：按唯一名获取物品图标。
 # 注意：不要加 ?size= 查询参数——实测该参数会让服务端返回 502，无查询串才稳定返回 PNG。
 RENDER_URL = "https://render.albiononline.com/v1/item/{name}.png"
 # 层级前缀（T6_）与附魔后缀（@3）
 _TIER = re.compile(r"^T\d+_")
-_ENCHANT = re.compile(r"@\d+$")
+_ENCHANT = re.compile(r"@(\d+)$")
+
+# 附魔等级角标配色：1 绿、2 蓝、3 紫、4 橙
+ENCHANT_COLORS = {
+    1: (86, 190, 92),
+    2: (72, 145, 235),
+    3: (168, 100, 222),
+    4: (236, 168, 58),
+}
+
+
+def enchant_level(unique: str | None) -> int:
+    """从唯一名解析附魔等级，如 T6_MAIN_SWORD@3 -> 3。"""
+    match = _ENCHANT.search(unique or "")
+    return int(match.group(1)) if match else 0
+
+
+@lru_cache(maxsize=32)
+def _font(px: int):
+    for name in ("arialbd.ttf", "segoeuib.ttf", "arial.ttf"):
+        try:
+            return ImageFont.truetype(name, px)
+        except OSError:
+            continue
+    return ImageFont.load_default()
+
+
+def draw_enchant_badge(image: Image.Image, level: int) -> Image.Image:
+    """在图标右下角画附魔等级角标；官方图该位置本来就是留空的。"""
+    if level <= 0:
+        return image
+    image = image.convert("RGBA")
+    side = min(image.width, image.height)
+    size = max(int(round(side * 0.46)), 7)
+    x0, y0 = image.width - size, image.height - size
+    overlay = Image.new("RGBA", image.size, (0, 0, 0, 0))
+    draw = ImageDraw.Draw(overlay)
+    color = ENCHANT_COLORS.get(level, (200, 200, 200))
+    draw.rounded_rectangle((x0, y0, image.width - 1, image.height - 1),
+                           radius=max(size // 4, 2), fill=color + (240,))
+    font = _font(max(int(round(size * 0.7)), 7))
+    text = str(level)
+    left, top, right, bottom = draw.textbbox((0, 0), text, font=font)
+    draw.text((x0 + (size - (right - left)) / 2 - left,
+               y0 + (size - (bottom - top)) / 2 - top),
+              text, font=font, fill=(255, 255, 255, 255))
+    return Image.alpha_composite(image, overlay)
+
 
 
 def _slug(unique: str) -> str:
