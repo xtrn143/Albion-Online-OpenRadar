@@ -30,6 +30,16 @@ def test_missing_optional_fields_are_omitted():
     assert events[0].fields == {}
 
 
+def test_equip_accepts_buffer_wrapped_array():
+    # 少数玩家事件的数组包在 {type: 'Buffer', data: [...]} 里
+    events = parse_message(frame({
+        "252": 29, "0": 55, "1": "Buffered",
+        "40": {"type": "Buffer", "data": [0] * 10},
+    }))
+    assert isinstance(events[0], PlayerSeen)
+    assert events[0].fields["equip"] == [0] * 10
+
+
 def test_leave_removes_player():
     events = parse_message(frame({"252": 1, "0": 99}))
     assert isinstance(events[0], PlayerLeft)

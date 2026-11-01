@@ -44,7 +44,7 @@ from albion_aware.launcher import (
     wizard_needed,
 )
 from albion_aware.models import View
-from albion_aware.overlay import OverlayWindow
+from albion_aware.overlay import ICON_SIZE, OverlayWindow
 from albion_aware.party import PartyList
 from albion_aware.player_store import PlayerStore
 from albion_aware.radar_client import RadarClient
@@ -267,10 +267,10 @@ class AlbionAwareApp:
     # ---------- 图标 ----------
     def _row_icon(self, player):
         item_id = int(player.equip[0]) if player.equip else 0
-        return self._photo(item_id, 22)
+        return self._photo(item_id, ICON_SIZE)
 
     def _detail_icon(self, item_id):
-        return self._photo(item_id, 32)
+        return self._photo(item_id, ICON_SIZE)
 
     def _photo(self, item_id: int, size: int):
         key = (item_id, size)

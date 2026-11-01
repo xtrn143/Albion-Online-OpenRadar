@@ -76,6 +76,9 @@ def _character_fields(p: dict) -> dict:
     if faction is not None:
         fields["faction"] = faction
     equip = p.get("40")
+    # 少数事件的数组以 {type: 'Buffer', data: [...]} 形式出现，需拆包
+    if isinstance(equip, dict) and isinstance(equip.get("data"), list):
+        equip = equip["data"]
     if isinstance(equip, list):
         fields["equip"] = [_as_int(x) or 0 for x in equip]
     spells = p.get("43")

@@ -1,10 +1,11 @@
-"""68px 无边框置顶主窗：武器图标 + IP，行点击、闪烁、拖动、穿透。"""
+"""窄条置顶主窗：武器图标 + IP，行点击、闪烁、拖动、穿透。"""
 import tkinter as tk
 
 import albion_aware.win32_ext as win32
 
-WIDTH = 68
-ROW_H = 26
+WIDTH = 78
+ROW_H = 36
+ICON_SIZE = 32
 PAD = 4
 BORDER = 2
 BG = "#141414"
