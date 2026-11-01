@@ -29,7 +29,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "..\dist\AlbionAware.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\data\items.min.json"; DestDir: "{app}\data"; Flags: ignoreversion
-Source: "..\OpenRadar\*"; DestDir: "{app}\OpenRadar"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\OpenRadar\*"; DestDir: "{app}\OpenRadar"; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
 Source: "LICENSES\*"; DestDir: "{app}\LICENSES"; Flags: ignoreversion
 Source: "NOTICE.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "README.txt"; DestDir: "{app}"; Flags: ignoreversion

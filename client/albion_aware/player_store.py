@@ -34,6 +34,13 @@ class PlayerStore:
         player.last_seen = now
         return player, is_new
 
+    def update_existing(self, player_id: int, fields: dict, now: float | None = None) -> bool:
+        """只更新已知玩家；未知 id 直接忽略，避免无昵称实体进入列表。"""
+        if player_id not in self._players:
+            return False
+        self.upsert(player_id, fields, now)
+        return True
+
     def touch(self, player_id: int, now: float | None = None) -> None:
         now = self._clock() if now is None else now
         player = self._players.get(player_id)

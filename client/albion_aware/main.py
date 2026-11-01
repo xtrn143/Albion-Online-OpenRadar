@@ -1,5 +1,6 @@
 # client/albion_aware/main.py
 """装配层：配置、解析、玩家表、悬浮窗、托盘与热键。"""
+import os
 import sys
 import threading
 import time
@@ -62,21 +63,37 @@ def _load_items(app_dir: Path) -> ItemDatabase:
         return ItemDatabase([])
 
 
+def _resource_dir(app_dir: Path) -> Path:
+    """打包后资源在 sys._MEIPASS 里，开发时在 app_dir。"""
+    return Path(getattr(sys, "_MEIPASS", None) or app_dir)
+
+
+def user_data_dir(app_dir: Path) -> Path:
+    """打包运行时用户数据放 %LOCALAPPDATA%，避免安装目录只读。"""
+    if getattr(sys, "frozen", False):
+        base = os.environ.get("LOCALAPPDATA")
+        if base:
+            return Path(base) / "AlbionAware"
+    return Path(app_dir)
+
+
 class AlbionAwareApp:
     def __init__(self, app_dir: Path):
         self.app_dir = app_dir
-        self.config = Config(app_dir / "config.json")
+        self.data_dir = user_data_dir(app_dir)
+        self.config = Config(self.data_dir / "config.json")
         self.i18n = I18n(self.config.language())
-        self.db = _load_items(app_dir)
-        self.icons = IconCache(app_dir / "cache" / "icons", self.db)
+        self.db = _load_items(_resource_dir(app_dir))
+        self.icons = IconCache(self.data_dir / "cache" / "icons", self.db)
         self.store = PlayerStore(
             self_name=self.config.get("self_name", ""),
             timeout=float(self.config.get("player_timeout", 60)),
         )
-        self.party = PartyList(app_dir / "party.json")
+        self.party = PartyList(self.data_dir / "party.json")
         self._expanded = False
         self._rows = []
         self._photo_cache = {}
+        self._icon_pending: set[int] = set()
         self._state = "connecting"
         self._flash_pending = False
         self._events: list[list] = []
@@ -142,19 +159,23 @@ class AlbionAwareApp:
 
     # ---------- 主线程 --------------
     def _drain(self) -> None:
-        dirty = bool(self.store.prune())
-        while self._actions:
-            action, args = self._actions.pop(0)
-            action(*args)
-            dirty = True
-        while self._events:
-            if self._apply(self._events.pop(0)):
+        try:
+            dirty = bool(self.store.prune())
+            while self._actions:
+                action, args = self._actions.pop(0)
+                action(*args)
                 dirty = True
-        self.window.set_status(self._state == "connected")
-        if dirty:
-            self._refresh()
-        self._check_silence()
-        self.window.root.after(100, self._drain)
+            while self._events:
+                if self._apply(self._events.pop(0)):
+                    dirty = True
+            self.window.set_status(self._state == "connected")
+            if dirty:
+                self._refresh()
+            self._check_silence()
+        except Exception:
+            pass
+        finally:
+            self.window.root.after(100, self._drain)
 
     def _check_silence(self) -> None:
         if self._diag_shown or self._ever_received or self._connected_at is None:
@@ -162,10 +183,13 @@ class AlbionAwareApp:
         if time.time() - self._connected_at < 60.0:
             return
         self._diag_shown = True
-        self._open_diagnostics()
+        threading.Thread(target=self._diagnose_silence, daemon=True).start()
 
-    def _open_diagnostics(self) -> None:
+    def _diagnose_silence(self) -> None:
         accelerator = detect_accelerator(parse_process_names(running_tasklist()))
+        self._queue_action(self._open_diagnostics, accelerator)
+
+    def _open_diagnostics(self, accelerator=None) -> None:
         self._diag_window = DiagnosticsWindow(
             self.window.root, self.i18n, self._diagnostic_report,
             lambda: select_all_interfaces(self.config.get("radar.base_url", "http://localhost:5001")),
@@ -184,13 +208,14 @@ class AlbionAwareApp:
 
     def _ensure_radar(self) -> None:
         try:
-            ensure_radar(self.config.get("radar.base_url", "http://localhost:5001"),
-                         self.app_dir / "OpenRadar")
+            base_url = self.config.get("radar.base_url", "http://localhost:5001")
+            if ensure_radar(base_url, self.app_dir / "OpenRadar"):
+                select_all_interfaces(base_url)
         except Exception:
             pass
 
     def _apply(self, events) -> bool:
-        before = {player.id for player in self._rows}
+        before = {player.id for player in self._view_rows()}
         party_names_before = len(self.party.names)
         applied = False
         for event in events:
@@ -198,8 +223,7 @@ class AlbionAwareApp:
                 self.store.upsert(event.player_id, event.fields)
                 applied = True
             elif isinstance(event, PlayerUpdated):
-                self.store.upsert(event.player_id, event.fields)
-                applied = True
+                applied = self.store.update_existing(event.player_id, event.fields) or applied
             elif isinstance(event, PlayerLeft):
                 self.store.remove(event.player_id)
                 applied = True
@@ -249,15 +273,34 @@ class AlbionAwareApp:
         key = (item_id, size)
         if key in self._photo_cache:
             return self._photo_cache[key]
+        path = self.icons.path_for(item_id)
+        if path is None:
+            if item_id not in self._icon_pending and self.db.unique_name(item_id):
+                self._icon_pending.add(item_id)
+                threading.Thread(target=self._fetch_icon, args=(item_id,), daemon=True).start()
+            path = self.icons.placeholder_for(item_id)
         photo = None
         try:
-            image = Image.open(self.icons.get(item_id))
+            image = Image.open(path)
             image.thumbnail((size, size))
             photo = ImageTk.PhotoImage(image, master=self.window.root)
         except Exception:
             photo = None
         self._photo_cache[key] = photo
         return photo
+
+    def _fetch_icon(self, item_id: int) -> None:
+        try:
+            self.icons.get(item_id)
+        except Exception:
+            pass
+        finally:
+            self._icon_pending.discard(item_id)
+            self._queue_action(self._icons_ready)
+
+    def _icons_ready(self) -> None:
+        self._photo_cache.clear()
+        self._refresh()
 
     # ---------- 交互 ----------
     def _on_row_click(self, player) -> None:
@@ -308,6 +351,10 @@ class AlbionAwareApp:
         self.config.save()
         self.i18n = I18n(self.config.language())
         self.window.i18n = self.i18n
+        self.panel.i18n = self.i18n
+        if self._diag_window is not None:
+            self._diag_window.close()
+            self._diag_window = None
         try:
             self.tray.stop()
         except Exception:

@@ -61,6 +61,7 @@ class OverlayWindow:
             widget.bind("<B1-Motion>", self._drag)
             widget.bind("<ButtonRelease-1>", self._end_drag)
 
+        self._pos = None
         self._drag_origin = None
         self._flash_job = None
         self._flash_step = 0
@@ -72,19 +73,22 @@ class OverlayWindow:
 
     # ---------- 位置与尺寸 ----------
     def place_at(self, x: int, y: int) -> None:
+        self._pos = (int(x), int(y))
         self.root.geometry(f"+{int(x)}+{int(y)}")
 
     def reset_position(self) -> None:
         screen_w = self.root.winfo_screenwidth()
         screen_h = self.root.winfo_screenheight()
         self.place_at(screen_w - WIDTH - 8, int(screen_h / 3))
-        self._on_drag_end(self.root.winfo_x(), self.root.winfo_y())
+        self._on_drag_end(*self._pos)
 
     def _resize(self, row_count: int) -> None:
         height = PAD * 2 + max(row_count, 1) * ROW_H + 8  # +8 为顶部状态点
-        geometry = self.root.winfo_geometry()
-        position = geometry.split("+", 1)[1] if "+" in geometry else "0+0"
-        self.root.geometry(f"{WIDTH}x{height}+{position}")
+        if self._pos is not None:
+            x, y = self._pos
+        else:
+            x, y = self.root.winfo_x(), self.root.winfo_y()
+        self.root.geometry(f"{WIDTH}x{height}+{x}+{y}")
 
     # ---------- 渲染 ----------
     def render(self, view, ip_getter) -> None:
@@ -193,7 +197,9 @@ class OverlayWindow:
         if self._drag_origin is None:
             return
         offset_x, offset_y = self._drag_origin
-        self.root.geometry(f"+{event.x_root - offset_x}+{event.y_root - offset_y}")
+        x, y = event.x_root - offset_x, event.y_root - offset_y
+        self._pos = (int(x), int(y))
+        self.root.geometry(f"+{x}+{y}")
 
     def _end_drag(self, _event) -> None:
         if self._drag_origin is None:

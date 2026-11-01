@@ -97,6 +97,18 @@ class IconCache:
             return dest
         return self.placeholder(self._category(item_id))
 
+    def path_for(self, item_id: int) -> Path | None:
+        """已缓存的图标路径；未缓存返回 None（不触发下载）。"""
+        unique = self.db.unique_name(item_id)
+        if not unique:
+            return None
+        dest = self.cache_dir / f"{urllib.parse.quote(unique, safe='')}.png"
+        return dest if dest.exists() else None
+
+    def placeholder_for(self, item_id: int) -> Path:
+        """按物品类别返回占位图路径（必要时生成）。"""
+        return self.placeholder(self._category(item_id))
+
     def placeholder(self, category: str = "unknown") -> Path:
         # 占位图按类别着色，同一类别复用同一文件
         dest = self.cache_dir / f"_placeholder_{category or 'unknown'}.png"

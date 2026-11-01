@@ -62,6 +62,27 @@ def test_icon_is_downloaded_once(tmp_path):
     assert first.read_bytes() == b"fake-png"
 
 
+def test_path_for_does_not_trigger_download(tmp_path):
+    db = make_db(tmp_path)
+    calls = []
+
+    def fetch(url, dest):
+        calls.append(url)
+        return False
+
+    cache = IconCache(tmp_path / "cache", db, fetch=fetch)
+    assert cache.path_for(1) is None
+    assert calls == []
+
+
+def test_path_for_returns_cached_file_and_placeholder_exists(tmp_path):
+    db = make_db(tmp_path)
+    cache = IconCache(tmp_path / "cache", db, fetch=lambda url, dest: dest.write_bytes(b"png") or True)
+    cached = cache.get(1)
+    assert cache.path_for(1) == cached
+    assert cache.placeholder_for(0).exists()
+
+
 def test_failed_download_uses_placeholder(tmp_path):
     db = make_db(tmp_path)
     cache = IconCache(tmp_path / "cache", db, fetch=lambda url, dest: False)

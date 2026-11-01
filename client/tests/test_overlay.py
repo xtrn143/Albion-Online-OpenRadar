@@ -1,4 +1,22 @@
-from albion_aware.overlay import format_ip, ip_color
+from albion_aware.overlay import PAD, ROW_H, WIDTH, OverlayWindow, format_ip, ip_color
+
+
+class _FakeRoot:
+    def __init__(self):
+        self.geometries = []
+
+    def geometry(self, value):
+        self.geometries.append(value)
+
+
+def test_resize_keeps_negative_position():
+    window = OverlayWindow.__new__(OverlayWindow)
+    window.root = _FakeRoot()
+    window._pos = None
+    window.place_at(-120, 300)
+    assert window._pos == (-120, 300)
+    window._resize(6)
+    assert window.root.geometries[-1] == f"{WIDTH}x{PAD * 2 + 6 * ROW_H + 8}+-120+300"
 
 
 def test_ip_color_thresholds():

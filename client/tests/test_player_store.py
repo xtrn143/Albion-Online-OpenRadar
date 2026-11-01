@@ -98,6 +98,19 @@ def test_clear_empties_store():
     assert store.view(StubParty(), max_rows=10).rows == []
 
 
+def test_update_existing_ignores_unknown_id():
+    store = PlayerStore()
+    assert store.update_existing(42, {"nickname": "Ghost"}) is False
+    assert store.get(42) is None
+
+
+def test_update_existing_updates_known_player():
+    store = PlayerStore()
+    store.upsert(1, {"nickname": "Razoth"}, now=100.0)
+    assert store.update_existing(1, {"hp": 900}, now=200.0) is True
+    assert store.get(1).hp == 900
+
+
 def test_upsert_ignores_unknown_and_reserved_fields():
     store = PlayerStore()
     player, _ = store.upsert(1, {"id": 999, "first_seen": 0.0, "password": "x", "guild": "Hoard"})

@@ -52,6 +52,7 @@ class RadarClient:
         self._stopping = threading.Event()
         self._thread: threading.Thread | None = None
         self._ws = None
+        self._opened = False
 
     def start(self) -> None:
         """启动 daemon 线程，不阻塞调用方。"""
@@ -69,6 +70,10 @@ class RadarClient:
         if self._thread is not None:
             self._thread.join(timeout=2)
 
+    def _on_open(self, _ws) -> None:
+        self._opened = True
+        self._on_state("connected")
+
     def _handle(self, raw) -> None:
         frames = parse_frames(raw)
         if frames:
@@ -83,13 +88,17 @@ class RadarClient:
             self._ws = websocket.WebSocketApp(
                 self.url,
                 on_message=lambda _ws, message: self._handle(message),
-                on_open=lambda _ws: self._on_state("connected"),
+                on_open=self._on_open,
                 on_close=lambda _ws, *_args: self._on_state("disconnected"),
             )
             try:
                 self._ws.run_forever(ping_interval=30, ping_timeout=10)
             except Exception:
                 self._on_state("disconnected")
+            if self._opened:
+                # 连接成功后重置退避，避免一次掉线后重连间隔永久停在 30 秒
+                delay = 1.0
+                self._opened = False
             if self._stopping.is_set():
                 break
             # 等待退避间隔，同时可被 stop() 立即打断
