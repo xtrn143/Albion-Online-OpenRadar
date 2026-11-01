@@ -132,6 +132,7 @@ class AlbionAwareApp:
             self.config.get("hotkeys.toggle_click_through", "F10"): self._queue_toggle_click_through,
             self.config.get("hotkeys.mark_party", "F9"): self._queue_mark_selected,
             self.config.get("hotkeys.toggle_visible", "F8"): self._queue_toggle_visible,
+            self.config.get("hotkeys.toggle_sound", "F7"): self._queue_toggle_sound,
         })
         self.tray = build_tray(self.i18n, self._tray_actions())
 
@@ -144,6 +145,9 @@ class AlbionAwareApp:
 
     def _queue_toggle_click_through(self):
         self._queue_action(self._toggle_click_through)
+
+    def _queue_toggle_sound(self):
+        self._queue_action(self._toggle_sound)
 
     def _queue_mark_selected(self):
         self._queue_action(self._mark_selected)

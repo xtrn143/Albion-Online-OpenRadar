@@ -14,6 +14,7 @@ DEFAULT_CONFIG = {
         "toggle_click_through": "F10",
         "mark_party": "F9",
         "toggle_visible": "F8",
+        "toggle_sound": "F7",
     },
     "overlay": {"x": None, "y": None, "opacity": 0.9, "sound": True},
     "radar": {
