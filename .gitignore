@@ -110,3 +110,11 @@ captures/
 /specs/
 /.specify/
 /work
+
+# Python 客户端
+__pycache__/
+*.pyc
+.pytest_cache/
+# 图标由 client/tools/fetch_icons.py 生成，不入库
+/client/data/icons/
+/client/config.json
