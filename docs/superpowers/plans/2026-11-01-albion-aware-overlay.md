@@ -3696,7 +3696,7 @@ if __name__ == "__main__":
 - [ ] **Step 2: 运行全部单测**
 
 Run: `python -m pytest -q`（cwd = `client`）
-Expected: 全部通过（约 67 个用例，0 failed）
+Expected: 全部通过（93 个用例，0 failed）
 
 - [ ] **Step 3: 界面冒烟**
 
@@ -3743,4 +3743,5 @@ git commit -m "test(client): overlay smoke script and integration checklist"
 - **状态点颜色**：只用绿（已连接）/ 灰（未连接）两态。tk 侧无法区分“雷达没启动”与“雷达掉线”，因此不实现设计文档 §10 里的红色状态点；雷达是否可达由诊断向导的 `radar=` 字段说明。
 - **更新检查（可选）**：设计文档 §9 的 `version.json` 启动检查未纳入首发计划，入口仍只有“反馈问题”按钮。
 - **未知事件码**：解析层静默忽略，不做计数；诊断摘要只包含环境信息（程序版本、Npcap、雷达可达性、网卡数、加速器类型），不含任何玩家数据。
+- **OpenRadar 二进制需自备**：本机未安装 Go，无法在本地编译雷达。出包前需把官方 OpenRadar 的 Windows 发布版解压到 `client/OpenRadar/`（含 `OpenRadar.exe`），Inno Setup 的 `..\OpenRadar\*` 与运行时的 `app_dir/OpenRadar` 都指向这个目录；仓库内不提交该二进制。
 
