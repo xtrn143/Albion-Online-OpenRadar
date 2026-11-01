@@ -121,6 +121,7 @@ class AlbionAwareApp:
             self.window.reset_position()
         else:
             self.window.place_at(saved_x, saved_y)
+        self.window.set_opacity(self.config.get("overlay.opacity", 0.9))
 
         self.panel = DetailPanel(self.window.root, self.i18n, self._detail_icon,
                                  self._on_mark_party, lambda _player: None)
@@ -340,6 +341,11 @@ class AlbionAwareApp:
         self.config.set("overlay.y", int(y))
         self.config.save()
 
+    def _set_opacity(self, value: float) -> None:
+        self.window.set_opacity(value)
+        self.config.set("overlay.opacity", float(value))
+        self.config.save()
+
     def _toggle_visible(self) -> None:
         self.window.toggle_visible()
 
@@ -376,6 +382,7 @@ class AlbionAwareApp:
             "toggle_visible": lambda: self._queue_action(self._toggle_visible),
             "click_through": lambda: self._queue_action(self._toggle_click_through),
             "reset_position": lambda: self._queue_action(self.window.reset_position),
+            "set_opacity": lambda value: self._queue_action(self._set_opacity, value),
             "feedback": lambda: self._queue_action(self._open_feedback),
             "about": lambda: self._queue_action(self._show_about),
             "set_language": lambda setting: self._queue_action(self._set_language, setting),

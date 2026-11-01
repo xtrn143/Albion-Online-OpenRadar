@@ -12,7 +12,7 @@ BG = "#141414"
 FLASH_ON = "#ff3b30"
 FLASH_STEPS = 10
 FLASH_INTERVAL_MS = 200
-DRAG_MODIFIER = 0x0004  # Ctrl
+DRAG_THRESHOLD = 4      # 位移小于该像素仍视为点击
 
 IP_GREY = "#d6d6d6"
 IP_YELLOW = "#e8c04a"
@@ -57,17 +57,19 @@ class OverlayWindow:
         self.inner = tk.Frame(self.border, bg=BG)
         self.inner.pack(fill="both", expand=True)
 
-        for widget in (self.border, self.inner):
+        for widget in (self.border, self.inner, self.status):
             widget.bind("<ButtonPress-1>", self._start_drag)
             widget.bind("<B1-Motion>", self._drag)
             widget.bind("<ButtonRelease-1>", self._end_drag)
 
         self._pos = None
-        self._drag_origin = None
+        self._press_origin = None
+        self._dragging = False
         self._flash_job = None
         self._flash_step = 0
         self._images = []
         self._click_through = False
+        self._opacity = 1.0
 
         self.root.update_idletasks()
         self._apply_styles()
@@ -127,7 +129,9 @@ class OverlayWindow:
         text_label.pack(side="right", fill="x", expand=True)
 
         for widget in (row, icon_label, text_label):
-            widget.bind("<Button-1>", lambda _event, p=player: self._on_row_click(p))
+            widget.bind("<ButtonPress-1>", lambda event, p=player: self._start_drag(event, p))
+            widget.bind("<B1-Motion>", self._drag)
+            widget.bind("<ButtonRelease-1>", lambda event, p=player: self._end_drag(event, p))
 
     def clear(self) -> None:
         for child in self.inner.winfo_children():
@@ -188,22 +192,40 @@ class OverlayWindow:
     def run(self) -> None:
         self.root.mainloop()
 
+    # ---------- 透明度 ----------
+    def set_opacity(self, value: float) -> None:
+        self._opacity = float(value)
+        try:
+            self.root.attributes("-alpha", self._opacity)
+        except tk.TclError:
+            pass
+
     # ---------- 拖动 ----------
-    def _start_drag(self, event) -> None:
-        if not (event.state & DRAG_MODIFIER):
-            return
-        self._drag_origin = (event.x_root - self.root.winfo_x(), event.y_root - self.root.winfo_y())
+    # 按住左键移动即拖动；按下后几乎没动就松开视为点击某一行
+    def _start_drag(self, event, player=None) -> None:
+        self._press_origin = (event.x_root, event.y_root,
+                              self.root.winfo_x(), self.root.winfo_y(), player)
+        self._dragging = False
 
     def _drag(self, event) -> None:
-        if self._drag_origin is None:
+        if self._press_origin is None:
             return
-        offset_x, offset_y = self._drag_origin
-        x, y = event.x_root - offset_x, event.y_root - offset_y
-        self._pos = (int(x), int(y))
-        self.root.geometry(f"+{x}+{y}")
+        start_x, start_y, win_x, win_y, _player = self._press_origin
+        dx, dy = event.x_root - start_x, event.y_root - start_y
+        if not self._dragging:
+            if abs(dx) + abs(dy) < DRAG_THRESHOLD:
+                return
+            self._dragging = True
+        self._pos = (win_x + dx, win_y + dy)
+        self.root.geometry(f"+{win_x + dx}+{win_y + dy}")
 
-    def _end_drag(self, _event) -> None:
-        if self._drag_origin is None:
+    def _end_drag(self, _event, player=None) -> None:
+        if self._press_origin is None:
             return
-        self._drag_origin = None
-        self._on_drag_end(self.root.winfo_x(), self.root.winfo_y())
+        self._press_origin = None
+        if self._dragging:
+            self._dragging = False
+            if self._pos is not None:
+                self._on_drag_end(*self._pos)
+        elif player is not None:
+            self._on_row_click(player)

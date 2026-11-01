@@ -22,6 +22,12 @@ def build_tray(i18n, actions: dict) -> pystray.Icon:
         pystray.MenuItem(i18n.t("tray.show"), wrap("toggle_visible"), default=True),
         pystray.MenuItem(i18n.t("tray.click_through"), wrap("click_through")),
         pystray.MenuItem(i18n.t("tray.reset_position"), wrap("reset_position")),
+        pystray.MenuItem(i18n.t("tray.opacity"), pystray.Menu(
+            pystray.MenuItem("100%", wrap("set_opacity", 1.0)),
+            pystray.MenuItem("90%", wrap("set_opacity", 0.9)),
+            pystray.MenuItem("80%", wrap("set_opacity", 0.8)),
+            pystray.MenuItem("70%", wrap("set_opacity", 0.7)),
+        )),
         pystray.MenuItem(i18n.t("tray.language"), pystray.Menu(
             pystray.MenuItem(i18n.t("tray.language.auto"), wrap("set_language", "auto")),
             pystray.MenuItem(i18n.t("tray.language.zh"), wrap("set_language", "zh-CN")),
