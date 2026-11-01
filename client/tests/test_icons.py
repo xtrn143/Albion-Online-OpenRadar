@@ -62,6 +62,37 @@ def test_icon_is_downloaded_once(tmp_path):
     assert first.read_bytes() == b"fake-png"
 
 
+def test_icon_url_has_no_size_query(tmp_path):
+    db = make_db(tmp_path)
+    calls = []
+
+    def fetch(url, dest):
+        calls.append(url)
+        dest.write_bytes(b"fake-png")
+        return True
+
+    IconCache(tmp_path / "cache", db, fetch=fetch).get(1)
+    # 渲染服务对 ?size= 参数会返回 502，必须用纯路径
+    assert calls[0].endswith(".png")
+    assert "size=" not in calls[0]
+
+
+def test_enchanted_item_keeps_at_sign_in_url(tmp_path):
+    db = make_db(tmp_path)
+    db._items[1] = {"n": "T6_MAIN_SWORD@3", "p": 1200, "cat": "weapons"}
+    calls = []
+
+    def fetch(url, dest):
+        calls.append(url)
+        dest.write_bytes(b"fake-png")
+        return True
+
+    IconCache(tmp_path / "cache", db, fetch=fetch).get(1)
+    # 附魔符号 @ 不能被编码成 %40，否则渲染服务返回 502
+    assert "@3" in calls[0]
+    assert "%40" not in calls[0]
+
+
 def test_path_for_does_not_trigger_download(tmp_path):
     db = make_db(tmp_path)
     calls = []

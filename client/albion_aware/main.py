@@ -290,13 +290,16 @@ class AlbionAwareApp:
         return photo
 
     def _fetch_icon(self, item_id: int) -> None:
+        """后台下载图标；失败时保持占位图，不触发无休止的重试。"""
         try:
-            self.icons.get(item_id)
+            path = self.icons.get(item_id)
         except Exception:
-            pass
+            path = None
         finally:
             self._icon_pending.discard(item_id)
-            self._queue_action(self._icons_ready)
+        if path is None or path == self.icons.placeholder_for(item_id):
+            return
+        self._queue_action(self._icons_ready)
 
     def _icons_ready(self) -> None:
         self._photo_cache.clear()

@@ -6,11 +6,20 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw
 
-# 官方渲染服务：按唯一名获取物品图标
-RENDER_URL = "https://render.albiononline.com/v1/item/{name}.png?size={size}"
+# 官方渲染服务：按唯一名获取物品图标。
+# 注意：不要加 ?size= 查询参数——实测该参数会让服务端返回 502，无查询串才稳定返回 PNG。
+RENDER_URL = "https://render.albiononline.com/v1/item/{name}.png"
 # 层级前缀（T6_）与附魔后缀（@3）
 _TIER = re.compile(r"^T\d+_")
 _ENCHANT = re.compile(r"@\d+$")
+
+
+def _slug(unique: str) -> str:
+    """缓存文件名与 URL 片段；@ 是附魔分隔符，必须原样保留。
+
+    渲染服务对 ``%40`` 编码会返回 502，因此只转义真正需要转义的字符。
+    """
+    return urllib.parse.quote(unique, safe='@')
 
 # 详情面板槽位 -> 装备数组下标
 EQUIP_SLOTS = {
@@ -89,10 +98,10 @@ class IconCache:
         unique = self.db.unique_name(item_id)
         if not unique:
             return self.placeholder("unknown")
-        dest = self.cache_dir / f"{urllib.parse.quote(unique, safe='')}.png"
+        dest = self.cache_dir / f"{_slug(unique)}.png"
         if dest.exists():
             return dest
-        url = RENDER_URL.format(name=urllib.parse.quote(unique, safe=''), size=self.size)
+        url = RENDER_URL.format(name=_slug(unique))
         if self._fetch(url, dest) and dest.exists():
             return dest
         return self.placeholder(self._category(item_id))
@@ -102,7 +111,7 @@ class IconCache:
         unique = self.db.unique_name(item_id)
         if not unique:
             return None
-        dest = self.cache_dir / f"{urllib.parse.quote(unique, safe='')}.png"
+        dest = self.cache_dir / f"{_slug(unique)}.png"
         return dest if dest.exists() else None
 
     def placeholder_for(self, item_id: int) -> Path:
@@ -114,10 +123,16 @@ class IconCache:
         dest = self.cache_dir / f"_placeholder_{category or 'unknown'}.png"
         if dest.exists():
             return dest
+        # 键与 ao-bin-dumps 的 cat 字段一致（复数是官方写法）
         colors = {
             "weapons": (150, 150, 165),
-            "armor": (120, 135, 155),
-            "consumable": (145, 120, 95),
+            "offhands": (140, 145, 160),
+            "armors": (120, 135, 155),
+            "head": (125, 130, 150),
+            "shoes": (115, 125, 145),
+            "capes": (135, 120, 140),
+            "consumables": (145, 120, 95),
+            "mounts": (120, 140, 120),
         }
         color = colors.get(category, (105, 105, 110))
         image = Image.new("RGBA", (self.size, self.size), (0, 0, 0, 0))
@@ -135,7 +150,7 @@ class IconCache:
         # 默认下载实现；测试通过注入 fetch 避免真实网络请求
         import requests
         try:
-            response = requests.get(url, timeout=5)
+            response = requests.get(url, timeout=10)
         except requests.RequestException:
             return False
         if response.status_code != 200 or not response.content:
