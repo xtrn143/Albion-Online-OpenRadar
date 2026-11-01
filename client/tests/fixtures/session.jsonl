@@ -1,0 +1,8 @@
+{"code":"response","dictionary":{"parameters":{"253":2,"8":"0311"}}}
+{"code":"event","dictionary":{"parameters":{"252":29,"0":1001,"1":"Ally","8":"GuildA"}}}
+{"code":"event","dictionary":{"parameters":{"252":233,"0":1,"1":1001}}}
+{"code":"event","dictionary":{"parameters":{"252":29,"0":1002,"1":"Enemy","8":"GuildB","51":"AllianceB","40":[0,0,0,0,0,0,0,0,0,0]}}}
+{"code":"event","dictionary":{"parameters":{"252":6,"0":1002,"2":900,"3":1200}}}
+{"code":"event","dictionary":{"parameters":{"252":1,"0":1002}}}
+{"code":"event","dictionary":{"parameters":{"252":29,"0":1003,"1":"Enemy2"}}}
+{"code":"response","dictionary":{"parameters":{"253":41,"0":"0312"}}}
