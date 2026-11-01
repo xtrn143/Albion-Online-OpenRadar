@@ -1,0 +1,311 @@
+# client/albion_aware/main.py
+"""装配层：配置、解析、玩家表、悬浮窗、托盘与热键。"""
+import sys
+import webbrowser
+from pathlib import Path
+
+import tkinter as tk
+from tkinter import messagebox
+
+from PIL import Image, ImageTk
+
+from albion_aware import __version__
+from albion_aware.config import Config
+from albion_aware.detail_panel import DetailPanel, equipment_entries
+from albion_aware.event_parser import (
+    PartyEvent,
+    PlayerLeft,
+    PlayerSeen,
+    PlayerUpdated,
+    ZoneChanged,
+    parse_message,
+)
+from albion_aware.i18n import I18n
+from albion_aware.icons import IconCache, ItemDatabase
+from albion_aware.launcher import FEEDBACK_URL, run_wizard, wizard_needed
+from albion_aware.models import View
+from albion_aware.overlay import OverlayWindow
+from albion_aware.party import PartyList
+from albion_aware.player_store import PlayerStore
+from albion_aware.radar_client import RadarClient
+from albion_aware.tray import build_tray
+from albion_aware.win32_ext import HotkeyListener
+
+
+def has_new_stranger(before_ids: set[int], after_ids: set[int]) -> bool:
+    return bool(after_ids - before_ids)
+
+
+def _load_items(app_dir: Path) -> ItemDatabase:
+    try:
+        return ItemDatabase.load(app_dir / "data" / "items.min.json")
+    except (OSError, ValueError):
+        return ItemDatabase([])
+
+
+class AlbionAwareApp:
+    def __init__(self, app_dir: Path):
+        self.app_dir = app_dir
+        self.config = Config(app_dir / "config.json")
+        self.i18n = I18n(self.config.language())
+        self.db = _load_items(app_dir)
+        self.icons = IconCache(app_dir / "cache" / "icons", self.db)
+        self.store = PlayerStore(
+            self_name=self.config.get("self_name", ""),
+            timeout=float(self.config.get("player_timeout", 60)),
+        )
+        self.party = PartyList(app_dir / "party.json")
+        self._expanded = False
+        self._rows = []
+        self._photo_cache = {}
+        self._state = "connecting"
+        self._flash_pending = False
+        self._events: list[list] = []
+        self._actions: list[tuple] = []
+
+        self.window = OverlayWindow(
+            i18n=self.i18n,
+            icon_loader=self._row_icon,
+            on_row_click=self._on_row_click,
+            on_more_click=self._on_more_click,
+            on_drag_end=self._save_position,
+        )
+        self.window.render(View(), self._item_power)
+
+        saved_x = self.config.get("overlay.x")
+        saved_y = self.config.get("overlay.y")
+        if saved_x is None or saved_y is None:
+            self.window.reset_position()
+        else:
+            self.window.place_at(saved_x, saved_y)
+
+        self.panel = DetailPanel(self.window.root, self.i18n, self._detail_icon,
+                                 self._on_mark_party, lambda _player: None)
+
+        self.client = RadarClient(self.config.get("radar.ws_url", "ws://localhost:5001/ws"),
+                                  on_frames=self._on_frames, on_state=self._on_state)
+        self.hotkeys = HotkeyListener({
+            self.config.get("hotkeys.toggle_click_through", "F10"): self._queue_toggle_click_through,
+            self.config.get("hotkeys.mark_party", "F9"): self._queue_mark_selected,
+            self.config.get("hotkeys.toggle_visible", "F8"): self._queue_toggle_visible,
+        })
+        self.tray = build_tray(self.i18n, self._tray_actions())
+
+    # ---------- 线程边界：WS/热键/托盘只入队，Tk 操作在主线程 ----------
+    def _queue_action(self, action, *args) -> None:
+        self._actions.append((action, args))
+
+    def _queue_toggle_visible(self):
+        self._queue_action(self._toggle_visible)
+
+    def _queue_toggle_click_through(self):
+        self._queue_action(self._toggle_click_through)
+
+    def _queue_mark_selected(self):
+        self._queue_action(self._mark_selected)
+
+    def _on_frames(self, frames) -> None:
+        events = []
+        for frame in frames:
+            events.extend(parse_message(frame))
+        if events:
+            self._events.append(events)
+
+    def _on_state(self, state: str) -> None:
+        self._state = state
+
+    # ---------- 主线程 --------------
+    def _drain(self) -> None:
+        dirty = bool(self.store.prune())
+        while self._actions:
+            action, args = self._actions.pop(0)
+            action(*args)
+            dirty = True
+        while self._events:
+            if self._apply(self._events.pop(0)):
+                dirty = True
+        self.window.set_status(self._state == "connected")
+        if dirty:
+            self._refresh()
+        self.window.root.after(100, self._drain)
+
+    def _apply(self, events) -> bool:
+        before = {player.id for player in self._rows}
+        party_names_before = len(self.party.names)
+        applied = False
+        for event in events:
+            if isinstance(event, PlayerSeen):
+                self.store.upsert(event.player_id, event.fields)
+                applied = True
+            elif isinstance(event, PlayerUpdated):
+                self.store.upsert(event.player_id, event.fields)
+                applied = True
+            elif isinstance(event, PlayerLeft):
+                self.store.remove(event.player_id)
+                applied = True
+            elif isinstance(event, ZoneChanged):
+                self.store.clear()
+                self.panel.hide()
+                applied = True
+            elif isinstance(event, PartyEvent):
+                self.party.handle_event(event.parameters, self.store)
+                applied = True
+        self.party.resolve(self.store)
+        if len(self.party.names) != party_names_before:
+            self.party.save()
+        after = {player.id for player in self._view_rows()}
+        if applied and has_new_stranger(before, after):
+            self._flash_pending = True
+        return applied
+
+    def _view_rows(self):
+        return self.store.view(self.party, max_rows=10000,
+                               sort_mode=self.config.get("sort_mode", "recent"),
+                               ip_getter=self._item_power).rows
+
+    def _refresh(self) -> None:
+        max_rows = 10000 if self._expanded else int(self.config.get("max_rows", 6))
+        view = self.store.view(self.party, max_rows=max_rows,
+                               sort_mode=self.config.get("sort_mode", "recent"),
+                               ip_getter=self._item_power)
+        self._rows = view.rows
+        self.window.render(view, self._item_power)
+        if self._flash_pending:
+            self._flash_pending = False
+            self.window.flash()
+
+    def _item_power(self, player):
+        return self.db.average_ip(player.equip)
+
+    # ---------- 图标 ----------
+    def _row_icon(self, player):
+        item_id = int(player.equip[0]) if player.equip else 0
+        return self._photo(item_id, 22)
+
+    def _detail_icon(self, item_id):
+        return self._photo(item_id, 32)
+
+    def _photo(self, item_id: int, size: int):
+        key = (item_id, size)
+        if key in self._photo_cache:
+            return self._photo_cache[key]
+        photo = None
+        try:
+            image = Image.open(self.icons.get(item_id))
+            image.thumbnail((size, size))
+            photo = ImageTk.PhotoImage(image, master=self.window.root)
+        except Exception:
+            photo = None
+        self._photo_cache[key] = photo
+        return photo
+
+    # ---------- 交互 ----------
+    def _on_row_click(self, player) -> None:
+        self.panel.show(player, self._item_power(player),
+                        self.party.contains_name(player.nickname),
+                        equipment_entries(player, self.db),
+                        max(self.window.root.winfo_x() - 226, 0),
+                        self.window.root.winfo_y())
+
+    def _on_more_click(self) -> None:
+        self._expanded = not self._expanded
+        self._refresh()
+
+    def _on_mark_party(self, player) -> None:
+        if self.party.contains_name(player.nickname):
+            self.party.remove_name(player.nickname)
+        else:
+            self.party.add_name(player.nickname)
+        self.party.save()
+        self.panel.hide()
+        self._refresh()
+
+    def _mark_selected(self) -> None:
+        if self.panel.current is not None:
+            self._on_mark_party(self.panel.current)
+
+    def _save_position(self, x: int, y: int) -> None:
+        self.config.set("overlay.x", int(x))
+        self.config.set("overlay.y", int(y))
+        self.config.save()
+
+    def _toggle_visible(self) -> None:
+        self.window.toggle_visible()
+
+    def _toggle_click_through(self) -> None:
+        self.window.set_click_through(not self.window.click_through)
+
+    def _open_feedback(self) -> None:
+        webbrowser.open(FEEDBACK_URL)
+
+    def _show_about(self) -> None:
+        messagebox.showinfo("AlbionAware",
+                            f"{self.i18n.t('about.version', version=__version__)}\n"
+                            f"{self.i18n.t('about.license')}")
+
+    def _set_language(self, setting: str) -> None:
+        self.config.set("language", setting)
+        self.config.save()
+        self.i18n = I18n(self.config.language())
+        self.window.i18n = self.i18n
+        try:
+            self.tray.stop()
+        except Exception:
+            pass
+        self.tray = build_tray(self.i18n, self._tray_actions())
+        self.tray.run_detached()
+        self._refresh()
+
+    def _tray_actions(self) -> dict:
+        return {
+            "toggle_visible": lambda: self._queue_action(self._toggle_visible),
+            "click_through": lambda: self._queue_action(self._toggle_click_through),
+            "reset_position": lambda: self._queue_action(self.window.reset_position),
+            "feedback": lambda: self._queue_action(self._open_feedback),
+            "about": lambda: self._queue_action(self._show_about),
+            "set_language": lambda setting: self._queue_action(self._set_language, setting),
+            "quit": lambda: self._queue_action(self._quit),
+        }
+
+    def _reload_from_config(self) -> None:
+        self.i18n = I18n(self.config.language())
+        self.window.i18n = self.i18n
+        self.store.set_self_name(self.config.get("self_name", ""))
+        self._refresh()
+
+    def _quit(self) -> None:
+        self.client.stop()
+        self.hotkeys.stop()
+        try:
+            self.tray.stop()
+        except Exception:
+            pass
+        self.window.close()
+
+    def run(self) -> None:
+        if wizard_needed(self.config):
+            run_wizard(self.window.root, self.config, self.i18n)
+            self._reload_from_config()
+        if wizard_needed(self.config):
+            return  # 用户关闭了向导窗口且未填写，不进入主循环
+        self.client.start()
+        self.hotkeys.start()
+        try:
+            self.tray.run_detached()
+        except Exception:
+            pass
+        self._refresh()
+        self.window.root.after(100, self._drain)
+        self.window.run()
+
+
+def main() -> None:
+    if getattr(sys, "frozen", False):
+        app_dir = Path(sys.executable).parent
+    else:
+        app_dir = Path(__file__).resolve().parents[1]
+    AlbionAwareApp(app_dir).run()
+
+
+if __name__ == "__main__":
+    main()
