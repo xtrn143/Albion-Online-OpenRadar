@@ -1,10 +1,13 @@
 """窄条置顶主窗：武器图标 + IP，行点击、闪烁、拖动、穿透。"""
 import tkinter as tk
 
+from PIL import Image, ImageDraw, ImageTk
+
 import albion_aware.win32_ext as win32
 
-WIDTH = 94
+WIDTH = 102             # 78 内容宽 + 6 层红光内外边距（每层左右各 2px）
 ROW_H = 36
+TOP_H = 16               # 顶部图标行（提示音 / 穿透 / 连接状态）
 ICON_SIZE = 32
 PAD = 4
 BORDER = 2
@@ -23,6 +26,24 @@ IP_YELLOW = "#e8c04a"
 IP_ORANGE = "#ff7a45"
 STATUS_ON = "#3fb950"
 STATUS_OFF = "#6b6b6b"
+SOUND_ON = (230, 230, 230, 255)
+SOUND_OFF = (107, 107, 107, 255)
+SOUND_SLASH = (255, 75, 62, 255)
+CLICK_WARN = "#e8c04a"
+
+
+def sound_icon(on: bool) -> Image.Image:
+    """12px 扬声器图标：开启时亮色+声波，关闭时灰色+红色斜杠。"""
+    image = Image.new("RGBA", (12, 12), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(image)
+    color = SOUND_ON if on else SOUND_OFF
+    draw.polygon([(1, 4), (4, 4), (8, 1), (8, 10), (4, 7), (1, 7)], fill=color)
+    if on:
+        draw.line((9, 4, 11, 6), fill=color, width=1)
+        draw.line((11, 6, 9, 8), fill=color, width=1)
+    else:
+        draw.line((2, 2, 10, 10), fill=SOUND_SLASH, width=2)
+    return image
 
 
 def ip_color(item_power: int | None) -> str:
@@ -40,12 +61,14 @@ def format_ip(item_power: int | None) -> str:
 
 
 class OverlayWindow:
-    def __init__(self, i18n, icon_loader, on_row_click, on_more_click, on_drag_end):
+    def __init__(self, i18n, icon_loader, on_row_click, on_more_click, on_drag_end,
+                 on_sound_click=None):
         self.i18n = i18n
         self._icon_loader = icon_loader          # (Player) -> ImageTk.PhotoImage | None
         self._on_row_click = on_row_click
         self._on_more_click = on_more_click
         self._on_drag_end = on_drag_end
+        self._on_sound_click = on_sound_click
 
         self.root = tk.Tk()
         self.root.title(i18n.t("app.title"))
@@ -63,13 +86,31 @@ class OverlayWindow:
 
         self.border = tk.Frame(parent, bg=BG, padx=BORDER, pady=BORDER)
         self.border.pack(fill="both", expand=True)
-        self.status = tk.Label(self.border, text="●", bg=BG, fg=STATUS_OFF,
-                               font=("Segoe UI", 5), anchor="e")
-        self.status.pack(fill="x")
+
+        self.top_row = tk.Frame(self.border, bg=BG, height=TOP_H)
+        self.top_row.pack(fill="x")
+        self.top_row.pack_propagate(False)
+
+        self._sound_images = {state: ImageTk.PhotoImage(sound_icon(state), master=self.root)
+                              for state in (True, False)}
+        self._sound_on = False
+        self.sound_icon = tk.Label(self.top_row, bg=BG, bd=0,
+                                   image=self._sound_images[False])
+        self.sound_icon.pack(side="left", padx=(1, 0))
+        self.sound_icon.bind("<Button-1>", self._toggle_sound_click)
+
+        self.click_icon = tk.Label(self.top_row, text="!", bg=BG, fg=CLICK_WARN,
+                                   font=("Segoe UI", 7, "bold"), bd=0)
+
+        self.status = tk.Label(self.top_row, text="●", bg=BG, fg=STATUS_OFF,
+                               font=("Segoe UI", 6), anchor="e", bd=0)
+        self.status.pack(side="right", padx=(0, 1))
+
         self.inner = tk.Frame(self.border, bg=BG)
         self.inner.pack(fill="both", expand=True)
 
-        for widget in (*self._glow, self.border, self.inner, self.status):
+        for widget in (*self._glow, self.border, self.inner, self.top_row, self.click_icon,
+                       self.status):
             widget.bind("<ButtonPress-1>", self._start_drag)
             widget.bind("<B1-Motion>", self._drag)
             widget.bind("<ButtonRelease-1>", self._end_drag)
@@ -100,7 +141,7 @@ class OverlayWindow:
 
     def _resize(self, row_count: int) -> None:
         glow = GLOW_LAYERS * GLOW_STEP * 2
-        height = PAD * 2 + max(row_count, 1) * ROW_H + 8 + glow  # +8 为顶部状态点
+        height = PAD * 2 + max(row_count, 1) * ROW_H + TOP_H + glow  # 顶部图标行
         if self._pos is not None:
             x, y = self._pos
         else:
@@ -187,6 +228,11 @@ class OverlayWindow:
             pass
 
     def set_click_through(self, enabled: bool) -> None:
+        enabled = bool(enabled)
+        if enabled and not self._click_through:
+            self.click_icon.pack(side="left", padx=(2, 0))
+        elif not enabled and self._click_through:
+            self.click_icon.pack_forget()
         self._click_through = enabled
         try:
             win32.set_click_through(int(self.root.wm_frame(), 16), enabled)
@@ -196,6 +242,19 @@ class OverlayWindow:
     @property
     def click_through(self) -> bool:
         return self._click_through
+
+    def set_sound(self, enabled: bool) -> None:
+        self._sound_on = bool(enabled)
+        self.sound_icon.configure(image=self._sound_images[self._sound_on])
+
+    @property
+    def sound_on(self) -> bool:
+        return self._sound_on
+
+    def _toggle_sound_click(self, _event=None):
+        if self._on_sound_click is not None:
+            self._on_sound_click()
+        return "break"
 
     def set_status(self, connected: bool) -> None:
         self.status.configure(fg=STATUS_ON if connected else STATUS_OFF)

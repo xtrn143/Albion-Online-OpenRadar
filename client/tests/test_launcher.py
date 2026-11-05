@@ -146,9 +146,41 @@ def test_wizard_needed_until_onboarded(tmp_path):
 def test_start_radar_launches_bundled_binary(tmp_path):
     (tmp_path / "OpenRadar.exe").write_bytes(b"MZ")
     launched = []
-    assert start_radar(tmp_path, popen=lambda args, cwd=None: launched.append((args, cwd))) is True
+    assert start_radar(tmp_path, popen=lambda args, **kwargs: launched.append((args, kwargs))) is True
     assert launched[0][0] == [str(tmp_path / "OpenRadar.exe")]
 
 
+def test_start_radar_accepts_release_artifact_name(tmp_path):
+    release = tmp_path / "OpenRadar-windows-amd64.exe"
+    release.write_bytes(b"MZ")
+    launched = []
+    assert start_radar(tmp_path, popen=lambda args, **kwargs: launched.append((args, kwargs))) is True
+    assert launched[0][0] == [str(release)]
+
+
+def test_start_radar_prefers_canonical_name(tmp_path):
+    (tmp_path / "OpenRadar.exe").write_bytes(b"MZ")
+    (tmp_path / "OpenRadar-windows-amd64.exe").write_bytes(b"MZ")
+    launched = []
+    assert start_radar(tmp_path, popen=lambda args, **kwargs: launched.append((args, kwargs))) is True
+    assert launched[0][0] == [str(tmp_path / "OpenRadar.exe")]
+
+
+def test_start_radar_runs_without_console_window(tmp_path):
+    import subprocess
+    (tmp_path / "OpenRadar.exe").write_bytes(b"MZ")
+    seen = {}
+
+    def popen(args, **kwargs):
+        seen.update(kwargs)
+        seen["args"] = args
+
+    assert start_radar(tmp_path, popen=popen) is True
+    assert seen["creationflags"] == getattr(subprocess, "CREATE_NO_WINDOW", 0)
+    assert seen["stdin"] == subprocess.DEVNULL
+    assert seen["stdout"] == subprocess.DEVNULL
+    assert seen["stderr"] == subprocess.DEVNULL
+
+
 def test_start_radar_returns_false_when_binary_missing(tmp_path):
-    assert start_radar(tmp_path, popen=lambda args, cwd=None: None) is False
+    assert start_radar(tmp_path, popen=lambda args, **kwargs: None) is False

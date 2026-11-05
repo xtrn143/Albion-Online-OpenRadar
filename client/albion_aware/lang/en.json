@@ -54,6 +54,7 @@
   "diag.generic.one": "Make sure Npcap is installed and running.",
   "diag.generic.two": "Hit \"Refresh and select all adapters\".",
   "diag.generic.three": "If there is still no data, copy the diagnostics and open the feedback page.",
+  "diag.no_radar": "OpenRadar was not found. Use the installer, or keep the OpenRadar folder next to AlbionAware.exe.",
   "feedback.title": "Feedback",
   "about.version": "Version {version}",
   "about.license": "Includes OpenRadar (MIT, by Nouuu)",

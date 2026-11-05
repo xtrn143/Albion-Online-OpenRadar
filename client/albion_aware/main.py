@@ -38,6 +38,7 @@ from albion_aware.launcher import (
     list_interfaces,
     npcap_installed,
     npcap_running,
+    radar_executable,
     radar_state,
     run_wizard,
     select_all_interfaces,
@@ -52,8 +53,17 @@ from albion_aware.tray import build_tray
 from albion_aware.win32_ext import HotkeyListener
 
 
+SOUND_COOLDOWN_S = 2.0
+RADAR_RETRY_S = 15.0
+
+
 def has_new_stranger(before_ids: set[int], after_ids: set[int]) -> bool:
     return bool(after_ids - before_ids)
+
+
+def sound_cooldown_ok(last_at: float | None, now: float,
+                      cooldown: float = SOUND_COOLDOWN_S) -> bool:
+    return last_at is None or (now - last_at) >= cooldown
 
 
 def _load_items(app_dir: Path) -> ItemDatabase:
@@ -102,9 +112,13 @@ class AlbionAwareApp:
         self._events: list[list] = []
         self._actions: list[tuple] = []
         self._connected_at = None
+        self._started_at = time.monotonic()
         self._ever_received = False
         self._diag_shown = False
         self._diag_window = None
+        self._last_sound_at = None
+        self._stopping = threading.Event()
+        self._no_radar_warned = False
 
         self.window = OverlayWindow(
             i18n=self.i18n,
@@ -112,7 +126,9 @@ class AlbionAwareApp:
             on_row_click=self._on_row_click,
             on_more_click=self._on_more_click,
             on_drag_end=self._save_position,
+            on_sound_click=self._toggle_sound,
         )
+        self.window.set_sound(bool(self.config.get("overlay.sound", False)))
         self.window.render(View(), self._item_power)
 
         saved_x = self.config.get("overlay.x")
@@ -163,7 +179,7 @@ class AlbionAwareApp:
     def _on_state(self, state: str) -> None:
         self._state = state
         if state == "connected" and self._connected_at is None:
-            self._connected_at = time.time()
+            self._connected_at = time.monotonic()
 
     # ---------- 主线程 --------------
     def _drain(self) -> None:
@@ -186,9 +202,11 @@ class AlbionAwareApp:
             self.window.root.after(100, self._drain)
 
     def _check_silence(self) -> None:
-        if self._diag_shown or self._ever_received or self._connected_at is None:
+        if self._diag_shown or self._ever_received:
             return
-        if time.time() - self._connected_at < 60.0:
+        # 连上之后一直没数据，或压根没连上（雷达没起来），都要给出诊断入口
+        since = self._connected_at if self._connected_at is not None else self._started_at
+        if time.monotonic() - since < 60.0:
             return
         self._diag_shown = True
         threading.Thread(target=self._diagnose_silence, daemon=True).start()
@@ -217,10 +235,27 @@ class AlbionAwareApp:
     def _ensure_radar(self) -> None:
         try:
             base_url = self.config.get("radar.base_url", "http://localhost:5001")
-            if ensure_radar(base_url, self.app_dir / "OpenRadar"):
+            radar_dir = self.app_dir / "OpenRadar"
+            if radar_executable(radar_dir) is None:
+                # 只拷贝了 AlbionAware.exe、丢了 OpenRadar 文件夹时，用户只会看到灰灯
+                if not self._no_radar_warned and radar_state(base_url) is None:
+                    self._no_radar_warned = True
+                    self._queue_action(self._warn_no_radar)
+                return
+            if ensure_radar(base_url, radar_dir):
                 select_all_interfaces(base_url)
         except Exception:
             pass
+
+    def _warn_no_radar(self) -> None:
+        messagebox.showwarning("AlbionAware", self.i18n.t("diag.no_radar"))
+
+    def _supervise_radar(self) -> None:
+        """雷达被杀毒软件拦截或中途退出时自动重试，避免状态灯永久灰着。"""
+        while not self._stopping.is_set():
+            if self._state != "connected":
+                self._ensure_radar()
+            self._stopping.wait(RADAR_RETRY_S)
 
     def _apply(self, events) -> bool:
         before = {player.id for player in self._view_rows()}
@@ -352,13 +387,19 @@ class AlbionAwareApp:
         self.config.save()
 
     def _toggle_sound(self) -> None:
-        enabled = not bool(self.config.get("overlay.sound", True))
+        enabled = not bool(self.config.get("overlay.sound", False))
         self.config.set("overlay.sound", enabled)
         self.config.save()
+        self.window.set_sound(enabled)
 
     def _play_sound(self) -> None:
-        if not bool(self.config.get("overlay.sound", True)) or sys.platform != "win32":
+        if not bool(self.config.get("overlay.sound", False)) or sys.platform != "win32":
             return
+        now = time.monotonic()
+        # 同一批新玩家只响一次，避免瞬间连续蜂鸣
+        if not sound_cooldown_ok(self._last_sound_at, now):
+            return
+        self._last_sound_at = now
 
         def beep() -> None:
             try:
@@ -407,7 +448,7 @@ class AlbionAwareApp:
             "reset_position": lambda: self._queue_action(self.window.reset_position),
             "set_opacity": lambda value: self._queue_action(self._set_opacity, value),
             "toggle_sound": lambda: self._queue_action(self._toggle_sound),
-            "sound_on": lambda: bool(self.config.get("overlay.sound", True)),
+            "sound_on": lambda: bool(self.config.get("overlay.sound", False)),
             "feedback": lambda: self._queue_action(self._open_feedback),
             "about": lambda: self._queue_action(self._show_about),
             "set_language": lambda setting: self._queue_action(self._set_language, setting),
@@ -421,6 +462,7 @@ class AlbionAwareApp:
         self._refresh()
 
     def _quit(self) -> None:
+        self._stopping.set()
         if self._diag_window is not None:
             self._diag_window.close()
         self.client.stop()
@@ -437,7 +479,7 @@ class AlbionAwareApp:
             self._reload_from_config()
         if wizard_needed(self.config):
             return  # 用户关闭了向导窗口且未填写，不进入主循环
-        threading.Thread(target=self._ensure_radar, name="radar-launcher", daemon=True).start()
+        threading.Thread(target=self._supervise_radar, name="radar-supervisor", daemon=True).start()
         self.client.start()
         self.hotkeys.start()
         try:

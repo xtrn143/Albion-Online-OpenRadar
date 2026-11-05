@@ -3,7 +3,10 @@ import copy
 import json
 from pathlib import Path
 
+CONFIG_VERSION = 2
+
 DEFAULT_CONFIG = {
+    "config_version": CONFIG_VERSION,
     "language": "auto",
     "self_name": "",
     "player_timeout": 60,
@@ -16,7 +19,7 @@ DEFAULT_CONFIG = {
         "toggle_visible": "F8",
         "toggle_sound": "F7",
     },
-    "overlay": {"x": None, "y": None, "opacity": 0.9, "sound": True},
+    "overlay": {"x": None, "y": None, "opacity": 0.9, "sound": False},
     "radar": {
         "base_url": "http://localhost:5001",
         "ws_url": "ws://localhost:5001/ws",
@@ -76,7 +79,16 @@ class Config:
             self.data = default_config()
             return self.data
         self.data = _merge(default_config(), raw)
+        self._migrate(raw.get("config_version"))
         return self.data
+
+    def _migrate(self, version) -> None:
+        """老配置一次性升级：v2 起提示音默认关闭，避免城里持续蜂鸣。"""
+        if isinstance(version, int) and version >= CONFIG_VERSION:
+            return
+        self.data["overlay"]["sound"] = False
+        self.data["config_version"] = CONFIG_VERSION
+        self.save()
 
     def get(self, dotted: str, default=None):
         node = self.data

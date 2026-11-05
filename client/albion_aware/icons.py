@@ -69,21 +69,22 @@ def _slug(unique: str) -> str:
     """
     return urllib.parse.quote(unique, safe='@')
 
-# 详情面板槽位 -> 装备数组下标
+# 详情面板槽位 -> 装备数组下标（游戏协议顺序）
+# 0=主手 1=副手 2=头 3=衣 4=鞋 5=包 6=披风 7=坐骑 8=药水 9=食物
 EQUIP_SLOTS = {
     "mainhand": 0,
     "offhand": 1,
     "head": 2,
     "chest": 3,
     "shoes": 4,
-    "cape": 5,
-    "mount": 6,
-    "bag": 7,
+    "bag": 5,
+    "cape": 6,
+    "mount": 7,
     "potion": 8,
     "food": 9,
 }
-# 参与平均 IP 的战斗槽：主手、副手、头、衣、鞋、药水
-COMBAT_SLOTS = (0, 1, 2, 3, 4, 8)
+# 官方平均 IP：主手、副手、头、衣、鞋、披风六个槽，空槽按 0 计入分母
+COMBAT_SLOTS = (0, 1, 2, 3, 4, 6)
 
 
 class ItemDatabase:
@@ -120,17 +121,21 @@ class ItemDatabase:
         return base.replace("_", " ")
 
     def average_ip(self, equip: list[int]) -> int | None:
-        total = valid = 0
+        total = 0
         for index in COMBAT_SLOTS:
-            if index >= len(equip):
-                continue
-            item = self.get(equip[index])
-            power = int(item.get("p") or 0) if item else 0
-            if power > 0:
-                total += power
-                valid += 1
-        # 没有有效物品时返回 None
-        return round(total / valid) if valid else None
+            power = 0
+            if index < len(equip):
+                item = self.get(equip[index])
+                power = int(item.get("p") or 0) if item else 0
+            total += power
+        # 双手武器同时占主手与副手两个槽，副手按同一物品强度再计一次
+        if equip:
+            main = self.get(equip[0])
+            if (main and main.get("h2") and main.get("cat") == "weapons"
+                    and main.get("t") == "weapon"):
+                total += int(main.get("p") or 0)
+        # 官方算法固定除以 6 个槽，空槽按 0；全空时没有有效 IP
+        return round(total / len(COMBAT_SLOTS)) if total > 0 else None
 
 
 class IconCache:

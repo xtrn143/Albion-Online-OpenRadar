@@ -2,7 +2,7 @@
 import sys
 from pathlib import Path
 
-from albion_aware.main import _resource_dir, has_new_stranger, user_data_dir
+from albion_aware.main import sound_cooldown_ok, _resource_dir, has_new_stranger, user_data_dir
 
 
 def test_user_data_dir_uses_app_dir_when_not_frozen(tmp_path, monkeypatch):
@@ -36,3 +36,9 @@ def test_new_stranger_detected():
 def test_no_new_stranger_when_only_removals():
     assert has_new_stranger({1, 2}, {1}) is False
     assert has_new_stranger(set(), set()) is False
+
+
+def test_sound_cooldown_blocks_bursts():
+    assert sound_cooldown_ok(None, 100.0, cooldown=2.0) is True
+    assert sound_cooldown_ok(100.0, 101.5, cooldown=2.0) is False
+    assert sound_cooldown_ok(100.0, 102.0, cooldown=2.0) is True

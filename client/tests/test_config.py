@@ -55,3 +55,27 @@ def test_default_config_is_not_shared():
     a, b = default_config(), default_config()
     a["hotkeys"]["mark_party"] = "F7"
     assert b["hotkeys"]["mark_party"] == "F9"
+
+
+def test_alert_sound_is_off_by_default():
+    assert default_config()["overlay"]["sound"] is False
+
+
+def test_legacy_config_forces_sound_off_once(tmp_path):
+    path = tmp_path / "config.json"
+    path.write_text(json.dumps({"overlay": {"sound": True}}), encoding="utf-8")
+    cfg = Config(path)
+    assert cfg.get("overlay.sound") is False
+    assert cfg.get("config_version") == 2
+    # 迁移结果写入磁盘，用户之后手动打开提示音不会被覆盖
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    assert raw["overlay"]["sound"] is False
+    assert raw["config_version"] == 2
+
+
+def test_migrated_config_keeps_user_sound_choice(tmp_path):
+    path = tmp_path / "config.json"
+    path.write_text(json.dumps({"config_version": 2, "overlay": {"sound": True}}),
+                    encoding="utf-8")
+    cfg = Config(path)
+    assert cfg.get("overlay.sound") is True

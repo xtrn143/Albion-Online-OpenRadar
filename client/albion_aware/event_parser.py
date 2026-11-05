@@ -118,6 +118,14 @@ def parse_message(message: dict) -> list[DomainEvent]:
         return [PlayerUpdated(player_id, fields)]
     if event == 3 and player_id is not None:
         return [PlayerUpdated(player_id, {})]
+    if event == 90 and player_id is not None:
+        equip = p.get("2")
+        # 装备切换事件的数组同样可能以 Buffer 包装出现
+        if isinstance(equip, dict) and isinstance(equip.get("data"), list):
+            equip = equip["data"]
+        if isinstance(equip, list) and equip:
+            return [PlayerUpdated(player_id, {"equip": [_as_int(x) or 0 for x in equip]})]
+        return []
     if event in PARTY_CODES:
         return [PartyEvent(event, p)]
     return []

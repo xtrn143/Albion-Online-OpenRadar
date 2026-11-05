@@ -94,12 +94,29 @@ def radar_running(base_url: str, session=None) -> bool:
     return radar_state(base_url, session) is not None
 
 
+def radar_executable(radar_dir: str | Path) -> Path | None:
+    """优先用规范名 OpenRadar.exe，其次兼容官方 release 的 OpenRadar-windows-amd64.exe。"""
+    directory = Path(radar_dir)
+    canonical = directory / "OpenRadar.exe"
+    if canonical.exists():
+        return canonical
+    candidates = sorted(directory.glob("OpenRadar*.exe"))
+    return candidates[0] if candidates else None
+
+
 def start_radar(radar_dir: str | Path, popen=subprocess.Popen) -> bool:
-    exe = Path(radar_dir) / "OpenRadar.exe"
-    if not exe.exists():
+    exe = radar_executable(radar_dir)
+    if exe is None:
         return False
+    # OpenRadar 是控制台程序；不隐藏子进程控制台会在桌面上弹出黑框
+    hidden = {
+        "creationflags": getattr(subprocess, "CREATE_NO_WINDOW", 0),
+        "stdin": subprocess.DEVNULL,
+        "stdout": subprocess.DEVNULL,
+        "stderr": subprocess.DEVNULL,
+    }
     try:
-        popen([str(exe)], cwd=str(Path(radar_dir)))
+        popen([str(exe)], cwd=str(Path(radar_dir)), **hidden)
     except (OSError, subprocess.SubprocessError):
         return False
     return True

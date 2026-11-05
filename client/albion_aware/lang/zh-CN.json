@@ -54,6 +54,7 @@
   "diag.generic.one": "确认 Npcap 已安装并运行。",
   "diag.generic.two": "点「刷新并全选网卡」。",
   "diag.generic.three": "仍无数据时，点「复制诊断信息并打开反馈页」。",
+  "diag.no_radar": "没有找到 OpenRadar。请用安装包安装，或让 OpenRadar 文件夹和 AlbionAware.exe 放在同一目录。",
   "feedback.title": "反馈问题",
   "about.version": "版本 {version}",
   "about.license": "包含 OpenRadar（MIT，作者 Nouuu）",

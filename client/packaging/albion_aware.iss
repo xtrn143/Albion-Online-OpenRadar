@@ -1,4 +1,4 @@
-# client/packaging/albion_aware.iss
+; client/packaging/albion_aware.iss
 #define MyAppName "AlbionAware"
 #define MyAppVersion "0.1.0"
 #define MyAppPublisher "portaler.pages.dev"
@@ -16,12 +16,11 @@ OutputBaseFilename=AlbionAware-Setup-{#MyAppVersion}
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
-Languages: english,chinesesimplified
 LicenseFile=LICENSES\AlbionAware-MIT.txt
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
-Name: "chinesesimplified"; MessagesFile: "compiler:Languages\ChineseSimplified.isl"
+Name: "chinesesimplified"; MessagesFile: "Languages\ChineseSimplified.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
@@ -29,11 +28,9 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "..\dist\AlbionAware\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\data\items.min.json"; DestDir: "{app}\data"; Flags: ignoreversion
-Source: "..\OpenRadar\*"; DestDir: "{app}\OpenRadar"; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
 Source: "LICENSES\*"; DestDir: "{app}\LICENSES"; Flags: ignoreversion
 Source: "NOTICE.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "README.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "launcher.bat"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\AlbionAware.exe"

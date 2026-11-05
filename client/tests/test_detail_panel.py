@@ -15,7 +15,7 @@ def make_db(tmp_path):
 
 def test_equipment_entries_skip_empty_slots(tmp_path):
     db = make_db(tmp_path)
-    player = Player(id=1, equip=[1, 0, 0, 0, 0, 0, 0, 2, 3, 4])
+    player = Player(id=1, equip=[1, 0, 0, 0, 0, 2, 0, 0, 3, 4])
     entries = equipment_entries(player, db)
     assert [slot for slot, _id, _name in entries] == ["mainhand", "bag", "potion", "food"]
     assert entries[0][2] == "MAIN SWORD"

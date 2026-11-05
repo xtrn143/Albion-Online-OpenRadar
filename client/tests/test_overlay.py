@@ -1,4 +1,5 @@
-from albion_aware.overlay import GLOW_LAYERS, GLOW_STEP, PAD, ROW_H, WIDTH, OverlayWindow, format_ip, ip_color
+from albion_aware.overlay import (GLOW_LAYERS, GLOW_STEP, PAD, ROW_H, TOP_H, WIDTH,
+                                  OverlayWindow, format_ip, ip_color, sound_icon)
 
 
 class _FakeRoot:
@@ -17,7 +18,7 @@ def test_resize_keeps_negative_position():
     assert window._pos == (-120, 300)
     window._resize(6)
     glow = GLOW_LAYERS * GLOW_STEP * 2
-    assert window.root.geometries[-1] == f"{WIDTH}x{PAD * 2 + 6 * ROW_H + 8 + glow}+-120+300"
+    assert window.root.geometries[-1] == f"{WIDTH}x{PAD * 2 + 6 * ROW_H + TOP_H + glow}+-120+300"
 
 
 def test_ip_color_thresholds():
@@ -114,3 +115,55 @@ def test_glow_paints_every_layer():
     window._paint_glow(("#ff4b3e", "#e0331f", "#b52616", "#83200f", "#4e170b", "#261210"))
     assert [frame.bg for frame in window._glow] == ["#ff4b3e", "#e0331f", "#b52616", "#83200f", "#4e170b", "#261210"]
     assert window.border.bg == "#261210"
+
+
+def test_sound_icon_marks_muted_state_with_red_slash():
+    on = sound_icon(True)
+    off = sound_icon(False)
+    assert on.size == off.size == (12, 12)
+    assert on.getpixel((1, 1))[3] == 0
+
+    def has_red(image):
+        return any(r > 180 and g < 110 and a > 0 for r, g, b, a in image.getdata())
+
+    assert has_red(off) is True
+    assert has_red(on) is False
+
+
+class _FakeLabel:
+    def __init__(self):
+        self.kwargs = {}
+        self.packed = 0
+        self.forgotten = 0
+
+    def configure(self, **kwargs):
+        self.kwargs.update(kwargs)
+
+    def pack(self, **kwargs):
+        self.packed += 1
+
+    def pack_forget(self):
+        self.forgotten += 1
+
+
+def test_set_sound_swaps_icon_and_exposes_state():
+    window = OverlayWindow.__new__(OverlayWindow)
+    window._sound_on = False
+    window.sound_icon = _FakeLabel()
+    window._sound_images = {True: "on-image", False: "off-image"}
+    window.set_sound(True)
+    assert window.sound_on is True
+    assert window.sound_icon.kwargs["image"] == "on-image"
+    window.set_sound(False)
+    assert window.sound_on is False
+    assert window.sound_icon.kwargs["image"] == "off-image"
+
+
+def test_click_through_warning_icon_shows_only_when_enabled():
+    window = OverlayWindow.__new__(OverlayWindow)
+    window._click_through = False
+    window.click_icon = _FakeLabel()
+    window.set_click_through(True)
+    assert window.click_icon.packed == 1
+    window.set_click_through(False)
+    assert window.click_icon.forgotten == 1

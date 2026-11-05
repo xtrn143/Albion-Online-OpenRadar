@@ -75,6 +75,29 @@ def test_party_event_is_forwarded_raw():
     assert events[0].parameters["1"] == 12345
 
 
+def test_equipment_change_updates_slots():
+    events = parse_message(frame({
+        "252": 90, "0": 41475, "1": 33068615,
+        "2": [8408, 2358, 4134, 4081, 3650, 2888, 2510, 3029, 0, 0],
+    }))
+    assert isinstance(events[0], PlayerUpdated)
+    assert events[0].player_id == 41475
+    assert events[0].fields == {
+        "equip": [8408, 2358, 4134, 4081, 3650, 2888, 2510, 3029, 0, 0],
+    }
+
+
+def test_equipment_change_accepts_buffer_wrapper():
+    events = parse_message(frame({
+        "252": 90, "0": 7, "2": {"type": "Buffer", "data": [1, 2, 3]},
+    }))
+    assert events[0].fields == {"equip": [1, 2, 3]}
+
+
+def test_equipment_change_without_slots_is_ignored():
+    assert parse_message(frame({"252": 90, "0": 7})) == []
+
+
 def test_unknown_and_request_messages_are_ignored():
     assert parse_message(frame({"252": 999})) == []
     assert parse_message(frame({"252": 41}, kind="request")) == []

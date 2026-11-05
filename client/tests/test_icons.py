@@ -77,18 +77,52 @@ def test_badge_draws_in_lower_corner_without_resizing():
     assert draw_enchant_badge(image, 0) is image
 
 
-def test_slot_mapping_covers_all_detail_panel_slots():
+def test_slot_mapping_follows_game_protocol_order():
     assert EQUIP_SLOTS["mainhand"] == 0
-    assert EQUIP_SLOTS["bag"] == 7
+    assert EQUIP_SLOTS["offhand"] == 1
+    assert EQUIP_SLOTS["head"] == 2
+    assert EQUIP_SLOTS["chest"] == 3
+    assert EQUIP_SLOTS["shoes"] == 4
+    assert EQUIP_SLOTS["bag"] == 5
+    assert EQUIP_SLOTS["cape"] == 6
+    assert EQUIP_SLOTS["mount"] == 7
     assert EQUIP_SLOTS["potion"] == 8
     assert EQUIP_SLOTS["food"] == 9
-    assert COMBAT_SLOTS == (0, 1, 2, 3, 4, 8)
+    assert COMBAT_SLOTS == (0, 1, 2, 3, 4, 6)
 
 
-def test_average_ip_only_uses_combat_slots(tmp_path):
-    db = make_db(tmp_path)
-    equip = [1, 1, 1, 1, 1, 99, 99, 99, 2, 99]
-    assert db.average_ip(equip) == 900
+def combat_db(tmp_path):
+    path = tmp_path / "combat.json"
+    items = [
+        None,
+        {"n": "T8_2H_SWORD", "p": 1000, "h2": True, "t": "weapon", "cat": "weapons"},
+        {"n": "T8_HEAD", "p": 800, "t": "equipmentitem", "cat": "head"},
+        {"n": "T8_ARMOR", "p": 800, "t": "equipmentitem", "cat": "armors"},
+        {"n": "T8_SHOES", "p": 800, "t": "equipmentitem", "cat": "shoes"},
+        {"n": "T8_CAPE", "p": 800, "t": "equipmentitem", "cat": "capes"},
+        {"n": "T8_TOOL", "p": 500, "h2": True, "t": "weapon", "cat": "gathering"},
+    ]
+    path.write_text(json.dumps(items), encoding="utf-8")
+    return ItemDatabase.load(path)
+
+
+def test_average_ip_counts_six_slots_and_two_handed_weapon_twice(tmp_path):
+    db = combat_db(tmp_path)
+    # 主手双手武器占主手+副手两个槽
+    equip = [1, 0, 2, 3, 4, 0, 5, 0, 0, 0]
+    assert db.average_ip(equip) == round((1000 + 1000 + 800 + 800 + 800 + 800) / 6)
+
+
+def test_average_ip_treats_empty_slots_as_zero(tmp_path):
+    db = combat_db(tmp_path)
+    # 只有头衣鞋：其余三个槽记 0，而不是只除以 3
+    equip = [0, 0, 2, 3, 4]
+    assert db.average_ip(equip) == 400
+
+
+def test_average_ip_does_not_double_count_gathering_tool(tmp_path):
+    db = combat_db(tmp_path)
+    assert db.average_ip([6]) == round(500 / 6)
 
 
 def test_average_ip_returns_none_without_valid_items(tmp_path):
