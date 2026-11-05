@@ -1,3 +1,7 @@
+import json
+
+import pytest
+
 from albion_aware.map_index import (
     AvalonMapIndex,
     build_index_records,
@@ -121,3 +125,41 @@ def test_build_index_records_merges_zone_and_gallery():
     assert by_name["Hetitos-Iuaerom"]["icons"] == [
         {"alt": "GOLD", "badge": 0}, {"alt": "HIDE", "badge": 0}]
     assert by_name["Secent-Qi-Odesom"]["imgFile"] == ""
+
+
+def test_zone_ids_are_normalized():
+    entry = make_entry("Hetitos-Iuaerom", 6, (), "", ("tnl-225",))
+    index = AvalonMapIndex([entry])
+    assert index.by_zone("tnl-225").name == "Hetitos-Iuaerom"
+    assert index.by_zone("TNL-225") is entry
+
+
+def test_load_reads_index_json(tmp_path):
+    payload = {"version": 1, "maps": [
+        {"name": "Hetitos-Iuaerom", "tier": 6,
+         "icons": [{"alt": "HIRE", "badge": 2}],
+         "imgFile": "Hetitos-Iuaerom T6.webp", "zoneIds": ["TNL-225"]},
+        {"name": "Secent-Qi-Odesom", "tier": 4, "icons": [], "imgFile": "",
+         "zoneIds": ["TNL-377"]},
+    ]}
+    path = tmp_path / "index.json"
+    path.write_text(json.dumps(payload), encoding="utf-8")
+    index = AvalonMapIndex.load(path)
+    assert len(index.entries) == 2
+    assert index.by_zone("TNL-225").icons == (("HIDE", 2),)
+    assert index.by_name("Secent-Qi-Odesom").tier == 4
+
+
+def test_load_rejects_empty_index(tmp_path):
+    path = tmp_path / "index.json"
+    path.write_text(json.dumps({"version": 1, "maps": []}), encoding="utf-8")
+    with pytest.raises(ValueError):
+        AvalonMapIndex.load(path)
+
+
+def test_load_skips_dirty_records(tmp_path):
+    payload = {"maps": [{"name": ""}, {"name": "Cases-Ugumlos", "tier": 6}]}
+    path = tmp_path / "index.json"
+    path.write_text(json.dumps(payload), encoding="utf-8")
+    index = AvalonMapIndex.load(path)
+    assert [entry.name for entry in index.entries] == ["Cases-Ugumlos"]

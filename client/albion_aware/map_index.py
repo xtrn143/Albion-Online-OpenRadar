@@ -63,6 +63,7 @@ class MapHit:
 
 
 def make_entry(name, tier=0, icons=(), img_file="", zone_ids=()) -> MapEntry:
+    zones = tuple(str(zone).strip().upper() for zone in zone_ids if str(zone).strip())
     return MapEntry(
         name=str(name),
         tier=int(tier or 0),
@@ -70,7 +71,7 @@ def make_entry(name, tier=0, icons=(), img_file="", zone_ids=()) -> MapEntry:
         key3=key3(name),
         icons=tuple(icons),
         img_file=str(img_file or ""),
-        zone_ids=tuple(zone_ids),
+        zone_ids=zones,
     )
 
 
@@ -262,5 +263,5 @@ def build_index_records(zones: dict, gallery: list) -> list[dict]:
             if meta.get("img") else "",
             "zoneIds": [],
         })
-        record["zoneIds"].append(zone_id)
+        record["zoneIds"].append(str(zone_id).strip().upper())
     return list(records.values())
