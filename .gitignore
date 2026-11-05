@@ -118,3 +118,5 @@ __pycache__/
 # 图标由 client/tools/fetch_icons.py 生成，不入库
 /client/data/icons/
 /client/config.json
+# 阿瓦隆地图截图：构建前由 tools/sync_avalon_maps.py 生成，不入库
+/client/data/avalon/maps/

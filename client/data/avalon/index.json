@@ -1,0 +1,10430 @@
+{
+ "version": 1,
+ "generated_at": "2026-11-05T11:55:44Z",
+ "maps": [
+  {
+   "name": "Ouyos-Aoeuam",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Ouyos-Aoeuam t4.webp",
+   "zoneIds": [
+    "TNL-001"
+   ]
+  },
+  {
+   "name": "Coues-Exakrom",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 8
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Coues-Exakrom t4.webp",
+   "zoneIds": [
+    "TNL-002"
+   ]
+  },
+  {
+   "name": "Puros-Amayam",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 4
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Puros-Amayam T4.webp",
+   "zoneIds": [
+    "TNL-003"
+   ]
+  },
+  {
+   "name": "Pures-Ouozlum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Pures-Ouozlum.webp",
+   "zoneIds": [
+    "TNL-004"
+   ]
+  },
+  {
+   "name": "Soros-Axaesum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 7
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Soros-Axaesum T4.webp",
+   "zoneIds": [
+    "TNL-005"
+   ]
+  },
+  {
+   "name": "Huyos-Uxeulum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 8
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Huyos-Uxeulum t4.webp",
+   "zoneIds": [
+    "TNL-006"
+   ]
+  },
+  {
+   "name": "Ceres-Iooinum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 2
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Ceres-Iooinum t4.webp",
+   "zoneIds": [
+    "TNL-007"
+   ]
+  },
+  {
+   "name": "Cetos-Obaelos",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Cetos-Obaelos_T4.webp",
+   "zoneIds": [
+    "TNL-008"
+   ]
+  },
+  {
+   "name": "Oieos-Umiutum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Oieos-Umiutum t4.webp",
+   "zoneIds": [
+    "TNL-009"
+   ]
+  },
+  {
+   "name": "Sebos-Avoirom",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 8
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Sebos-Avoirom T4.webp",
+   "zoneIds": [
+    "TNL-010"
+   ]
+  },
+  {
+   "name": "Teros-Auiusum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 2
+    }
+   ],
+   "imgFile": "teros-auiusum.webp",
+   "zoneIds": [
+    "TNL-011"
+   ]
+  },
+  {
+   "name": "Oebos-Ixakaum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 4
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Oebos-Ixakaum T4.webp",
+   "zoneIds": [
+    "TNL-012"
+   ]
+  },
+  {
+   "name": "Touos-Uoemtum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Touos-Uoemtum T4.webp",
+   "zoneIds": [
+    "TNL-013"
+   ]
+  },
+  {
+   "name": "Xasos-Aeoilos",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 3
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Xasos-Aeoilos t4.webp",
+   "zoneIds": [
+    "TNL-014"
+   ]
+  },
+  {
+   "name": "Xuros-Eyoztum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Xuros-Eyoztum t4.webp",
+   "zoneIds": [
+    "TNL-015"
+   ]
+  },
+  {
+   "name": "Pasos-Avosam",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Pasos-Avosam t4.webp",
+   "zoneIds": [
+    "TNL-016"
+   ]
+  },
+  {
+   "name": "Oasos-Uromlum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Oasos-Uromlum t4.webp",
+   "zoneIds": [
+    "TNL-017"
+   ]
+  },
+  {
+   "name": "Casos-Uruxtum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Casos-Uruxtum t4.webp",
+   "zoneIds": [
+    "TNL-018"
+   ]
+  },
+  {
+   "name": "Ceros-Aeaylum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Ceros-Aeaylum t4.webp",
+   "zoneIds": [
+    "TNL-019"
+   ]
+  },
+  {
+   "name": "Xouos-Aioblos",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 3
+    }
+   ],
+   "imgFile": "Xouos-Aioblos T4.webp",
+   "zoneIds": [
+    "TNL-020"
+   ]
+  },
+  {
+   "name": "Oasos-Eraerom",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 4
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Oasos-Eraerom t4.webp",
+   "zoneIds": [
+    "TNL-021"
+   ]
+  },
+  {
+   "name": "Tetos-Igaelum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 7
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "tetos-igaelum.webp",
+   "zoneIds": [
+    "TNL-022"
+   ]
+  },
+  {
+   "name": "Hynos-Oiaelos",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 9
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Hynos-Oiaelos t6.webp",
+   "zoneIds": [
+    "TNL-023"
+   ]
+  },
+  {
+   "name": "Hebos-Ulamsum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "ROCK",
+     "badge": 2
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 2
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Hebos-Ulamsum T6.webp",
+   "zoneIds": [
+    "TNL-024"
+   ]
+  },
+  {
+   "name": "Hiros-Iuaerom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "HIDE",
+     "badge": 2
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Hiros-Iuaerom t6.webp",
+   "zoneIds": [
+    "TNL-025"
+   ]
+  },
+  {
+   "name": "Cynos-Avixnum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 7
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Cynos-Avixnum t6.webp",
+   "zoneIds": [
+    "TNL-026"
+   ]
+  },
+  {
+   "name": "Conos-Avaelum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 8
+    },
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Conos-Avaelum t6.webp",
+   "zoneIds": [
+    "TNL-027"
+   ]
+  },
+  {
+   "name": "Tetos-Ulaurom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 8
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 2
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Tetos-Ulaurom t6.webp",
+   "zoneIds": [
+    "TNL-028"
+   ]
+  },
+  {
+   "name": "Oures-Araosum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 3
+    }
+   ],
+   "imgFile": "Oures-Araosum t6.webp",
+   "zoneIds": [
+    "TNL-029"
+   ]
+  },
+  {
+   "name": "Hures-Ugumtum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 8
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Hures-Ugumtum T6.webp",
+   "zoneIds": [
+    "TNL-030"
+   ]
+  },
+  {
+   "name": "Hasos-Iuimaum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "LOGS",
+     "badge": 2
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Hasos-Iuimaum t6.webp",
+   "zoneIds": [
+    "TNL-031"
+   ]
+  },
+  {
+   "name": "Foros-Egoisum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Foros-Egoisum t6.webp",
+   "zoneIds": [
+    "TNL-032"
+   ]
+  },
+  {
+   "name": "Hasos-Agoitum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Hasos-Agoitum t6.webp",
+   "zoneIds": [
+    "TNL-033"
+   ]
+  },
+  {
+   "name": "Setos-Avamsum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Setos-Avamsum t6.webp",
+   "zoneIds": [
+    "TNL-034"
+   ]
+  },
+  {
+   "name": "Tonos-Obayam",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "BLUE",
+     "badge": 3
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Tonos-Obayam T6.webp",
+   "zoneIds": [
+    "TNL-035"
+   ]
+  },
+  {
+   "name": "Honos-Umayaum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "COTTON",
+     "badge": 2
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Honos-Umayaum t6.webp",
+   "zoneIds": [
+    "TNL-036"
+   ]
+  },
+  {
+   "name": "Huyes-Ogozlum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "HIDE",
+     "badge": 2
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Huyes-Ogozlum T6.webp",
+   "zoneIds": [
+    "TNL-037"
+   ]
+  },
+  {
+   "name": "Curos-Avulsum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Curos-Avulsum t6.webp",
+   "zoneIds": [
+    "TNL-038"
+   ]
+  },
+  {
+   "name": "Cebos-Avemlum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    }
+   ],
+   "imgFile": "cebos-avemlum.webp",
+   "zoneIds": [
+    "TNL-039"
+   ]
+  },
+  {
+   "name": "Hasos-Inayaum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Hasos-Inayaum t6.webp",
+   "zoneIds": [
+    "TNL-040"
+   ]
+  },
+  {
+   "name": "Sasos-Egeylos",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Sasos-Egeylos t6.webp",
+   "zoneIds": [
+    "TNL-041"
+   ]
+  },
+  {
+   "name": "Coros-Aiayrom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Coros-Aiayrom T6.webp",
+   "zoneIds": [
+    "TNL-042"
+   ]
+  },
+  {
+   "name": "Hiros-Exozlos",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "HIDE",
+     "badge": 3
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Hiros-Exozlos t6.webp",
+   "zoneIds": [
+    "TNL-043"
+   ]
+  },
+  {
+   "name": "Tiros-Ouultum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 4
+    },
+    {
+     "alt": "HIDE",
+     "badge": 2
+    },
+    {
+     "alt": "ORE",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Tiros-Ouultum T6.webp",
+   "zoneIds": [
+    "TNL-044"
+   ]
+  },
+  {
+   "name": "Cases-Ugumlos",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Cases-Ugumlos T6.webp",
+   "zoneIds": [
+    "TNL-045"
+   ]
+  },
+  {
+   "name": "Fynes-Unavtum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 3
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 3
+    }
+   ],
+   "imgFile": "Fynes-Unavtum t6.webp",
+   "zoneIds": [
+    "TNL-046"
+   ]
+  },
+  {
+   "name": "Fetos-Aiaylos",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 4
+    }
+   ],
+   "imgFile": "Fetos-Aiaylos T6.webp",
+   "zoneIds": [
+    "TNL-047"
+   ]
+  },
+  {
+   "name": "Fouos-Agosaum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Fouos-Agosaum t6.webp",
+   "zoneIds": [
+    "TNL-048"
+   ]
+  },
+  {
+   "name": "Huyos-Eyoztum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 2
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Huyos-eyoztum t6.webp",
+   "zoneIds": [
+    "TNL-049"
+   ]
+  },
+  {
+   "name": "Poues-Unatam",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Poues-Unatam T6.webp",
+   "zoneIds": [
+    "TNL-050"
+   ]
+  },
+  {
+   "name": "Fouos-Amaurom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Fouos-Amaurom T6.webp",
+   "zoneIds": [
+    "TNL-051"
+   ]
+  },
+  {
+   "name": "Suyos-Onaytum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Suyos-Onaytum t6.webp",
+   "zoneIds": [
+    "TNL-052"
+   ]
+  },
+  {
+   "name": "Xasos-Oneulum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "HIDE",
+     "badge": 2
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Xasos-Oneulum t6.webp",
+   "zoneIds": [
+    "TNL-053"
+   ]
+  },
+  {
+   "name": "Oynos-Oyozam",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 3
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Oynos-Oyozam t6.webp",
+   "zoneIds": [
+    "TNL-054"
+   ]
+  },
+  {
+   "name": "Coros-Atinaum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 3
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Coros-Atinaum t6 v2.webp",
+   "zoneIds": [
+    "TNL-055"
+   ]
+  },
+  {
+   "name": "Sasos-Oiozlum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 3
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Sasos-Oiozlum T6.webp",
+   "zoneIds": [
+    "TNL-056"
+   ]
+  },
+  {
+   "name": "Xynos-Oyogam",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Xynos-Oyogam T6.webp",
+   "zoneIds": [
+    "TNL-057"
+   ]
+  },
+  {
+   "name": "Cynos-Oxaeaum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Cynos-Oxaeaum T4.webp",
+   "zoneIds": [
+    "TNL-058"
+   ]
+  },
+  {
+   "name": "Tynos-Atatlos",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 3
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Tynos-Atatlos t4.webp",
+   "zoneIds": [
+    "TNL-059"
+   ]
+  },
+  {
+   "name": "Firos-Enomaum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "firos-enomaum t4.webp",
+   "zoneIds": [
+    "TNL-060"
+   ]
+  },
+  {
+   "name": "Hynes-Exemrom",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 2
+    },
+    {
+     "alt": "ORE",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Hynes-Exemrom t4.webp",
+   "zoneIds": [
+    "TNL-061"
+   ]
+  },
+  {
+   "name": "Hebes-Ouaylos",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 8
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Hebes-Ouaylos t4.webp",
+   "zoneIds": [
+    "TNL-062"
+   ]
+  },
+  {
+   "name": "Foues-Aeaosum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Foues-Aeaosum t4.webp",
+   "zoneIds": [
+    "TNL-063"
+   ]
+  },
+  {
+   "name": "Xilos-Osayam",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Xilos-Osayam t6.webp",
+   "zoneIds": [
+    "TNL-064"
+   ]
+  },
+  {
+   "name": "Casos-Ayosrom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "LOGS",
+     "badge": 2
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Casos-Ayosrom T6.webp",
+   "zoneIds": [
+    "TNL-065"
+   ]
+  },
+  {
+   "name": "Souos-Ososlos",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 4
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Souos-Ososlos t6.webp",
+   "zoneIds": [
+    "TNL-066"
+   ]
+  },
+  {
+   "name": "Xebos-Emimsum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 4
+    },
+    {
+     "alt": "ORE",
+     "badge": 2
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Xebos-Emimsum T6.webp",
+   "zoneIds": [
+    "TNL-067"
+   ]
+  },
+  {
+   "name": "Oetos-Oyexlos",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 4
+    },
+    {
+     "alt": "LOGS",
+     "badge": 2
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "OETOS-OYEXLOS - T6.webp",
+   "zoneIds": [
+    "TNL-068"
+   ]
+  },
+  {
+   "name": "Xebos-Exostum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Xebos-Exostum t6.webp",
+   "zoneIds": [
+    "TNL-069"
+   ]
+  },
+  {
+   "name": "Tynos-Eyexrom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    },
+    {
+     "alt": "ROCK",
+     "badge": 2
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Tynos-Eyexrom t6 v2.webp",
+   "zoneIds": [
+    "TNL-070"
+   ]
+  },
+  {
+   "name": "Casos-Aximam",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "ORE",
+     "badge": 2
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Casos-Aximam t6.webp",
+   "zoneIds": [
+    "TNL-071"
+   ]
+  },
+  {
+   "name": "Hasos-Ayousum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Hasos-Ayousum T6.webp",
+   "zoneIds": [
+    "TNL-072"
+   ]
+  },
+  {
+   "name": "Fasos-Ayiotum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Fasos-Ayiotum T6.webp",
+   "zoneIds": [
+    "TNL-073"
+   ]
+  },
+  {
+   "name": "Pebos-Avosrom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 2
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 4
+    }
+   ],
+   "imgFile": "Pebos-Avosrom t6.webp",
+   "zoneIds": [
+    "TNL-074"
+   ]
+  },
+  {
+   "name": "Sases-Avuotum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Sases-Avuotum t6.webp",
+   "zoneIds": [
+    "TNL-075"
+   ]
+  },
+  {
+   "name": "Xases-Oxoulum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Xases-Oxoulum T6.webp",
+   "zoneIds": [
+    "TNL-076"
+   ]
+  },
+  {
+   "name": "Hieos-Avaolum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Hieos-Avaolum T6.webp",
+   "zoneIds": [
+    "TNL-077"
+   ]
+  },
+  {
+   "name": "Xasos-Aoemaum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 4
+    },
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Xasos-Aoemaum T6.webp",
+   "zoneIds": [
+    "TNL-078"
+   ]
+  },
+  {
+   "name": "Hasos-Osuorom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Hasos-Osuorom t6.webp",
+   "zoneIds": [
+    "TNL-079"
+   ]
+  },
+  {
+   "name": "Oynos-Eramtum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 2
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Oynos-Eramtum t6.webp",
+   "zoneIds": [
+    "TNL-080"
+   ]
+  },
+  {
+   "name": "Couos-Ayayaum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Couos-Ayayaum t6.webp",
+   "zoneIds": [
+    "TNL-081"
+   ]
+  },
+  {
+   "name": "Siros-Obobrom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Siros-Obobrom t6.webp",
+   "zoneIds": [
+    "TNL-082"
+   ]
+  },
+  {
+   "name": "Souos-Umogaum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 2
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Souos-Umogaum T4.webp",
+   "zoneIds": [
+    "TNL-083"
+   ]
+  },
+  {
+   "name": "Cilos-Avioaum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 2
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Cilos-Avioaum t4.webp",
+   "zoneIds": [
+    "TNL-084"
+   ]
+  },
+  {
+   "name": "Fonos-Aiugsum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "ROCK",
+     "badge": 2
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Fonos-Aiugsum T4.webp",
+   "zoneIds": [
+    "TNL-085"
+   ]
+  },
+  {
+   "name": "Synos-Ayailos",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 1
+    },
+    {
+     "alt": "GREEN",
+     "badge": 7
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 1
+    }
+   ],
+   "imgFile": "Synos-Ayailos t4.webp",
+   "zoneIds": [
+    "TNL-086"
+   ]
+  },
+  {
+   "name": "Xiles-Aiavlum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Xiles-Aiavlum T4.webp",
+   "zoneIds": [
+    "TNL-087"
+   ]
+  },
+  {
+   "name": "Sases-Aoarsum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 2
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Sases-Aorsum t4.webp",
+   "zoneIds": [
+    "TNL-088"
+   ]
+  },
+  {
+   "name": "Casos-Aiagsum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 2
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Casos-Aiagsum T4.webp",
+   "zoneIds": [
+    "TNL-089"
+   ]
+  },
+  {
+   "name": "Tieos-Ayoslum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Tieos-Ayoslum t4.webp",
+   "zoneIds": [
+    "TNL-090"
+   ]
+  },
+  {
+   "name": "Hieos-Aiigaum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 2
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Hieos-Aiigaum T4.webp",
+   "zoneIds": [
+    "TNL-091"
+   ]
+  },
+  {
+   "name": "Poros-Aiayrom",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 4
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 3
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Poros-Aiayrom t4.webp",
+   "zoneIds": [
+    "TNL-092"
+   ]
+  },
+  {
+   "name": "Cilos-Ofailos",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Cilos-Ofailos T4.webp",
+   "zoneIds": [
+    "TNL-093"
+   ]
+  },
+  {
+   "name": "Silos-Apenlum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "LOGS",
+     "badge": 2
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Silos-Apenlum t4.webp",
+   "zoneIds": [
+    "TNL-094"
+   ]
+  },
+  {
+   "name": "Fynos-Alodrom",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 3
+    }
+   ],
+   "imgFile": "Fynos-Alodrom T4.webp",
+   "zoneIds": [
+    "TNL-095"
+   ]
+  },
+  {
+   "name": "Firos-Ezatam",
+   "tier": 8,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 4
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "firos-ezatam.webp",
+   "zoneIds": [
+    "TNL-096"
+   ]
+  },
+  {
+   "name": "Firos-Osinsum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 3
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Firos-Osinsum t6.webp",
+   "zoneIds": [
+    "TNL-097"
+   ]
+  },
+  {
+   "name": "Soues-Uzurtum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 3
+    },
+    {
+     "alt": "COTTON",
+     "badge": 2
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Soues-Uzurtum t6.webp",
+   "zoneIds": [
+    "TNL-098"
+   ]
+  },
+  {
+   "name": "Ooros-Ataltum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Ooros-Ataltum t6.webp",
+   "zoneIds": [
+    "TNL-099"
+   ]
+  },
+  {
+   "name": "Hynes-Ieatun",
+   "tier": 8,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Hynes-Ieatun t8.webp",
+   "zoneIds": [
+    "TNL-100"
+   ]
+  },
+  {
+   "name": "Fuyes-Izohun",
+   "tier": 8,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Fuyes-Izohun T8.webp",
+   "zoneIds": [
+    "TNL-101"
+   ]
+  },
+  {
+   "name": "Xetos-Obursum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "xetos-obursum t6.webp",
+   "zoneIds": [
+    "TNL-102"
+   ]
+  },
+  {
+   "name": "Oetos-Ofailos",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 4
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 3
+    }
+   ],
+   "imgFile": "Oetos-Ofailos t6.webp",
+   "zoneIds": [
+    "TNL-103"
+   ]
+  },
+  {
+   "name": "Tynos-Igurlum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Tynos-Igurlum T6.webp",
+   "zoneIds": [
+    "TNL-104"
+   ]
+  },
+  {
+   "name": "Puros-Ofavam",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 4
+    }
+   ],
+   "imgFile": "Puros-_Ofavam_T6.webp",
+   "zoneIds": [
+    "TNL-105"
+   ]
+  },
+  {
+   "name": "Setos-Aiaitum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Setos-Aiaitum T6.webp",
+   "zoneIds": [
+    "TNL-106"
+   ]
+  },
+  {
+   "name": "Tynos-Uxavrom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 4
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Tynos-Uxavrom T6.webp",
+   "zoneIds": [
+    "TNL-107"
+   ]
+  },
+  {
+   "name": "Souos-Availos",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Souos-Availos t6.webp",
+   "zoneIds": [
+    "TNL-108"
+   ]
+  },
+  {
+   "name": "Sebos-Ugersum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "LOGS",
+     "badge": 2
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Sebos-Ugersum T6.webp",
+   "zoneIds": [
+    "TNL-109"
+   ]
+  },
+  {
+   "name": "Peros-Aiataum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Peros-Aiataum-T6.webp",
+   "zoneIds": [
+    "TNL-110"
+   ]
+  },
+  {
+   "name": "Pieos-Ofairom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Pieos-Ofairom t6.webp",
+   "zoneIds": [
+    "TNL-111"
+   ]
+  },
+  {
+   "name": "Sieos-Ofugtum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 3
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "sieos-ofugtum t6.webp",
+   "zoneIds": [
+    "TNL-112"
+   ]
+  },
+  {
+   "name": "Tasos-Iriglos",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Tasos-Iriglos T6.webp",
+   "zoneIds": [
+    "TNL-113"
+   ]
+  },
+  {
+   "name": "Tiros-Odoxlum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 2
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Tiros-Odoxlum t6.webp",
+   "zoneIds": [
+    "TNL-114"
+   ]
+  },
+  {
+   "name": "Xases-Ataglos",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Xases-Ataglos T6.webp",
+   "zoneIds": [
+    "TNL-115"
+   ]
+  },
+  {
+   "name": "Oires-Oloblum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 3
+    }
+   ],
+   "imgFile": "Oires-Oloblum t6.webp",
+   "zoneIds": [
+    "TNL-116"
+   ]
+  },
+  {
+   "name": "Firos-Aiavam",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Firos-Aiavam T6.webp",
+   "zoneIds": [
+    "TNL-117"
+   ]
+  },
+  {
+   "name": "Heros-Atoyam",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 3
+    }
+   ],
+   "imgFile": "Heros-Atoyam t6.webp",
+   "zoneIds": [
+    "TNL-118"
+   ]
+  },
+  {
+   "name": "Petos-Aietam",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 4
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Petos-Aietam t6.webp",
+   "zoneIds": [
+    "TNL-119"
+   ]
+  },
+  {
+   "name": "Touos-Ataglos",
+   "tier": 8,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 9
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Touos-Ataglos t8.webp",
+   "zoneIds": [
+    "TNL-120"
+   ]
+  },
+  {
+   "name": "Poros-Oconun",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 3
+    }
+   ],
+   "imgFile": "Poros-oconun.webp",
+   "zoneIds": [
+    "TNL-121"
+   ]
+  },
+  {
+   "name": "Honos-Oyezam",
+   "tier": 8,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Honos-Oyezam T8.webp",
+   "zoneIds": [
+    "TNL-122"
+   ]
+  },
+  {
+   "name": "Fieos-Atezsum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Fieos-Atezsum T4.webp",
+   "zoneIds": [
+    "TNL-123"
+   ]
+  },
+  {
+   "name": "Ooros-Ecunsum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 3
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Ooros-Ecunsum t4.webp",
+   "zoneIds": [
+    "TNL-124"
+   ]
+  },
+  {
+   "name": "Coros-Alieam",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Coros-Alieam_T4.webp",
+   "zoneIds": [
+    "TNL-125"
+   ]
+  },
+  {
+   "name": "Couos-Opodam",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 3
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Couos-Opodam T6.webp",
+   "zoneIds": [
+    "TNL-126"
+   ]
+  },
+  {
+   "name": "Horos-Ohenlum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Horos-Ohenlum t6.webp",
+   "zoneIds": [
+    "TNL-127"
+   ]
+  },
+  {
+   "name": "Files-Azazsum",
+   "tier": 8,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 7
+    },
+    {
+     "alt": "ORE",
+     "badge": 2
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Files-Azazsum t8.webp",
+   "zoneIds": [
+    "TNL-128"
+   ]
+  },
+  {
+   "name": "Sasos-Abizaum",
+   "tier": 8,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "GOLD",
+     "badge": 3
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Sasos-Abizaum T8.webp",
+   "zoneIds": [
+    "TNL-129"
+   ]
+  },
+  {
+   "name": "Fones-Opavun",
+   "tier": 8,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 3
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Fones-Opavun t8.webp",
+   "zoneIds": [
+    "TNL-130"
+   ]
+  },
+  {
+   "name": "Fiees-Ohohtum",
+   "tier": 8,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "ROCK",
+     "badge": 2
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Fiees-Ohohtum t8.webp",
+   "zoneIds": [
+    "TNL-131"
+   ]
+  },
+  {
+   "name": "Siros-Ofurlos",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "COTTON",
+     "badge": 2
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Siros-Ofurlos T6.webp",
+   "zoneIds": [
+    "TNL-132"
+   ]
+  },
+  {
+   "name": "Oiros-Alaiam",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Oiros-Alaiam T6.webp",
+   "zoneIds": [
+    "TNL-133"
+   ]
+  },
+  {
+   "name": "Xiros-Aiairom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "xiros-aiairom t6.webp",
+   "zoneIds": [
+    "TNL-134"
+   ]
+  },
+  {
+   "name": "Silos-Oyarlum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Silos-Oyarlum T6.webp",
+   "zoneIds": [
+    "TNL-135"
+   ]
+  },
+  {
+   "name": "Fonos-Oleraum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 3
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Fonos-Oleraum t6.webp",
+   "zoneIds": [
+    "TNL-136"
+   ]
+  },
+  {
+   "name": "Fieos-Aiuttum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 3
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Fieos-Aiuttum t6.webp",
+   "zoneIds": [
+    "TNL-137"
+   ]
+  },
+  {
+   "name": "Filos-Abalam",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Filos-Abalam T4.webp",
+   "zoneIds": [
+    "TNL-138"
+   ]
+  },
+  {
+   "name": "Synos-Oyarlos",
+   "tier": 8,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Synos-Oyarlos T8.webp",
+   "zoneIds": [
+    "TNL-139"
+   ]
+  },
+  {
+   "name": "Febos-Acalun",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 3
+    }
+   ],
+   "imgFile": "Febos-Acalun t4.webp",
+   "zoneIds": [
+    "TNL-140"
+   ]
+  },
+  {
+   "name": "Pieos-Eterrom",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "ROCK",
+     "badge": 2
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Pieos-Eterrom T4.webp",
+   "zoneIds": [
+    "TNL-141"
+   ]
+  },
+  {
+   "name": "Feros-Oyuctum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 3
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Feros-Oyuctum t6.webp",
+   "zoneIds": [
+    "TNL-142"
+   ]
+  },
+  {
+   "name": "Pynos-Opabrom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 4
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Pynos-Opabrom t6.webp",
+   "zoneIds": [
+    "TNL-143"
+   ]
+  },
+  {
+   "name": "Foros-Uzazlum",
+   "tier": 8,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Foros-Uzazlum t8.webp",
+   "zoneIds": [
+    "TNL-144"
+   ]
+  },
+  {
+   "name": "Cieos-Atatlum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Cieos-Atatlum t6.webp",
+   "zoneIds": [
+    "TNL-145"
+   ]
+  },
+  {
+   "name": "Huros-Atontum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Huros-Atontum t6.webp",
+   "zoneIds": [
+    "TNL-146"
+   ]
+  },
+  {
+   "name": "Tonos-Aboysum",
+   "tier": 8,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Tonos-Aboysum T8.webp",
+   "zoneIds": [
+    "TNL-147"
+   ]
+  },
+  {
+   "name": "Hiles-Izizaum",
+   "tier": 8,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "LOGS",
+     "badge": 2
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Hiles-Izizaum T8.webp",
+   "zoneIds": [
+    "TNL-148"
+   ]
+  },
+  {
+   "name": "Sebos-Oyohun",
+   "tier": 8,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Sebos-Oyohun t8.webp",
+   "zoneIds": [
+    "TNL-149"
+   ]
+  },
+  {
+   "name": "Cilos-Otatrom",
+   "tier": 8,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "LOGS",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Cilos-Otatrom t8.webp",
+   "zoneIds": [
+    "TNL-150"
+   ]
+  },
+  {
+   "name": "Quaent-Vynsum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Quaent-Vynsum T6.webp",
+   "zoneIds": [
+    "TNL-151"
+   ]
+  },
+  {
+   "name": "Quaent-Tersis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Quaent-Tersis T6.webp",
+   "zoneIds": [
+    "TNL-152"
+   ]
+  },
+  {
+   "name": "Quaent-Viesom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "ORE",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Quaent-Viesom T6.webp",
+   "zoneIds": [
+    "TNL-153"
+   ]
+  },
+  {
+   "name": "Quatun-Nusas",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "ROCK",
+     "badge": 2
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Quatun-Nusas T6.webp",
+   "zoneIds": [
+    "TNL-154"
+   ]
+  },
+  {
+   "name": "Quaent-Qintis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Quaent-Qintis t6.webp",
+   "zoneIds": [
+    "TNL-155"
+   ]
+  },
+  {
+   "name": "Quatun-Odetum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Quatun-Odetum T6.webp",
+   "zoneIds": [
+    "TNL-156"
+   ]
+  },
+  {
+   "name": "Quaent-Al-Odesum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Quaent-Al-Odesum T6.webp",
+   "zoneIds": [
+    "TNL-157"
+   ]
+  },
+  {
+   "name": "Quaent-Al-Nusis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "quaent-al-nusis t6.webp",
+   "zoneIds": [
+    "TNL-158"
+   ]
+  },
+  {
+   "name": "Qiient-Tersom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Qiient-Tersom t6.webp",
+   "zoneIds": [
+    "TNL-159"
+   ]
+  },
+  {
+   "name": "Qiient-Odesas",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Qiient-Odesas T6.webp",
+   "zoneIds": [
+    "TNL-160"
+   ]
+  },
+  {
+   "name": "Qiient-Nutis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Qiient-Nutis t6.webp",
+   "zoneIds": [
+    "TNL-161"
+   ]
+  },
+  {
+   "name": "Qiient-Vyntum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Qiient-Vyntum T6.webp",
+   "zoneIds": [
+    "TNL-162"
+   ]
+  },
+  {
+   "name": "Qiient-Al-Odesum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Qiient-Al-Odesum T6.webp",
+   "zoneIds": [
+    "TNL-163"
+   ]
+  },
+  {
+   "name": "Qiient-Al-Vynsis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Qiient-Al-Vynsis t6.webp",
+   "zoneIds": [
+    "TNL-164"
+   ]
+  },
+  {
+   "name": "Qiitun-Et-Vynsom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Qiitun-Et-Vynsom T6.webp",
+   "zoneIds": [
+    "TNL-165"
+   ]
+  },
+  {
+   "name": "Qiient-Al-Tersas",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Qiient-Al-Tersas T6.webp",
+   "zoneIds": [
+    "TNL-166"
+   ]
+  },
+  {
+   "name": "Qiitun-Vietis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Qiitun-Vietis t6.webp",
+   "zoneIds": [
+    "TNL-167"
+   ]
+  },
+  {
+   "name": "Qiient-Et-Tertum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Qiient-Et-Tertum T6.webp",
+   "zoneIds": [
+    "TNL-168"
+   ]
+  },
+  {
+   "name": "Qiient-Qinsum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "LOGS",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Qiient-Qinsum T6.webp",
+   "zoneIds": [
+    "TNL-169"
+   ]
+  },
+  {
+   "name": "Qiient-Al-Viesis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Qiient-Al-Viesis T6.webp",
+   "zoneIds": [
+    "TNL-170"
+   ]
+  },
+  {
+   "name": "Qiient-Al-Nusom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Qiient-Al-Nusom t6.webp",
+   "zoneIds": [
+    "TNL-171"
+   ]
+  },
+  {
+   "name": "Qiient-Et-Nusas",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Qiient-Et-Nusas t6.webp",
+   "zoneIds": [
+    "TNL-172"
+   ]
+  },
+  {
+   "name": "Qiient-Et-Odetis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Qiient-Et-Odetis T6.webp",
+   "zoneIds": [
+    "TNL-173"
+   ]
+  },
+  {
+   "name": "Qiient-In-Odetum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Qiient-In-Odetum T6.webp",
+   "zoneIds": [
+    "TNL-174"
+   ]
+  },
+  {
+   "name": "Qiitun-Duosum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Qiitun-Duosum t6.webp",
+   "zoneIds": [
+    "TNL-175"
+   ]
+  },
+  {
+   "name": "Qiient-Al-Qinsis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Qiient-Al-Qinsis t6.webp",
+   "zoneIds": [
+    "TNL-176"
+   ]
+  },
+  {
+   "name": "Secent-Odesom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Secent-Odesom t6.webp",
+   "zoneIds": [
+    "TNL-177"
+   ]
+  },
+  {
+   "name": "Sectun-Tersas",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "sectun-tersas t6.webp",
+   "zoneIds": [
+    "TNL-178"
+   ]
+  },
+  {
+   "name": "Secent-Al-Odetis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Secent-AI-Odetis.webp",
+   "zoneIds": [
+    "TNL-179"
+   ]
+  },
+  {
+   "name": "Secent-Vyntum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Secent-Vyntum T6.webp",
+   "zoneIds": [
+    "TNL-180"
+   ]
+  },
+  {
+   "name": "Secent-Viesum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "HIDE",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Secent-Viesum t6.webp",
+   "zoneIds": [
+    "TNL-181"
+   ]
+  },
+  {
+   "name": "Secent-Et-Odesis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Secent-Et-Odesis T6.webp",
+   "zoneIds": [
+    "TNL-182"
+   ]
+  },
+  {
+   "name": "Sectun-Qinsom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Sectun-Qinsom t6.webp",
+   "zoneIds": [
+    "TNL-183"
+   ]
+  },
+  {
+   "name": "Secent-Al-Qinsom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Secent-Al-Qinsom T6.webp",
+   "zoneIds": [
+    "TNL-184"
+   ]
+  },
+  {
+   "name": "Sectun-Al-Vyntis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Sectun-Al-Vyntis T6.webp",
+   "zoneIds": [
+    "TNL-185"
+   ]
+  },
+  {
+   "name": "Secent-Nutum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Secent-Nutum T6.webp",
+   "zoneIds": [
+    "TNL-186"
+   ]
+  },
+  {
+   "name": "Secent-Al-Tersum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Secent-al-tersum t6.webp",
+   "zoneIds": [
+    "TNL-187"
+   ]
+  },
+  {
+   "name": "Sectun-In-Odesis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Sectun-In-Odesis t6.webp",
+   "zoneIds": [
+    "TNL-188"
+   ]
+  },
+  {
+   "name": "Secent-Duosom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Secent-Duosom T6.webp",
+   "zoneIds": [
+    "TNL-189"
+   ]
+  },
+  {
+   "name": "Secent-Et-Qinsas",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Secent-Et-Qinsas T6.webp",
+   "zoneIds": [
+    "TNL-190"
+   ]
+  },
+  {
+   "name": "Setent-Vietis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Setent-Vietis T6.webp",
+   "zoneIds": [
+    "TNL-191"
+   ]
+  },
+  {
+   "name": "Settun-Odetum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 5
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Settun-Odetum T6.webp",
+   "zoneIds": [
+    "TNL-192"
+   ]
+  },
+  {
+   "name": "Setent-Nusum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Setent-Nusum t6.webp",
+   "zoneIds": [
+    "TNL-193"
+   ]
+  },
+  {
+   "name": "Settun-Vynsis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Settun-Vynsis T6.webp",
+   "zoneIds": [
+    "TNL-194"
+   ]
+  },
+  {
+   "name": "Settun-Tersom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Settun-Tersom t6.webp",
+   "zoneIds": [
+    "TNL-195"
+   ]
+  },
+  {
+   "name": "Setent-Duosas",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "",
+   "zoneIds": [
+    "TNL-196"
+   ]
+  },
+  {
+   "name": "Setent-Qintis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "LOGS",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Setent-Qintis t6.webp",
+   "zoneIds": [
+    "TNL-197"
+   ]
+  },
+  {
+   "name": "Settun-Al-Odetum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Settun-Al-Odetum t6.webp",
+   "zoneIds": [
+    "TNL-198"
+   ]
+  },
+  {
+   "name": "Setent-Al-Qinsum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Setent-Al-Qinsum T6.webp",
+   "zoneIds": [
+    "TNL-199"
+   ]
+  },
+  {
+   "name": "Settun-Al-Nusis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Settun-AL-Nusis T6.webp",
+   "zoneIds": [
+    "TNL-200"
+   ]
+  },
+  {
+   "name": "Oasitos-Aoeuam",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Oasitos-Aoeuam t4.webp",
+   "zoneIds": [
+    "TNL-201"
+   ]
+  },
+  {
+   "name": "Curites-Exakrom",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 8
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Curites-Exakrom t4.webp",
+   "zoneIds": [
+    "TNL-202"
+   ]
+  },
+  {
+   "name": "Petitos-Amayam",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 4
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Petitos-Amayam t4.webp",
+   "zoneIds": [
+    "TNL-203"
+   ]
+  },
+  {
+   "name": "Pynites-Ouozlum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Pynites-Ouozlum t4.webp",
+   "zoneIds": [
+    "TNL-204"
+   ]
+  },
+  {
+   "name": "Suyitos-Axaesum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 7
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Suyitos-Axaesum T4.webp",
+   "zoneIds": [
+    "TNL-205"
+   ]
+  },
+  {
+   "name": "Honitos-Uxeulum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 8
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Honitos-Uxeulum T4.webp",
+   "zoneIds": [
+    "TNL-206"
+   ]
+  },
+  {
+   "name": "Cuyites-Iooinum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 2
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "cuyites-iooinum.webp",
+   "zoneIds": [
+    "TNL-207"
+   ]
+  },
+  {
+   "name": "Cieitos-Obaelos",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Cieitos-Obaelos t4.webp",
+   "zoneIds": [
+    "TNL-208"
+   ]
+  },
+  {
+   "name": "Oonitos-Umiutum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Oonitos-Umiutum t4.webp",
+   "zoneIds": [
+    "TNL-209"
+   ]
+  },
+  {
+   "name": "Siritos-Avoirom",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 8
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Siritos-Avoirom t4.webp",
+   "zoneIds": [
+    "TNL-210"
+   ]
+  },
+  {
+   "name": "Tuyitos-Auiusum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "ROCK",
+     "badge": 2
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Tuyitos-Auiusum t4.webp",
+   "zoneIds": [
+    "TNL-211"
+   ]
+  },
+  {
+   "name": "Oieitos-Ixakaum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 4
+    },
+    {
+     "alt": "LOGS",
+     "badge": 2
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "oieitos-ixakaum t4.webp",
+   "zoneIds": [
+    "TNL-212"
+   ]
+  },
+  {
+   "name": "Turitos-Uoemtum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Turitos-Uoemtum T4.webp",
+   "zoneIds": [
+    "TNL-213"
+   ]
+  },
+  {
+   "name": "Xouitos-Aeoilos",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 3
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Xouitos-Aeoilos T4.webp",
+   "zoneIds": [
+    "TNL-214"
+   ]
+  },
+  {
+   "name": "Xouitos-Eyoztum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Xouitos-Eyoztum T4.webp",
+   "zoneIds": [
+    "TNL-215"
+   ]
+  },
+  {
+   "name": "Peritos-Avosam",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Peritos-Avosam t4.webp",
+   "zoneIds": [
+    "TNL-216"
+   ]
+  },
+  {
+   "name": "Oynitos-Uromlum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Oynitos-Uromlum t4.webp",
+   "zoneIds": [
+    "TNL-217"
+   ]
+  },
+  {
+   "name": "Conitos-Uruxtum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Conitos-Uruxtum t4.webp",
+   "zoneIds": [
+    "TNL-218"
+   ]
+  },
+  {
+   "name": "Cebitos-Aeaylum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Cebitos-Aeaylum_t4.webp",
+   "zoneIds": [
+    "TNL-219"
+   ]
+  },
+  {
+   "name": "Xuyitos-Aioblos",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 3
+    }
+   ],
+   "imgFile": "Xuyitos-Aioblos T4.webp",
+   "zoneIds": [
+    "TNL-220"
+   ]
+  },
+  {
+   "name": "Oebitos-Eraerom",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 4
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Oebitos-Eraerom t4.webp",
+   "zoneIds": [
+    "TNL-221"
+   ]
+  },
+  {
+   "name": "Tebitos-Igaelum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 7
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Tebitos-Igaelum T4.webp",
+   "zoneIds": [
+    "TNL-222"
+   ]
+  },
+  {
+   "name": "Huritos-Oiaelos",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 9
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Huritos-Oiaelos t6.webp",
+   "zoneIds": [
+    "TNL-223"
+   ]
+  },
+  {
+   "name": "Hynitos-Ulamsum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "HIDE",
+     "badge": 2
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Hynitos-Ulamsum t6.webp",
+   "zoneIds": [
+    "TNL-224"
+   ]
+  },
+  {
+   "name": "Hetitos-Iuaerom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "HIDE",
+     "badge": 2
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Hetitos-Iuaerom T6.webp",
+   "zoneIds": [
+    "TNL-225"
+   ]
+  },
+  {
+   "name": "Cetitos-Avixnum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 7
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Cetitos-Avixnum t6.webp",
+   "zoneIds": [
+    "TNL-226"
+   ]
+  },
+  {
+   "name": "Casitos-Avaelum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 8
+    },
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Casitos-Avaelum T6.webp",
+   "zoneIds": [
+    "TNL-227"
+   ]
+  },
+  {
+   "name": "Tasitos-Ulaurom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 8
+    },
+    {
+     "alt": "ORE",
+     "badge": 2
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Tasitos-Ulaurom t6.webp",
+   "zoneIds": [
+    "TNL-228"
+   ]
+  },
+  {
+   "name": "Oynites-Araosum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 3
+    }
+   ],
+   "imgFile": "Oynites-Araosum T6.webp",
+   "zoneIds": [
+    "TNL-229"
+   ]
+  },
+  {
+   "name": "Hilites-Ugumtum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 8
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Hilites-Ugumtum t6.webp",
+   "zoneIds": [
+    "TNL-230"
+   ]
+  },
+  {
+   "name": "Huritos-Iuimaum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    },
+    {
+     "alt": "LOGS",
+     "badge": 2
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Huritos-Iuimaum T6.webp",
+   "zoneIds": [
+    "TNL-231"
+   ]
+  },
+  {
+   "name": "Fynitos-Egoisum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Fynitos-Egoisum t6.webp",
+   "zoneIds": [
+    "TNL-232"
+   ]
+  },
+  {
+   "name": "Huyitos-Agoitum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "huyitos-agoitum t6.webp",
+   "zoneIds": [
+    "TNL-233"
+   ]
+  },
+  {
+   "name": "Soritos-Avamsum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Soritos-Avamsum T6.webp",
+   "zoneIds": [
+    "TNL-234"
+   ]
+  },
+  {
+   "name": "Tasitos-Obayam",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 3
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Tasitos-Obayam T6.webp",
+   "zoneIds": [
+    "TNL-235"
+   ]
+  },
+  {
+   "name": "Hasitos-Umayaum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "COTTON",
+     "badge": 2
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Hasitos-Umayaum T6.webp",
+   "zoneIds": [
+    "TNL-236"
+   ]
+  },
+  {
+   "name": "Hynites-Ogozlum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "HIDE",
+     "badge": 2
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Hynites-Ogozlum T6.webp",
+   "zoneIds": [
+    "TNL-237"
+   ]
+  },
+  {
+   "name": "Ceritos-Avulsum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Ceritos-Avulsum T6.webp",
+   "zoneIds": [
+    "TNL-238"
+   ]
+  },
+  {
+   "name": "Coritos-Avemlum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Coritos-Avemlum t6.webp",
+   "zoneIds": [
+    "TNL-239"
+   ]
+  },
+  {
+   "name": "Heritos-Inayaum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Heritos-Inayaum T6.webp",
+   "zoneIds": [
+    "TNL-240"
+   ]
+  },
+  {
+   "name": "Seritos-Egeylos",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Seritos-Egeylos T6.webp",
+   "zoneIds": [
+    "TNL-241"
+   ]
+  },
+  {
+   "name": "Cetitos-Aiayrom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Cetitos-Aiayrom T6.webp",
+   "zoneIds": [
+    "TNL-242"
+   ]
+  },
+  {
+   "name": "Heritos-Exozlos",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "HIDE",
+     "badge": 3
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Heritos-Exozlos T6.webp",
+   "zoneIds": [
+    "TNL-243"
+   ]
+  },
+  {
+   "name": "Tieitos-Ouultum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 4
+    },
+    {
+     "alt": "HIDE",
+     "badge": 2
+    },
+    {
+     "alt": "ORE",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Tieitos-Ouultum T6.webp",
+   "zoneIds": [
+    "TNL-244"
+   ]
+  },
+  {
+   "name": "Cieites-Ugumlos",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Cieites-Ugumlos T6.webp",
+   "zoneIds": [
+    "TNL-245"
+   ]
+  },
+  {
+   "name": "Fieites-Unavtum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 2
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 3
+    }
+   ],
+   "imgFile": "Fieites-Unavtum t6.webp",
+   "zoneIds": [
+    "TNL-246"
+   ]
+  },
+  {
+   "name": "Foritos-Aiaylos",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 4
+    }
+   ],
+   "imgFile": "Foritos-Aiaylos t6.webp",
+   "zoneIds": [
+    "TNL-247"
+   ]
+  },
+  {
+   "name": "Fynitos-Agosaum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Fynitos-Agosaum T6.webp",
+   "zoneIds": [
+    "TNL-248"
+   ]
+  },
+  {
+   "name": "Heritos-Eyoztum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 2
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Heritos-Eyoztum T6.webp",
+   "zoneIds": [
+    "TNL-249"
+   ]
+  },
+  {
+   "name": "Pirites-Unatam",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Pirites-Unatam t6.webp",
+   "zoneIds": [
+    "TNL-250"
+   ]
+  },
+  {
+   "name": "Fonitos-Amaurom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Fonitos-Amaurom t6.webp",
+   "zoneIds": [
+    "TNL-251"
+   ]
+  },
+  {
+   "name": "Seritos-Onaytum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Seritos-Onaytum T6 V2.webp",
+   "zoneIds": [
+    "TNL-252"
+   ]
+  },
+  {
+   "name": "Xetitos-Oneulum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "HIDE",
+     "badge": 2
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Xetitos-Oneulum T6.webp",
+   "zoneIds": [
+    "TNL-253"
+   ]
+  },
+  {
+   "name": "Oebitos-Oyozam",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 3
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Oebitos-Oyozam_T6.webp",
+   "zoneIds": [
+    "TNL-254"
+   ]
+  },
+  {
+   "name": "Casitos-Atinaum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 3
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Casitos-Atinaum T6.webp",
+   "zoneIds": [
+    "TNL-255"
+   ]
+  },
+  {
+   "name": "Souitos-Oiozlum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 3
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Souitos-Oiozlum t6.webp",
+   "zoneIds": [
+    "TNL-256"
+   ]
+  },
+  {
+   "name": "Xebitos-Oyogam",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 2
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Xebitos-Oyogam t6.webp",
+   "zoneIds": [
+    "TNL-257"
+   ]
+  },
+  {
+   "name": "Conitos-Oxaeaum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Conitos-Oxaeaum T4.webp",
+   "zoneIds": [
+    "TNL-258"
+   ]
+  },
+  {
+   "name": "Turitos-Atatlos",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 3
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Turitos-Atatlos T4.webp",
+   "zoneIds": [
+    "TNL-259"
+   ]
+  },
+  {
+   "name": "Feritos-Enomaum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Feritos-Enomaum t4.webp",
+   "zoneIds": [
+    "TNL-260"
+   ]
+  },
+  {
+   "name": "Hebites-Exemrom",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "ORE",
+     "badge": 2
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Hebites-Exemrom T4.webp",
+   "zoneIds": [
+    "TNL-261"
+   ]
+  },
+  {
+   "name": "Hurites-Ouaylos",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 8
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Hurites-Ouaylos t4.webp",
+   "zoneIds": [
+    "TNL-262"
+   ]
+  },
+  {
+   "name": "Fynites-Aeaosum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Fynites-Aeaosum t4.webp",
+   "zoneIds": [
+    "TNL-263"
+   ]
+  },
+  {
+   "name": "Xoritos-Osayam",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Xoritos-Osayam T6.webp",
+   "zoneIds": [
+    "TNL-264"
+   ]
+  },
+  {
+   "name": "Cieitos-Ayosrom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 2
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "cieitos-ayosrom t6.webp",
+   "zoneIds": [
+    "TNL-265"
+   ]
+  },
+  {
+   "name": "Synitos-Ososlos",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 4
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Synitos-Ososlos t6.webp",
+   "zoneIds": [
+    "TNL-266"
+   ]
+  },
+  {
+   "name": "Xetitos-Emimsum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 4
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Xetitos-Emimsum T6.webp",
+   "zoneIds": [
+    "TNL-267"
+   ]
+  },
+  {
+   "name": "Oeritos-Oyexlos",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 4
+    },
+    {
+     "alt": "LOGS",
+     "badge": 2
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Oeritos-Oyexlos T6.webp",
+   "zoneIds": [
+    "TNL-268"
+   ]
+  },
+  {
+   "name": "Xoritos-Exostum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Xoritos-Exostum T6.webp",
+   "zoneIds": [
+    "TNL-269"
+   ]
+  },
+  {
+   "name": "Tieitos-Eyexrom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "ROCK",
+     "badge": 2
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Tieitos-Eyexrom T6.webp",
+   "zoneIds": [
+    "TNL-270"
+   ]
+  },
+  {
+   "name": "Cetitos-Aximam",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 2
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "cetitos-aximam t6.webp",
+   "zoneIds": [
+    "TNL-271"
+   ]
+  },
+  {
+   "name": "Hynitos-Ayousum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Hynitos-Ayousum T6.webp",
+   "zoneIds": [
+    "TNL-272"
+   ]
+  },
+  {
+   "name": "Fuyitos-Ayiotum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Fuyitos-Ayiotum T6.webp",
+   "zoneIds": [
+    "TNL-273"
+   ]
+  },
+  {
+   "name": "Petitos-Avosrom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 4
+    }
+   ],
+   "imgFile": "Petitos-Avosrom t6.webp",
+   "zoneIds": [
+    "TNL-274"
+   ]
+  },
+  {
+   "name": "Suyites-Avuotum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Suyites-Avuotum T6.webp",
+   "zoneIds": [
+    "TNL-275"
+   ]
+  },
+  {
+   "name": "Xerites-Oxoulum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "xerites-oxoulum t6.webp",
+   "zoneIds": [
+    "TNL-276"
+   ]
+  },
+  {
+   "name": "Hasitos-Avaolum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Hasitos-Avaolum T6.webp",
+   "zoneIds": [
+    "TNL-277"
+   ]
+  },
+  {
+   "name": "Xilitos-Aoemaum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 4
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Xilitos-Aoemaum t6.webp",
+   "zoneIds": [
+    "TNL-278"
+   ]
+  },
+  {
+   "name": "Hilitos-Osuorom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Hilitos-Osuorom T6.webp",
+   "zoneIds": [
+    "TNL-279"
+   ]
+  },
+  {
+   "name": "Oiritos-Eramtum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Oiritos-Eramtum t6.webp",
+   "zoneIds": [
+    "TNL-280"
+   ]
+  },
+  {
+   "name": "Curitos-Ayayaum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Curitos-Ayayaum t6.webp",
+   "zoneIds": [
+    "TNL-281"
+   ]
+  },
+  {
+   "name": "Setitos-Obobrom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Setitos-Obobrom T6.webp",
+   "zoneIds": [
+    "TNL-282"
+   ]
+  },
+  {
+   "name": "Sasitos-Umogaum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 2
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "sasitos-umogaum.webp",
+   "zoneIds": [
+    "TNL-283"
+   ]
+  },
+  {
+   "name": "Cieitos-Avioaum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 2
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Cieitos-Avioaum T4.webp",
+   "zoneIds": [
+    "TNL-284"
+   ]
+  },
+  {
+   "name": "Fynitos-Aiugsum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "ROCK",
+     "badge": 2
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Fynitos-Aiugsum t4.webp",
+   "zoneIds": [
+    "TNL-285"
+   ]
+  },
+  {
+   "name": "Sonitos-Ayailos",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 7
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Sonitos-Ayailos_T4.webp",
+   "zoneIds": [
+    "TNL-286"
+   ]
+  },
+  {
+   "name": "Xonites-Aiavlum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Xonites-Aiavlum T4.webp",
+   "zoneIds": [
+    "TNL-287"
+   ]
+  },
+  {
+   "name": "Synites-Aoarsum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 2
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Synites-aoarsum.webp",
+   "zoneIds": [
+    "TNL-288"
+   ]
+  },
+  {
+   "name": "Cynitos-Aiagsum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 2
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Cynitos-Aiagsum T4.webp",
+   "zoneIds": [
+    "TNL-289"
+   ]
+  },
+  {
+   "name": "Tetitos-Ayoslum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Tetitos-Ayoslum t4.webp",
+   "zoneIds": [
+    "TNL-290"
+   ]
+  },
+  {
+   "name": "Hilitos-Aiigaum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 2
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Hilitos-Aiigaum T4.webp",
+   "zoneIds": [
+    "TNL-291"
+   ]
+  },
+  {
+   "name": "Ponitos-Aiayrom",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 4
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Ponitos-Aiayrom t4.webp",
+   "zoneIds": [
+    "TNL-292"
+   ]
+  },
+  {
+   "name": "Conitos-Ofailos",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Conitos-Ofailos T4.webp",
+   "zoneIds": [
+    "TNL-293"
+   ]
+  },
+  {
+   "name": "Soritos-Apenlum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "LOGS",
+     "badge": 2
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Soritos-Apenlum t4.webp",
+   "zoneIds": [
+    "TNL-294"
+   ]
+  },
+  {
+   "name": "Firitos-Alodrom",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "COTTON",
+     "badge": 3
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Firitos-Alodrom t4.webp",
+   "zoneIds": [
+    "TNL-295"
+   ]
+  },
+  {
+   "name": "Fynitos-Ezatam",
+   "tier": 8,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 4
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Fynitos-Ezatam t8.webp",
+   "zoneIds": [
+    "TNL-296"
+   ]
+  },
+  {
+   "name": "Feritos-Osinsum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 3
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Feritos-Osinsum t6.webp",
+   "zoneIds": [
+    "TNL-297"
+   ]
+  },
+  {
+   "name": "Suyites-Uzurtum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 3
+    },
+    {
+     "alt": "COTTON",
+     "badge": 2
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Suyites-Uzurtum t6.webp",
+   "zoneIds": [
+    "TNL-298"
+   ]
+  },
+  {
+   "name": "Ouritos-Ataltum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Ouritos-Ataltum t6 v2.webp",
+   "zoneIds": [
+    "TNL-299"
+   ]
+  },
+  {
+   "name": "Hurites-Ieatun",
+   "tier": 8,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Hurites-Ieatun t8.webp",
+   "zoneIds": [
+    "TNL-300"
+   ]
+  },
+  {
+   "name": "Filites-Izohun",
+   "tier": 8,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Filites-Izohun t8.webp",
+   "zoneIds": [
+    "TNL-301"
+   ]
+  },
+  {
+   "name": "Xynitos-Obursum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Xynitos-Obursum t6.webp",
+   "zoneIds": [
+    "TNL-302"
+   ]
+  },
+  {
+   "name": "Ouritos-Ofailos",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 4
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 3
+    }
+   ],
+   "imgFile": "Ouritos-Ofailos T6.webp",
+   "zoneIds": [
+    "TNL-303"
+   ]
+  },
+  {
+   "name": "Tonitos-Igurlum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Tonitos-Igurlum t6.webp",
+   "zoneIds": [
+    "TNL-304"
+   ]
+  },
+  {
+   "name": "Piritos-Ofavam",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 4
+    }
+   ],
+   "imgFile": "Piritos-Ofavam t6.webp",
+   "zoneIds": [
+    "TNL-305"
+   ]
+  },
+  {
+   "name": "Soritos-Aiaitum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "soritos-aiaitum.webp",
+   "zoneIds": [
+    "TNL-306"
+   ]
+  },
+  {
+   "name": "Tonitos-Uxavrom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 4
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Tonitos-Uxavrom T6.webp",
+   "zoneIds": [
+    "TNL-307"
+   ]
+  },
+  {
+   "name": "Synitos-Availos",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "COTTON",
+     "badge": 2
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "synitos-availos.webp",
+   "zoneIds": [
+    "TNL-308"
+   ]
+  },
+  {
+   "name": "Sasitos-Ugersum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "LOGS",
+     "badge": 2
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Sasitos-Ugersum T6.webp",
+   "zoneIds": [
+    "TNL-309"
+   ]
+  },
+  {
+   "name": "Puyitos-Aiataum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 3
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Puyitos-Aiataum T6.webp",
+   "zoneIds": [
+    "TNL-310"
+   ]
+  },
+  {
+   "name": "Pouitos-Ofairom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Pouitos-Ofairom_T6.webp",
+   "zoneIds": [
+    "TNL-311"
+   ]
+  },
+  {
+   "name": "Suyitos-Ofugtum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 3
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Suyitos-Ofugtum t6.webp",
+   "zoneIds": [
+    "TNL-312"
+   ]
+  },
+  {
+   "name": "Toritos-Iriglos",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Toritos-Iriglos T6.webp",
+   "zoneIds": [
+    "TNL-313"
+   ]
+  },
+  {
+   "name": "Tebitos-Odoxlum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 2
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Tebitos-Odoxlum t6.webp",
+   "zoneIds": [
+    "TNL-314"
+   ]
+  },
+  {
+   "name": "Xurites-Ataglos",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Xurites-Ataglos T6.webp",
+   "zoneIds": [
+    "TNL-315"
+   ]
+  },
+  {
+   "name": "Oynites-Oloblum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 3
+    }
+   ],
+   "imgFile": "Oynites-Oloblum t6.webp",
+   "zoneIds": [
+    "TNL-316"
+   ]
+  },
+  {
+   "name": "Furitos-Aiavam",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Furitos-Aiavam t6.webp",
+   "zoneIds": [
+    "TNL-317"
+   ]
+  },
+  {
+   "name": "Hynitos-Atoyam",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 3
+    }
+   ],
+   "imgFile": "Hynitos-Atoyam T6.webp",
+   "zoneIds": [
+    "TNL-318"
+   ]
+  },
+  {
+   "name": "Pynitos-Aietam",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 4
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Pynitos-Aietam t6.webp",
+   "zoneIds": [
+    "TNL-319"
+   ]
+  },
+  {
+   "name": "Tilitos-Ataglos",
+   "tier": 8,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 9
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Tilitos-Ataglos t8.webp",
+   "zoneIds": [
+    "TNL-320"
+   ]
+  },
+  {
+   "name": "Peritos-Oconun",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "HIDE",
+     "badge": 3
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Peritos-Oconun T4.webp",
+   "zoneIds": [
+    "TNL-321"
+   ]
+  },
+  {
+   "name": "Hynitos-Oyezam",
+   "tier": 8,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Hynitos-Oyezam T8.webp",
+   "zoneIds": [
+    "TNL-322"
+   ]
+  },
+  {
+   "name": "Fasitos-Atezsum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Fasitos-Atezsum t4.webp",
+   "zoneIds": [
+    "TNL-323"
+   ]
+  },
+  {
+   "name": "Oeritos-Ecunsum",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "ORE",
+     "badge": 3
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Oeritos-Ecunsum T4.webp",
+   "zoneIds": [
+    "TNL-324"
+   ]
+  },
+  {
+   "name": "Casitos-Alieam",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Casitos-Alieam t4.webp",
+   "zoneIds": [
+    "TNL-325"
+   ]
+  },
+  {
+   "name": "Cilitos-Opodam",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 3
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Cilitos-Opodam.webp",
+   "zoneIds": [
+    "TNL-326"
+   ]
+  },
+  {
+   "name": "Huyitos-Ohenlum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Huyitos-Ohenlum t6.webp",
+   "zoneIds": [
+    "TNL-327"
+   ]
+  },
+  {
+   "name": "Fasites-Azazsum",
+   "tier": 8,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 7
+    },
+    {
+     "alt": "ORE",
+     "badge": 2
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Fasites-Azazsum t8.webp",
+   "zoneIds": [
+    "TNL-328"
+   ]
+  },
+  {
+   "name": "Silitos-Abizaum",
+   "tier": 8,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 3
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Silitos-Abizaum t8.webp",
+   "zoneIds": [
+    "TNL-329"
+   ]
+  },
+  {
+   "name": "Febites-Opavun",
+   "tier": 8,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 3
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Febites-Opavun t8.webp",
+   "zoneIds": [
+    "TNL-330"
+   ]
+  },
+  {
+   "name": "Ferites-Ohohtum",
+   "tier": 8,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "ROCK",
+     "badge": 2
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Ferites-Ohohtum t8.webp",
+   "zoneIds": [
+    "TNL-331"
+   ]
+  },
+  {
+   "name": "Synitos-Ofurlos",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Synitos-Ofurlos T6.webp",
+   "zoneIds": [
+    "TNL-332"
+   ]
+  },
+  {
+   "name": "Oouitos-Alaiam",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Oouitos-Alaiam T6.webp",
+   "zoneIds": [
+    "TNL-333"
+   ]
+  },
+  {
+   "name": "Xoritos-Aiairom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Xoritos-Aiairom T6.webp",
+   "zoneIds": [
+    "TNL-334"
+   ]
+  },
+  {
+   "name": "Sasitos-Oyarlum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Sasitos-Oyarlum T6.webp",
+   "zoneIds": [
+    "TNL-335"
+   ]
+  },
+  {
+   "name": "Fasitos-Oleraum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 3
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Fasitos-Oleraum T6.webp",
+   "zoneIds": [
+    "TNL-336"
+   ]
+  },
+  {
+   "name": "Fouitos-Aiuttum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 3
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "fouitos-aiattum t6.webp",
+   "zoneIds": [
+    "TNL-337"
+   ]
+  },
+  {
+   "name": "Fynitos-Abalam",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 4
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "fynitos-abalam t4.webp",
+   "zoneIds": [
+    "TNL-338"
+   ]
+  },
+  {
+   "name": "Suyitos-Oyarlos",
+   "tier": 8,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Suyitos-Oyarlos t8.webp",
+   "zoneIds": [
+    "TNL-339"
+   ]
+  },
+  {
+   "name": "Fuyitos-Acalun",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Fuyitos-Acalun t4.webp",
+   "zoneIds": [
+    "TNL-340"
+   ]
+  },
+  {
+   "name": "Pilitos-Eterrom",
+   "tier": 4,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "ROCK",
+     "badge": 2
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Pilitos-Eterrom T4.webp",
+   "zoneIds": [
+    "TNL-341"
+   ]
+  },
+  {
+   "name": "Fasitos-Oyuctum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 3
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Fasitos-Oyuctum t6.webp",
+   "zoneIds": [
+    "TNL-342"
+   ]
+  },
+  {
+   "name": "Piritos-Opabrom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 4
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Piritos-Opabrom t6.webp",
+   "zoneIds": [
+    "TNL-343"
+   ]
+  },
+  {
+   "name": "Filitos-Uzazlum",
+   "tier": 8,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Filitos-Uzazlum t8.webp",
+   "zoneIds": [
+    "TNL-344"
+   ]
+  },
+  {
+   "name": "Cynitos-Atatlum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Cynitos-Atatlum T6.webp",
+   "zoneIds": [
+    "TNL-345"
+   ]
+  },
+  {
+   "name": "Hebitos-Atontum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 3
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Hebitos-Atontum t6.webp",
+   "zoneIds": [
+    "TNL-346"
+   ]
+  },
+  {
+   "name": "Tuyitos-Aboysum",
+   "tier": 8,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 2
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Tuyitos-Aboysum t8.webp",
+   "zoneIds": [
+    "TNL-347"
+   ]
+  },
+  {
+   "name": "Honites-Izizaum",
+   "tier": 8,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "LOGS",
+     "badge": 2
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Honites-Izizaum_T8.webp",
+   "zoneIds": [
+    "TNL-348"
+   ]
+  },
+  {
+   "name": "Siritos-Oyohun",
+   "tier": 8,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 2
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "DUNGEON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Siritos-Oyohun t8.webp",
+   "zoneIds": [
+    "TNL-349"
+   ]
+  },
+  {
+   "name": "Cieitos-Otatrom",
+   "tier": 8,
+   "icons": [
+    {
+     "alt": "GOLD",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 6
+    },
+    {
+     "alt": "LOGS",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Cieitos-Otatrom T8.webp",
+   "zoneIds": [
+    "TNL-350"
+   ]
+  },
+  {
+   "name": "Quaent-Al-Vynsum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "quaent-al-vynsum t6.webp",
+   "zoneIds": [
+    "TNL-351"
+   ]
+  },
+  {
+   "name": "Quaent-Al-Tersis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Quaent-Al-Tersis T6.webp",
+   "zoneIds": [
+    "TNL-352"
+   ]
+  },
+  {
+   "name": "Quaent-Al-Viesom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "ORE",
+     "badge": 2
+    }
+   ],
+   "imgFile": "quaent-al-Viesom t6.webp",
+   "zoneIds": [
+    "TNL-353"
+   ]
+  },
+  {
+   "name": "Quatun-Et-Nusas",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "ROCK",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Quatun-et-Nusas t6.webp",
+   "zoneIds": [
+    "TNL-354"
+   ]
+  },
+  {
+   "name": "Quaent-Al-Qintis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Quaent-Al-Qintis T6.webp",
+   "zoneIds": [
+    "TNL-355"
+   ]
+  },
+  {
+   "name": "Quatun-Et-Odetum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Quatun-Et-Odetum T6.webp",
+   "zoneIds": [
+    "TNL-356"
+   ]
+  },
+  {
+   "name": "Quaent-In-Odesum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Quaent-In-Odesum t6.webp",
+   "zoneIds": [
+    "TNL-357"
+   ]
+  },
+  {
+   "name": "Quaent-In-Nusis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Quaent-In-Nusis t6.webp",
+   "zoneIds": [
+    "TNL-358"
+   ]
+  },
+  {
+   "name": "Qiient-In-Tersom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Qiient-In-Tersom T6.webp",
+   "zoneIds": [
+    "TNL-359"
+   ]
+  },
+  {
+   "name": "Qiient-Qi-Odesas",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Qiient-Qi-Odesas T6.webp",
+   "zoneIds": [
+    "TNL-360"
+   ]
+  },
+  {
+   "name": "Qiient-In-Nutis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Qiient-In-Nutis T6.webp",
+   "zoneIds": [
+    "TNL-361"
+   ]
+  },
+  {
+   "name": "Qiient-In-Vyntum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Qiient-In-Vyntum T6.webp",
+   "zoneIds": [
+    "TNL-362"
+   ]
+  },
+  {
+   "name": "Qiient-Si-Odesum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Qiient-Si-Odesum t6.webp",
+   "zoneIds": [
+    "TNL-363"
+   ]
+  },
+  {
+   "name": "Qiient-Qi-Vynsis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Qiient-Qi-Vynsis T6.webp",
+   "zoneIds": [
+    "TNL-364"
+   ]
+  },
+  {
+   "name": "Qiitun-Si-Vynsom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Qiitun-Si-Vynsom T6.webp",
+   "zoneIds": [
+    "TNL-365"
+   ]
+  },
+  {
+   "name": "Qiient-Qi-Tersas",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Qiient-Qi-Tersas T6.webp",
+   "zoneIds": [
+    "TNL-366"
+   ]
+  },
+  {
+   "name": "Qiitun-Et-Vietis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Qiitun-Et-Vietis T6.webp",
+   "zoneIds": [
+    "TNL-367"
+   ]
+  },
+  {
+   "name": "Qiient-Si-Tertum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Qiient-Si-Tertum t6.webp",
+   "zoneIds": [
+    "TNL-368"
+   ]
+  },
+  {
+   "name": "Qiient-Et-Qinsum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "LOGS",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Qiient-Et-Qinsum t6.webp",
+   "zoneIds": [
+    "TNL-369"
+   ]
+  },
+  {
+   "name": "Qiient-In-Viesis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Qiient-In-Viesis t6.webp",
+   "zoneIds": [
+    "TNL-370"
+   ]
+  },
+  {
+   "name": "Qiient-Qi-Nusom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Qiient-Qi-Nusom t6.webp",
+   "zoneIds": [
+    "TNL-371"
+   ]
+  },
+  {
+   "name": "Qiient-Si-Nusas",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Qiient-Si-Nusas T6.webp",
+   "zoneIds": [
+    "TNL-372"
+   ]
+  },
+  {
+   "name": "Qiient-Sa-Odetis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Qiient-Sa-Odetis t6.webp",
+   "zoneIds": [
+    "TNL-373"
+   ]
+  },
+  {
+   "name": "Qiient-Oc-Odetum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Qiient-Oc-Odetum t6.webp",
+   "zoneIds": [
+    "TNL-374"
+   ]
+  },
+  {
+   "name": "Qiitun-Al-Duosum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Qiitun-Al-Duosum T6.webp",
+   "zoneIds": [
+    "TNL-375"
+   ]
+  },
+  {
+   "name": "Qiient-In-Qinsis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Qiient-In-Qinsis T6.webp",
+   "zoneIds": [
+    "TNL-376"
+   ]
+  },
+  {
+   "name": "Secent-Qi-Odesom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Secent-Qi-Odesom T6.webp",
+   "zoneIds": [
+    "TNL-377"
+   ]
+  },
+  {
+   "name": "Sectun-Et-Tersas",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Sectun-Et-Tersas T6.webp",
+   "zoneIds": [
+    "TNL-378"
+   ]
+  },
+  {
+   "name": "Secent-Si-Odetis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Secent-Si-Odetis T6.webp",
+   "zoneIds": [
+    "TNL-379"
+   ]
+  },
+  {
+   "name": "Secent-Et-Vyntum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Secent-Et-Vyntum T6.webp",
+   "zoneIds": [
+    "TNL-380"
+   ]
+  },
+  {
+   "name": "Secent-Al-Viesum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "COTTON",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Secent-Al-Viesum T6.webp",
+   "zoneIds": [
+    "TNL-381"
+   ]
+  },
+  {
+   "name": "Secent-Sa-Odesis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Secent-Sa-Odesis t6.webp",
+   "zoneIds": [
+    "TNL-382"
+   ]
+  },
+  {
+   "name": "Sectun-In-Qinsom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Sectun-In-Qinsom T6.webp",
+   "zoneIds": [
+    "TNL-383"
+   ]
+  },
+  {
+   "name": "Secent-Qi-Qinsom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Secent-Qi-Qinsom T6.webp",
+   "zoneIds": [
+    "TNL-384"
+   ]
+  },
+  {
+   "name": "Sectun-In-Vyntis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Sectun-in-Vyntis t6.webp",
+   "zoneIds": [
+    "TNL-385"
+   ]
+  },
+  {
+   "name": "Secent-Al-Nutum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Secent-Al-Nutum T6.webp",
+   "zoneIds": [
+    "TNL-386"
+   ]
+  },
+  {
+   "name": "Secent-In-Tersum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Secent-I-Tersum T6.webp",
+   "zoneIds": [
+    "TNL-387"
+   ]
+  },
+  {
+   "name": "Sectun-Oc-Odesis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Sectun-OC-Odesis T6.webp",
+   "zoneIds": [
+    "TNL-388"
+   ]
+  },
+  {
+   "name": "Secent-Al-Duosom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Secent-Al-Duosom t6.webp",
+   "zoneIds": [
+    "TNL-389"
+   ]
+  },
+  {
+   "name": "Secent-Si-Qinsas",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Secent-Si-Qinsas T6.webp",
+   "zoneIds": [
+    "TNL-390"
+   ]
+  },
+  {
+   "name": "Setent-Al-Vietis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Setent-Al-Vietis t6.webp",
+   "zoneIds": [
+    "TNL-391"
+   ]
+  },
+  {
+   "name": "Settun-Et-Odetum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "LOGS",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Settun-Et-Odetum T6.webp",
+   "zoneIds": [
+    "TNL-392"
+   ]
+  },
+  {
+   "name": "Setent-Et-Nusum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Setent-Et-Nusum t6.webp",
+   "zoneIds": [
+    "TNL-393"
+   ]
+  },
+  {
+   "name": "Settun-Al-Vynsis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Settun-Al-Vynsis T6.webp",
+   "zoneIds": [
+    "TNL-394"
+   ]
+  },
+  {
+   "name": "Settun-Al-Tersom",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "BLUE",
+     "badge": 2
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Settun-Al-Tersom T6.webp",
+   "zoneIds": [
+    "TNL-395"
+   ]
+  },
+  {
+   "name": "Setent-Al-Duosas",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "ORE",
+     "badge": 0
+    }
+   ],
+   "imgFile": "",
+   "zoneIds": [
+    "TNL-396"
+   ]
+  },
+  {
+   "name": "Setent-Et-Qintis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "LOGS",
+     "badge": 2
+    }
+   ],
+   "imgFile": "Setent-Et-Qintis t6.webp",
+   "zoneIds": [
+    "TNL-397"
+   ]
+  },
+  {
+   "name": "Settun-In-Odetum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Settun-In-Odetum t6.webp",
+   "zoneIds": [
+    "TNL-398"
+   ]
+  },
+  {
+   "name": "Setent-In-Qinsum",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "GREEN",
+     "badge": 5
+    },
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "COTTON",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Setent-In-Qinsum T6.webp",
+   "zoneIds": [
+    "TNL-399"
+   ]
+  },
+  {
+   "name": "Settun-In-Nusis",
+   "tier": 6,
+   "icons": [
+    {
+     "alt": "BLUE",
+     "badge": 0
+    },
+    {
+     "alt": "GREEN",
+     "badge": 0
+    },
+    {
+     "alt": "HIDE",
+     "badge": 0
+    },
+    {
+     "alt": "ROCK",
+     "badge": 0
+    }
+   ],
+   "imgFile": "Settun-In-Nusis T6.webp",
+   "zoneIds": [
+    "TNL-400"
+   ]
+  }
+ ]
+}
