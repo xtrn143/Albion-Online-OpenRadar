@@ -1,3 +1,6 @@
+from collections import OrderedDict
+
+from albion_aware.map_index import make_entry
 from albion_aware.map_window import (
     MapWindow,
     fit_scale,
@@ -165,6 +168,21 @@ def test_destroy_marks_window_closed():
     window.destroy()
     assert window._closed is True
     assert window.is_open is False
+
+
+def test_image_returns_none_when_file_is_missing(tmp_path):
+    window = MapWindow.__new__(MapWindow)
+    window._data_dir = tmp_path
+    window._images = OrderedDict()
+    entry = make_entry("Hetitos-Iuaerom", 6, (), "Hetitos-Iuaerom T6.webp")
+    assert window._image(entry) is None
+
+
+def test_image_returns_none_without_img_file(tmp_path):
+    window = MapWindow.__new__(MapWindow)
+    window._data_dir = tmp_path
+    window._images = OrderedDict()
+    assert window._image(make_entry("Cases-Ugumlos", 6, (), "")) is None
 
 
 def test_open_prefills_zone_before_index_is_ready():

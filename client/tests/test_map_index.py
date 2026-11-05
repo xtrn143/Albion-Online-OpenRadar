@@ -157,6 +157,15 @@ def test_load_rejects_empty_index(tmp_path):
         AvalonMapIndex.load(path)
 
 
+def test_load_raises_on_corrupt_icon_field(tmp_path):
+    """坏结构的索引必须抛错，让调用方按“索引不可用”降级而不是静默半加载。"""
+    path = tmp_path / "index.json"
+    path.write_text(json.dumps({"maps": [{"name": "Hetitos-Iuaerom", "icons": "GOLD"}]}),
+                    encoding="utf-8")
+    with pytest.raises((AttributeError, TypeError, ValueError)):
+        AvalonMapIndex.load(path)
+
+
 def test_load_skips_dirty_records(tmp_path):
     payload = {"maps": [{"name": ""}, {"name": "Cases-Ugumlos", "tier": 6}]}
     path = tmp_path / "index.json"

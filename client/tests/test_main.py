@@ -2,8 +2,8 @@
 import sys
 from pathlib import Path
 
-from albion_aware.main import (push_history, sound_cooldown_ok, _resource_dir,
-                               has_new_stranger, user_data_dir)
+from albion_aware.main import (AlbionAwareApp, push_history, sound_cooldown_ok,
+                               _resource_dir, has_new_stranger, user_data_dir)
 
 
 def test_user_data_dir_uses_app_dir_when_not_frozen(tmp_path, monkeypatch):
@@ -57,3 +57,14 @@ def test_push_history_caps_length():
     assert push_history(history, "NEW", limit=10)[-1] == "Z8"
     assert push_history([], "A") == ["A"]
     assert push_history(["A"], "B", limit=0) == []
+
+
+def test_map_index_ready_resets_loading_flag_on_failure():
+    """索引加载失败时也必须复位标志，否则窗口会永久停在“加载中”。"""
+    app = AlbionAwareApp.__new__(AlbionAwareApp)
+    app._map_index_loading = True
+    app._map_index = None
+    app._map_window = None
+    app._map_index_ready(None)
+    assert app._map_index_loading is False
+    assert app._map_index is None

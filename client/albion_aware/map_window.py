@@ -297,7 +297,8 @@ class MapWindow:
     def _on_enter(self, _event=None) -> str:
         if self._hits:
             self._select(self._hits[self._selected].entry)
-            self.canvas.focus_set()
+            # 焦点留在输入框，否则看完图继续输入会丢字符
+            self.entry.focus_set()
         return "break"
 
     def _on_tab(self, _event=None) -> str:

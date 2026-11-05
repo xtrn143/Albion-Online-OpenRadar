@@ -19,6 +19,8 @@ from urllib.error import URLError
 from urllib.parse import quote
 from urllib.request import Request, urlopen
 
+from PIL import Image
+
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "client"))
 
@@ -37,6 +39,16 @@ def _fetch_json(url: str) -> list:
         return json.loads(response.read().decode("utf-8"))
 
 
+def _valid_webp(path: Path) -> bool:
+    """截断的 webp 也能有 RIFF 头，必须让 Pillow 真正解析一遍才算有效。"""
+    try:
+        with Image.open(path) as image:
+            image.verify()
+    except (OSError, ValueError):
+        return False
+    return True
+
+
 def _download(filename: str, target: Path) -> bool:
     url = f"{REMOTE}/maps/{quote(filename, safe='')}"
     part = target.with_name(target.name + ".part")
@@ -44,9 +56,8 @@ def _download(filename: str, target: Path) -> bool:
     try:
         with urlopen(request, timeout=30) as response:
             part.write_bytes(response.read())
-        payload = part.read_bytes()
-        if not payload or not payload.startswith(b"RIFF"):
-            raise ValueError("payload is not a webp file")
+        if not part.stat().st_size or not _valid_webp(part):
+            raise ValueError("payload is not a valid webp file")
         part.replace(target)
         return True
     except (OSError, ValueError, URLError) as error:  # 网络失败不应阻断打包
@@ -87,12 +98,22 @@ def sync(source: Path, dest: Path, zones_path: Path, allow_download: bool = True
             raise SystemExit(f"unsafe image name: {filename}")
         target = maps_dir / filename
         if target.exists() and target.stat().st_size > 0:
-            available += 1
-            continue
+            if _valid_webp(target):
+                available += 1
+                continue
+            # 上次构建中断留下的截断图：删掉重来，避免坏图随包发布
+            target.unlink(missing_ok=True)
         origin = source / "maps" / filename
         if origin.exists() and origin.stat().st_size > 0:
-            shutil.copy2(origin, target)
-            available += 1
+            part = target.with_name(target.name + ".part")
+            shutil.copy2(origin, part)
+            if _valid_webp(part):
+                part.replace(target)
+                available += 1
+            else:
+                part.unlink(missing_ok=True)
+                missing += 1
+                print(f"broken local image: {filename}")
         elif allow_download:
             if _download(filename, target):
                 available += 1
