@@ -69,8 +69,11 @@ def sound_cooldown_ok(last_at: float | None, now: float,
 
 
 def push_history(history, name: str, limit: int = 10) -> list[str]:
+    name = str(name)
+    if limit <= 0:
+        return []
     cleaned = [str(item) for item in history if str(item) != name]
-    return [str(name)] + cleaned[:limit - 1]
+    return [name] + cleaned[:limit - 1]
 
 
 def _load_items(app_dir: Path) -> ItemDatabase:
@@ -92,6 +95,10 @@ def user_data_dir(app_dir: Path) -> Path:
         if base:
             return Path(base) / "AlbionAware"
     return Path(app_dir)
+
+
+def _avalon_dir(app_dir: Path) -> Path:
+    return _resource_dir(app_dir) / "data" / "avalon"
 
 
 class AlbionAwareApp:
@@ -131,7 +138,9 @@ class AlbionAwareApp:
         self._map_index = None
         self._map_index_loading = False
         self._map_window = None
-        self._map_history = [str(name) for name in (self.config.get("map_history") or [])]
+        stored_history = self.config.get("map_history")
+        self._map_history = ([str(name) for name in stored_history[:10]]
+                             if isinstance(stored_history, list) else [])
 
         self.window = OverlayWindow(
             i18n=self.i18n,
@@ -247,7 +256,7 @@ class AlbionAwareApp:
             self._map_window = MapWindow(
                 self.window.root,
                 self.i18n,
-                data_dir=_resource_dir(self.app_dir) / "data" / "avalon",
+                data_dir=_avalon_dir(self.app_dir),
                 history=self._map_history,
                 on_position_changed=self._save_map_position,
                 on_selected=self._remember_map,
@@ -266,12 +275,14 @@ class AlbionAwareApp:
         if self._map_index is not None or self._map_index_loading:
             return
         self._map_index_loading = True
-        path = _resource_dir(self.app_dir) / "data" / "avalon" / "index.json"
+        path = _avalon_dir(self.app_dir) / "index.json"
 
         def work() -> None:
             try:
                 index = AvalonMapIndex.load(path)
-            except (OSError, ValueError):
+            except Exception:
+                # 索引格式不可信（外部数据文件），任何解析异常都按“索引不可用”处理，
+                # 避免后台线程静默死亡导致窗口永久停在“加载中”。
                 index = None
             self._queue_action(self._map_index_ready, index)
 
@@ -352,12 +363,15 @@ class AlbionAwareApp:
                 self._zone_id = event.zone_id
                 self.store.clear()
                 self.panel.hide()
-                if is_roads_zone(event.zone_id):
+                in_roads = is_roads_zone(event.zone_id)
+                if in_roads:
                     if not self._in_roads:
                         self.window.flash_map_icon()
                     self._in_roads = True
                 else:
                     self._in_roads = False
+                if self._map_window is not None and self._map_window.is_open:
+                    self._map_window.set_zone(event.zone_id if in_roads else None)
                 applied = True
             elif isinstance(event, PartyEvent):
                 self.party.handle_event(event.parameters, self.store)
@@ -533,7 +547,7 @@ class AlbionAwareApp:
         return {
             "toggle_visible": lambda: self._queue_action(self._toggle_visible),
             "click_through": lambda: self._queue_action(self._toggle_click_through),
-            "map_lookup": lambda: self._queue_action(self._open_maps),
+            "map_lookup": self._queue_open_maps,
             "reset_position": lambda: self._queue_action(self.window.reset_position),
             "set_opacity": lambda value: self._queue_action(self._set_opacity, value),
             "toggle_sound": lambda: self._queue_action(self._toggle_sound),

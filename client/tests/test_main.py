@@ -54,3 +54,6 @@ def test_push_history_caps_length():
     history = [f"Z{i}" for i in range(10)]
     assert len(push_history(history, "NEW", limit=10)) == 10
     assert push_history(history, "NEW", limit=10)[0] == "NEW"
+    assert push_history(history, "NEW", limit=10)[-1] == "Z8"
+    assert push_history([], "A") == ["A"]
+    assert push_history(["A"], "B", limit=0) == []

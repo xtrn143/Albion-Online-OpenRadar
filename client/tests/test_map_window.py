@@ -137,6 +137,22 @@ def test_destroy_marks_window_closed():
     window = MapWindow.__new__(MapWindow)
     window._closed = False
     window.top = _Top()
+    window._on_position_changed = None
     window.destroy()
     assert window._closed is True
     assert window.is_open is False
+
+
+def test_set_zone_updates_zone_and_keeps_entry_text():
+    window = MapWindow.__new__(MapWindow)
+    window._closed = False
+    window._zone = None
+    window.top = _Top()
+    window.entry = _Entry("HET")
+    calls = []
+    window._refresh = lambda text: calls.append(text)
+    window.set_zone("TNL-225")
+    assert window._zone == "TNL-225"
+    assert calls == ["HET"]
+    window.set_zone(None)
+    assert window._zone is None

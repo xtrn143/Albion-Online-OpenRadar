@@ -151,6 +151,13 @@ class MapWindow:
                 self.entry.insert(0, text)
         self._refresh(text)
 
+    def set_zone(self, current_zone=None) -> None:
+        """进区时更新当前区，不动输入框内容，只重算候选与高亮。"""
+        self._zone = current_zone
+        if self._closed or not self.alive:
+            return
+        self._refresh(self.entry.get())
+
     def open(self, current_zone=None, prefill=None) -> None:
         self._closed = False
         self._zone = current_zone
@@ -181,6 +188,8 @@ class MapWindow:
             pass
 
     def destroy(self) -> None:
+        if not self._closed:
+            self._save_position()
         self._closed = True
         try:
             self.top.destroy()
