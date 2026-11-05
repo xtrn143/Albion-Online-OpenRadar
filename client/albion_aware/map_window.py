@@ -24,6 +24,11 @@ ICON_COLORS = {
     "ROCK": "#7a7a7a", "COTTON": "#e6e6e6", "HIDE": "#c46a4a",
 }
 CACHE_LIMIT = 5
+MAPS_SUBDIR = "maps"
+
+
+def map_image_path(data_dir, img_file) -> Path:
+    return Path(data_dir) / MAPS_SUBDIR / Path(img_file).name
 
 
 def fit_scale(canvas_w, canvas_h, image_w, image_h) -> float:
@@ -66,6 +71,9 @@ class MapWindow:
         self._zone = None
         self._closed = True
         self._state = "loading"  # loading / ready / missing
+        self._last_query = None
+        self._last_canvas = (None, None)
+        self._status_text = ""
 
         self.top = tk.Toplevel(master)
         self.top.title(i18n.t("map.title"))
@@ -126,14 +134,22 @@ class MapWindow:
     def set_index(self, index) -> None:
         self._index = index
         self._state = "ready" if index is not None else "missing"
-        if self._closed:
+        if self._closed or not self.alive:
             return
         if index is None:
             self._hits = []
             self._render_rows([])
+            self.count.configure(text="")
             self._status(self.i18n.t("map.missing"))
             return
-        self._refresh(self.entry.get())
+        text = self.entry.get()
+        if text and self._zone and text.strip().upper() == str(self._zone).upper():
+            entry = index.by_zone(self._zone)
+            if entry is not None:
+                text = entry.name
+                self.entry.delete(0, "end")
+                self.entry.insert(0, text)
+        self._refresh(text)
 
     def open(self, current_zone=None, prefill=None) -> None:
         self._closed = False
@@ -159,9 +175,13 @@ class MapWindow:
             return
         self._closed = True
         self._save_position()
-        self.top.withdraw()
+        try:
+            self.top.withdraw()
+        except tk.TclError:
+            pass
 
     def destroy(self) -> None:
+        self._closed = True
         try:
             self.top.destroy()
         except tk.TclError:
@@ -169,12 +189,21 @@ class MapWindow:
 
     # ---------- 搜索与候选 ----------
     def _on_query(self, _event=None) -> None:
-        self._refresh(self.entry.get())
+        if not self.alive:
+            return
+        text = self.entry.get()
+        if text == self._last_query:
+            return
+        self._refresh(text)
 
     def _refresh(self, text: str) -> None:
+        if not self.alive:
+            return
+        self._last_query = text
         if self._index is None:
             self._hits = []
             self._render_rows([])
+            self.count.configure(text="")
             self._status(self.i18n.t("map.loading") if self._state == "loading"
                          else self.i18n.t("map.missing"))
             return
@@ -194,45 +223,58 @@ class MapWindow:
             self._pil = None
             self._status("")
 
+    def _make_row(self) -> dict:
+        row = tk.Frame(self.rows, bg=BG, height=ROW_H)
+        row.pack_propagate(False)
+        name = tk.Label(row, bg=BG, fg=FG, anchor="w", font=("Segoe UI", 9))
+        name.pack(side="left")
+        tier = tk.Label(row, bg=BG, fg=SUB, font=("Segoe UI", 8))
+        tier.pack(side="left", padx=(6, 0))
+        current = tk.Label(row, bg=BG, fg=GOLD, font=("Segoe UI", 8))
+        current.pack(side="left", padx=(4, 0))
+        dots = [tk.Frame(row, width=ICON_SIZE, height=ICON_SIZE) for _ in range(6)]
+        for widget in (row, name, tier, current):
+            widget.bind("<Button-1>", lambda _event, frame=row: self._on_row_click(frame))
+        return {"row": row, "name": name, "tier": tier, "current": current, "dots": dots}
+
+    def _on_row_click(self, frame) -> None:
+        for position, widgets in enumerate(self._row_frames):
+            if widgets["row"] is frame:
+                if position < len(self._hits):
+                    self._select(self._hits[position].entry)
+                return
+
     def _render_rows(self, hits) -> None:
-        for child in self.rows.winfo_children():
-            child.destroy()
-        self._row_frames = []
-        for hit in hits:
-            row = tk.Frame(self.rows, bg=BG, height=ROW_H)
+        while len(self._row_frames) < len(hits):
+            self._row_frames.append(self._make_row())
+        for position, widgets in enumerate(self._row_frames):
+            row = widgets["row"]
+            if position >= len(hits):
+                row.pack_forget()
+                continue
+            hit = hits[position]
             row.pack(fill="x")
-            row.pack_propagate(False)
-            labels = []
-            name = tk.Label(row, text=hit.entry.name, bg=BG, fg=FG, anchor="w",
-                            font=("Segoe UI", 9, "bold" if hit.is_current else "normal"))
-            name.pack(side="left")
-            labels.append(name)
-            if hit.entry.tier:
-                tier = tk.Label(row, text=self.i18n.t("map.tier", tier=hit.entry.tier),
-                                bg=BG, fg=SUB, font=("Segoe UI", 8))
-                tier.pack(side="left", padx=(6, 0))
-                labels.append(tier)
-            if hit.is_current:
-                current = tk.Label(row, text=self.i18n.t("map.current"),
-                                   bg=BG, fg=GOLD, font=("Segoe UI", 8))
-                current.pack(side="left", padx=(4, 0))
-                labels.append(current)
-            for alt, _badge in hit.entry.icons[:6]:
-                dot = tk.Frame(row, bg=ICON_COLORS.get(alt, SUB),
-                               width=ICON_SIZE, height=ICON_SIZE)
+            row.configure(bg=BG)
+            widgets["name"].configure(
+                text=hit.entry.name,
+                font=("Segoe UI", 9, "bold" if hit.is_current else "normal"))
+            widgets["tier"].configure(
+                text=self.i18n.t("map.tier", tier=hit.entry.tier) if hit.entry.tier else "")
+            widgets["current"].configure(
+                text=self.i18n.t("map.current") if hit.is_current else "")
+            for dot in widgets["dots"]:
+                dot.pack_forget()
+            for dot, (alt, _badge) in zip(widgets["dots"], hit.entry.icons[:6]):
+                dot.configure(bg=ICON_COLORS.get(alt, SUB))
                 dot.pack(side="left", padx=(2, 0), pady=7)
-            for widget in (row, *labels):
-                widget.bind("<Button-1>",
-                            lambda _event, h=hit: self._select(h.entry))
-            self._row_frames.append((row, labels))
         self._highlight(0)
 
     def _highlight(self, index: int) -> None:
-        for position, (row, labels) in enumerate(self._row_frames):
-            color = SELECT_BG if position == index else BG
-            row.configure(bg=color)
-            for label in labels:
-                label.configure(bg=color)
+        for position, widgets in enumerate(self._row_frames):
+            color = SELECT_BG if position == index and position < len(self._hits) else BG
+            widgets["row"].configure(bg=color)
+            for key in ("name", "tier", "current"):
+                widgets[key].configure(bg=color)
 
     def _move(self, delta: int) -> str:
         if not self._hits:
@@ -262,18 +304,21 @@ class MapWindow:
 
     # ---------- 地图显示 ----------
     def _select(self, entry, remember=True) -> None:
-        self._pil = None
+        image = self._image(entry)
         self._zoom = 1.0
         self._offset = [0.0, 0.0]
-        image = self._image(entry)
         if image is None:
+            self._pil = None
             self._status(self.i18n.t("map.no_image"))
         else:
             self._pil = image
-            self._status("")
+            self._status_text = ""
             self._redraw()
-        if remember and self._on_selected is not None:
-            self._on_selected(entry.name)
+        if remember:
+            self._history = ([entry.name]
+                             + [name for name in self._history if name != entry.name])[:10]
+            if self._on_selected is not None:
+                self._on_selected(entry.name)
 
     def _image(self, entry):
         if self._data_dir is None or not entry.img_file:
@@ -283,7 +328,7 @@ class MapWindow:
             self._images.move_to_end(key)
             return self._images[key]
         try:
-            image = Image.open(self._data_dir / key)
+            image = Image.open(map_image_path(self._data_dir, key))
             image.load()
         except (OSError, ValueError):
             return None
@@ -296,10 +341,13 @@ class MapWindow:
         return max(self.canvas.winfo_width(), 1), max(self.canvas.winfo_height(), 1)
 
     def _redraw(self) -> None:
+        if not self.alive:
+            return
         self.canvas.delete("all")
         self._photo = None
         if self._pil is None:
             return
+        self._status_text = ""
         width, height = self._canvas_size()
         self._fit = fit_scale(width, height, self._pil.width, self._pil.height)
         scale = self._fit * self._zoom
@@ -310,8 +358,20 @@ class MapWindow:
                                  height / 2 + self._offset[1],
                                  image=self._photo, anchor="center", tags="map")
 
-    def _on_configure(self, _event=None) -> None:
+    def _place(self) -> None:
+        if self._pil is None:
+            return
+        width, height = self._canvas_size()
+        self.canvas.coords("map", width / 2 + self._offset[0],
+                           height / 2 + self._offset[1])
+
+    def _on_configure(self, event=None) -> None:
         """窗口首次映射后 canvas 才有真实尺寸，此时补画一次。"""
+        size = (getattr(event, "width", None), getattr(event, "height", None))
+        if size != (None, None):
+            if size == self._last_canvas:
+                return
+            self._last_canvas = size
         if self._pil is not None:
             self._redraw()
         elif getattr(self, "_status_text", ""):
@@ -326,18 +386,18 @@ class MapWindow:
             self.canvas.create_text(width / 2, 120, text=text, fill=SUB,
                                     font=("Segoe UI", 10), tags="status")
 
-    def _on_wheel(self, event) -> None:
+    def _on_wheel(self, event) -> str:
         if self._pil is None:
-            return
+            return "break"
         previous = self._zoom
         self._zoom = next_zoom(previous, 1 if getattr(event, "delta", 0) > 0 else -1)
         if self._zoom == previous:
-            return
+            return "break"
         width, height = self._canvas_size()
         old_scale = self._fit * previous
         new_scale = self._fit * self._zoom
         if old_scale <= 0:
-            return
+            return "break"
         left = width / 2 - self._pil.width * old_scale / 2 + self._offset[0]
         top = height / 2 - self._pil.height * old_scale / 2 + self._offset[1]
         image_x = (event.x - left) / old_scale
@@ -347,6 +407,7 @@ class MapWindow:
         self._offset[1] = (event.y - image_y * new_scale
                            - (height / 2 - self._pil.height * new_scale / 2))
         self._redraw()
+        return "break"
 
     def _on_press(self, event) -> None:
         self._drag = (event.x, event.y, self._offset[0], self._offset[1])
@@ -357,12 +418,13 @@ class MapWindow:
         start_x, start_y, offset_x, offset_y = self._drag
         self._offset[0] = offset_x + event.x - start_x
         self._offset[1] = offset_y + event.y - start_y
-        self._redraw()
+        self._place()
 
     def _on_release(self, _event=None) -> None:
         self._drag = None
 
     def _reset_view(self) -> None:
+        self._drag = None
         self._zoom = 1.0
         self._offset = [0.0, 0.0]
         self._redraw()

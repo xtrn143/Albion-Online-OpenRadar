@@ -1,4 +1,26 @@
-from albion_aware.map_window import MapWindow, fit_scale, move_selection, next_zoom
+from albion_aware.map_window import (
+    MapWindow,
+    fit_scale,
+    map_image_path,
+    move_selection,
+    next_zoom,
+)
+
+
+class _Top:
+    def winfo_exists(self):
+        return 1
+
+    def destroy(self):
+        pass
+
+
+class _Entry:
+    def __init__(self, value):
+        self.value = value
+
+    def get(self):
+        return self.value
 
 
 def test_fit_scale_letterboxes_wide_image():
@@ -87,3 +109,34 @@ def test_configure_redraws_visible_image():
     window._redraw = lambda: calls.append("redraw")
     window._on_configure()
     assert calls == ["redraw"]
+
+
+def test_map_image_path_points_into_maps_dir(tmp_path):
+    assert map_image_path(tmp_path, "Hetitos-Iuaerom T6.webp") == (
+        tmp_path / "maps" / "Hetitos-Iuaerom T6.webp")
+
+
+def test_query_ignores_unchanged_text():
+    window = MapWindow.__new__(MapWindow)
+    window.top = _Top()
+    window.entry = _Entry("HET")
+    window._last_query = None
+    calls = []
+
+    def refresh(text):
+        calls.append(text)
+        window._last_query = text
+
+    window._refresh = refresh
+    window._on_query()
+    window._on_query()
+    assert calls == ["HET"]
+
+
+def test_destroy_marks_window_closed():
+    window = MapWindow.__new__(MapWindow)
+    window._closed = False
+    window.top = _Top()
+    window.destroy()
+    assert window._closed is True
+    assert window.is_open is False
