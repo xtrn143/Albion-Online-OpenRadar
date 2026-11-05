@@ -165,8 +165,9 @@ class MapWindow:
         self.top.lift()
         self.top.attributes("-topmost", True)
         text = prefill or ""
-        if not text and current_zone and self._index is not None:
-            entry = self._index.by_zone(current_zone)
+        if not text and current_zone:
+            # 索引还没加载好时先填裸区号，等 set_index 到达后再换成区名并自动出图
+            entry = self._index.by_zone(current_zone) if self._index is not None else None
             text = entry.name if entry else current_zone
         self.entry.delete(0, "end")
         self.entry.insert(0, text)

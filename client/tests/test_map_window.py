@@ -14,6 +14,15 @@ class _Top:
     def destroy(self):
         pass
 
+    def deiconify(self):
+        pass
+
+    def lift(self):
+        pass
+
+    def attributes(self, *_args):
+        pass
+
 
 class _Entry:
     def __init__(self, value):
@@ -21,6 +30,21 @@ class _Entry:
 
     def get(self):
         return self.value
+
+    def delete(self, *_args):
+        self.value = ""
+
+    def insert(self, _index, text):
+        self.value = text
+
+    def focus_force(self):
+        pass
+
+    def select_range(self, *_args):
+        pass
+
+    def icursor(self, *_args):
+        pass
 
 
 def test_fit_scale_letterboxes_wide_image():
@@ -141,6 +165,43 @@ def test_destroy_marks_window_closed():
     window.destroy()
     assert window._closed is True
     assert window.is_open is False
+
+
+def test_open_prefills_zone_before_index_is_ready():
+    window = MapWindow.__new__(MapWindow)
+    window._closed = True
+    window._index = None
+    window.top = _Top()
+    window.entry = _Entry("")
+    calls = []
+    window._refresh = lambda text: calls.append(text)
+    window._zoom = 1.0
+    window._offset = [0.0, 0.0]
+    window.open(current_zone="TNL-225")
+    assert window.is_open is True
+    assert window._zone == "TNL-225"
+    assert window.entry.value == "TNL-225"
+    assert calls == ["TNL-225"]
+
+
+def test_set_index_replaces_zone_prefill_with_map_name():
+    window = MapWindow.__new__(MapWindow)
+    window._closed = False
+    window.top = _Top()
+    window._zone = "TNL-225"
+    window.entry = _Entry("TNL-225")
+    calls = []
+    window._refresh = lambda text: calls.append(text)
+
+    class _Index:
+        def by_zone(self, _zone):
+            class _EntryHit:
+                name = "Hetitos-Iuaerom"
+            return _EntryHit()
+
+    window.set_index(_Index())
+    assert window.entry.value == "Hetitos-Iuaerom"
+    assert calls == ["Hetitos-Iuaerom"]
 
 
 def test_set_zone_updates_zone_and_keeps_entry_text():
