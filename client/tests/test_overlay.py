@@ -183,19 +183,8 @@ def test_map_icon_highlights_in_gold():
 
 
 def test_flash_map_icon_swaps_image_then_cools():
-    class _Root:
-        def __init__(self):
-            self.jobs = {}
-
-        def after(self, ms, callback):
-            self.jobs["last"] = (ms, callback)
-            return "job-1"
-
-        def after_cancel(self, job):
-            self.jobs["cancelled"] = job
-
     window = OverlayWindow.__new__(OverlayWindow)
-    window.root = _Root()
+    window.root = _AfterRoot()
     window.map_icon = _FakeLabel()
     window._map_images = {False: "off-image", True: "hot-image"}
     window._map_job = None
@@ -204,3 +193,46 @@ def test_flash_map_icon_swaps_image_then_cools():
     assert window.root.jobs["last"][0] == 5000
     window.root.jobs["last"][1]()
     assert window.map_icon.kwargs["image"] == "off-image"
+
+
+class _AfterRoot:
+    def __init__(self):
+        self.jobs = {}
+
+    def after(self, ms, callback):
+        self.jobs["last"] = (ms, callback)
+        return "job-1"
+
+    def after_cancel(self, job):
+        self.jobs.setdefault("cancelled", []).append(job)
+
+
+def test_flash_map_icon_cancels_previous_job():
+    window = OverlayWindow.__new__(OverlayWindow)
+    window.root = _AfterRoot()
+    window.map_icon = _FakeLabel()
+    window._map_images = {False: "off-image", True: "hot-image"}
+    window._map_job = "old-job"
+    window.flash_map_icon(5000)
+    assert window.root.jobs["cancelled"] == ["old-job"]
+    assert window._map_job == "job-1"
+
+
+def test_cool_map_resets_job_and_image():
+    window = OverlayWindow.__new__(OverlayWindow)
+    window.map_icon = _FakeLabel()
+    window._map_images = {False: "off-image", True: "hot-image"}
+    window._map_job = "job-1"
+    window._cool_map()
+    assert window._map_job is None
+    assert window.map_icon.kwargs["image"] == "off-image"
+
+
+def test_map_click_invokes_callback_and_breaks():
+    window = OverlayWindow.__new__(OverlayWindow)
+    calls = []
+    window._on_map_click = lambda: calls.append("click")
+    assert window._map_click() == "break"
+    assert calls == ["click"]
+    window._on_map_click = None
+    assert window._map_click() == "break"

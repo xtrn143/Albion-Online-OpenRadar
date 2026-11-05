@@ -19,6 +19,7 @@ GLOW_DIM = ("#1a0f0d", "#18100e", "#17100f", "#161010", "#151212", "#141414")
 FLASH_STEPS = 6
 FLASH_INTERVAL_MS = 150
 ALERT_HOLD_MS = 5000     # 闪完后保持红光的时间
+MAP_HOT_MS = 5000        # 进入阿瓦隆后地图图标金色高亮的时长
 DRAG_THRESHOLD = 4      # 位移小于该像素仍视为点击
 
 IP_GREY = "#d6d6d6"
@@ -284,7 +285,7 @@ class OverlayWindow:
             self._on_map_click()
         return "break"
 
-    def flash_map_icon(self, duration_ms: int = 5000) -> None:
+    def flash_map_icon(self, duration_ms: int = MAP_HOT_MS) -> None:
         """进入阿瓦隆时短暂变金，提示可以按 F6 查图。"""
         if self._map_job is not None:
             try:
@@ -313,6 +314,12 @@ class OverlayWindow:
         return False
 
     def close(self) -> None:
+        if self._map_job is not None:
+            try:
+                self.root.after_cancel(self._map_job)
+            except tk.TclError:
+                pass
+            self._map_job = None
         try:
             self.root.destroy()
         except tk.TclError:
