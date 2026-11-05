@@ -44,6 +44,8 @@ from albion_aware.launcher import (
     select_all_interfaces,
     wizard_needed,
 )
+from albion_aware.map_index import AvalonMapIndex, is_roads_zone
+from albion_aware.map_window import MapWindow
 from albion_aware.models import View
 from albion_aware.overlay import ICON_SIZE, OverlayWindow
 from albion_aware.party import PartyList
@@ -64,6 +66,11 @@ def has_new_stranger(before_ids: set[int], after_ids: set[int]) -> bool:
 def sound_cooldown_ok(last_at: float | None, now: float,
                       cooldown: float = SOUND_COOLDOWN_S) -> bool:
     return last_at is None or (now - last_at) >= cooldown
+
+
+def push_history(history, name: str, limit: int = 10) -> list[str]:
+    cleaned = [str(item) for item in history if str(item) != name]
+    return [str(name)] + cleaned[:limit - 1]
 
 
 def _load_items(app_dir: Path) -> ItemDatabase:
@@ -119,6 +126,12 @@ class AlbionAwareApp:
         self._last_sound_at = None
         self._stopping = threading.Event()
         self._no_radar_warned = False
+        self._zone_id = ""
+        self._in_roads = False
+        self._map_index = None
+        self._map_index_loading = False
+        self._map_window = None
+        self._map_history = [str(name) for name in (self.config.get("map_history") or [])]
 
         self.window = OverlayWindow(
             i18n=self.i18n,
@@ -127,6 +140,7 @@ class AlbionAwareApp:
             on_more_click=self._on_more_click,
             on_drag_end=self._save_position,
             on_sound_click=self._toggle_sound,
+            on_map_click=self._open_maps,
         )
         self.window.set_sound(bool(self.config.get("overlay.sound", False)))
         self.window.render(View(), self._item_power)
@@ -149,6 +163,7 @@ class AlbionAwareApp:
             self.config.get("hotkeys.mark_party", "F9"): self._queue_mark_selected,
             self.config.get("hotkeys.toggle_visible", "F8"): self._queue_toggle_visible,
             self.config.get("hotkeys.toggle_sound", "F7"): self._queue_toggle_sound,
+            self.config.get("hotkeys.map_lookup", "F6"): self._queue_toggle_maps,
         })
         self.tray = build_tray(self.i18n, self._tray_actions())
 
@@ -167,6 +182,18 @@ class AlbionAwareApp:
 
     def _queue_mark_selected(self):
         self._queue_action(self._mark_selected)
+
+    def _queue_open_maps(self):
+        self._queue_action(self._open_maps)
+
+    def _queue_toggle_maps(self):
+        self._queue_action(self._toggle_maps)
+
+    def _toggle_maps(self) -> None:
+        if self._map_window is not None and self._map_window.is_open:
+            self._map_window.close()
+            return
+        self._open_maps()
 
     def _on_frames(self, frames) -> None:
         self._ever_received = True
@@ -214,6 +241,57 @@ class AlbionAwareApp:
     def _diagnose_silence(self) -> None:
         accelerator = detect_accelerator(parse_process_names(running_tasklist()))
         self._queue_action(self._open_diagnostics, accelerator)
+
+    def _open_maps(self) -> None:
+        if self._map_window is None or not self._map_window.alive:
+            self._map_window = MapWindow(
+                self.window.root,
+                self.i18n,
+                data_dir=_resource_dir(self.app_dir) / "data" / "avalon",
+                history=self._map_history,
+                on_position_changed=self._save_map_position,
+                on_selected=self._remember_map,
+            )
+            if self._map_index is not None:
+                self._map_window.set_index(self._map_index)
+            else:
+                self._load_map_index()
+            map_x = self.config.get("overlay.map_x")
+            map_y = self.config.get("overlay.map_y")
+            if map_x is not None and map_y is not None:
+                self._map_window.place_at(map_x, map_y)
+        self._map_window.open(self._zone_id if self._in_roads else None)
+
+    def _load_map_index(self) -> None:
+        if self._map_index is not None or self._map_index_loading:
+            return
+        self._map_index_loading = True
+        path = _resource_dir(self.app_dir) / "data" / "avalon" / "index.json"
+
+        def work() -> None:
+            try:
+                index = AvalonMapIndex.load(path)
+            except (OSError, ValueError):
+                index = None
+            self._queue_action(self._map_index_ready, index)
+
+        threading.Thread(target=work, name="avalon-map-index", daemon=True).start()
+
+    def _map_index_ready(self, index) -> None:
+        self._map_index_loading = False
+        self._map_index = index
+        if self._map_window is not None:
+            self._map_window.set_index(index)
+
+    def _save_map_position(self, x: int, y: int) -> None:
+        self.config.set("overlay.map_x", int(x))
+        self.config.set("overlay.map_y", int(y))
+        self.config.save()
+
+    def _remember_map(self, name: str) -> None:
+        self._map_history = push_history(self._map_history, name)
+        self.config.set("map_history", self._map_history)
+        self.config.save()
 
     def _open_diagnostics(self, accelerator=None) -> None:
         self._diag_window = DiagnosticsWindow(
@@ -271,8 +349,15 @@ class AlbionAwareApp:
                 self.store.remove(event.player_id)
                 applied = True
             elif isinstance(event, ZoneChanged):
+                self._zone_id = event.zone_id
                 self.store.clear()
                 self.panel.hide()
+                if is_roads_zone(event.zone_id):
+                    if not self._in_roads:
+                        self.window.flash_map_icon()
+                    self._in_roads = True
+                else:
+                    self._in_roads = False
                 applied = True
             elif isinstance(event, PartyEvent):
                 self.party.handle_event(event.parameters, self.store)
@@ -433,6 +518,9 @@ class AlbionAwareApp:
         if self._diag_window is not None:
             self._diag_window.close()
             self._diag_window = None
+        if self._map_window is not None:
+            self._map_window.destroy()
+            self._map_window = None
         try:
             self.tray.stop()
         except Exception:
@@ -445,6 +533,7 @@ class AlbionAwareApp:
         return {
             "toggle_visible": lambda: self._queue_action(self._toggle_visible),
             "click_through": lambda: self._queue_action(self._toggle_click_through),
+            "map_lookup": lambda: self._queue_action(self._open_maps),
             "reset_position": lambda: self._queue_action(self.window.reset_position),
             "set_opacity": lambda value: self._queue_action(self._set_opacity, value),
             "toggle_sound": lambda: self._queue_action(self._toggle_sound),
@@ -465,6 +554,9 @@ class AlbionAwareApp:
         self._stopping.set()
         if self._diag_window is not None:
             self._diag_window.close()
+        if self._map_window is not None:
+            self._map_window.destroy()
+            self._map_window = None
         self.client.stop()
         self.hotkeys.stop()
         try:

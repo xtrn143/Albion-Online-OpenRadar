@@ -2,7 +2,8 @@
 import sys
 from pathlib import Path
 
-from albion_aware.main import sound_cooldown_ok, _resource_dir, has_new_stranger, user_data_dir
+from albion_aware.main import (push_history, sound_cooldown_ok, _resource_dir,
+                               has_new_stranger, user_data_dir)
 
 
 def test_user_data_dir_uses_app_dir_when_not_frozen(tmp_path, monkeypatch):
@@ -42,3 +43,14 @@ def test_sound_cooldown_blocks_bursts():
     assert sound_cooldown_ok(None, 100.0, cooldown=2.0) is True
     assert sound_cooldown_ok(100.0, 101.5, cooldown=2.0) is False
     assert sound_cooldown_ok(100.0, 102.0, cooldown=2.0) is True
+
+
+def test_push_history_puts_newest_first_and_dedupes():
+    assert push_history(["A", "B"], "C") == ["C", "A", "B"]
+    assert push_history(["A", "B"], "B") == ["B", "A"]
+
+
+def test_push_history_caps_length():
+    history = [f"Z{i}" for i in range(10)]
+    assert len(push_history(history, "NEW", limit=10)) == 10
+    assert push_history(history, "NEW", limit=10)[0] == "NEW"
