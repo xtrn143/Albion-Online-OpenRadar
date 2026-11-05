@@ -68,3 +68,22 @@ def test_tab_completes_first_hit():
     window._refresh = lambda text: None
     assert window._on_tab() == "break"
     assert window.entry.value == "Hetitos-Iuaerom"
+
+
+def test_configure_replays_pending_status():
+    window = MapWindow.__new__(MapWindow)
+    window._pil = None
+    window._status_text = "loading"
+    calls = []
+    window._status = lambda text: calls.append(text)
+    window._on_configure()
+    assert calls == ["loading"]
+
+
+def test_configure_redraws_visible_image():
+    window = MapWindow.__new__(MapWindow)
+    window._pil = object()
+    calls = []
+    window._redraw = lambda: calls.append("redraw")
+    window._on_configure()
+    assert calls == ["redraw"]

@@ -103,6 +103,7 @@ class MapWindow:
         self.canvas.bind("<B1-Motion>", self._on_drag)
         self.canvas.bind("<ButtonRelease-1>", self._on_release)
         self.canvas.bind("<Double-Button-1>", lambda _event: self._reset_view())
+        self.canvas.bind("<Configure>", self._on_configure)
 
         tk.Label(self.top, text=i18n.t("map.hint"), bg=BG, fg=SUB,
                  font=("Segoe UI", 8), anchor="w").pack(fill="x", pady=(4, 0))
@@ -309,7 +310,15 @@ class MapWindow:
                                  height / 2 + self._offset[1],
                                  image=self._photo, anchor="center", tags="map")
 
+    def _on_configure(self, _event=None) -> None:
+        """窗口首次映射后 canvas 才有真实尺寸，此时补画一次。"""
+        if self._pil is not None:
+            self._redraw()
+        elif getattr(self, "_status_text", ""):
+            self._status(self._status_text)
+
     def _status(self, text: str) -> None:
+        self._status_text = text
         self.canvas.delete("all")
         self._photo = None
         if text:
