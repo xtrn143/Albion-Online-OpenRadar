@@ -29,6 +29,8 @@ STATUS_OFF = "#6b6b6b"
 SOUND_ON = (230, 230, 230, 255)
 SOUND_OFF = (107, 107, 107, 255)
 SOUND_SLASH = (255, 75, 62, 255)
+MAP_ON = (230, 230, 230, 255)
+MAP_HOT = (232, 192, 74, 255)
 CLICK_WARN = "#e8c04a"
 
 
@@ -43,6 +45,18 @@ def sound_icon(on: bool) -> Image.Image:
         draw.line((11, 6, 9, 8), fill=color, width=1)
     else:
         draw.line((2, 2, 10, 10), fill=SOUND_SLASH, width=2)
+    return image
+
+
+def map_icon(hot: bool = False) -> Image.Image:
+    """12px 地图图标：常态白色，进入阿瓦隆后临时变金色。"""
+    image = Image.new("RGBA", (12, 12), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(image)
+    color = MAP_HOT if hot else MAP_ON
+    draw.rectangle((1, 2, 10, 10), outline=color, width=1)
+    draw.line((4, 2, 4, 10), fill=color)
+    draw.line((7, 2, 7, 10), fill=color)
+    draw.line((1, 6, 10, 6), fill=color)
     return image
 
 
@@ -62,13 +76,14 @@ def format_ip(item_power: int | None) -> str:
 
 class OverlayWindow:
     def __init__(self, i18n, icon_loader, on_row_click, on_more_click, on_drag_end,
-                 on_sound_click=None):
+                 on_sound_click=None, on_map_click=None):
         self.i18n = i18n
         self._icon_loader = icon_loader          # (Player) -> ImageTk.PhotoImage | None
         self._on_row_click = on_row_click
         self._on_more_click = on_more_click
         self._on_drag_end = on_drag_end
         self._on_sound_click = on_sound_click
+        self._on_map_click = on_map_click
 
         self.root = tk.Tk()
         self.root.title(i18n.t("app.title"))
@@ -98,6 +113,14 @@ class OverlayWindow:
                                    image=self._sound_images[False])
         self.sound_icon.pack(side="left", padx=(1, 0))
         self.sound_icon.bind("<Button-1>", self._toggle_sound_click)
+
+        self._map_images = {hot: ImageTk.PhotoImage(map_icon(hot), master=self.root)
+                            for hot in (False, True)}
+        self._map_job = None
+        self.map_icon = tk.Label(self.top_row, bg=BG, bd=0,
+                                 image=self._map_images[False])
+        self.map_icon.pack(side="left", padx=(2, 0))
+        self.map_icon.bind("<Button-1>", self._map_click)
 
         self.click_icon = tk.Label(self.top_row, text="!", bg=BG, fg=CLICK_WARN,
                                    font=("Segoe UI", 7, "bold"), bd=0)
@@ -255,6 +278,29 @@ class OverlayWindow:
         if self._on_sound_click is not None:
             self._on_sound_click()
         return "break"
+
+    def _map_click(self, _event=None):
+        if self._on_map_click is not None:
+            self._on_map_click()
+        return "break"
+
+    def flash_map_icon(self, duration_ms: int = 5000) -> None:
+        """进入阿瓦隆时短暂变金，提示可以按 F6 查图。"""
+        if self._map_job is not None:
+            try:
+                self.root.after_cancel(self._map_job)
+            except tk.TclError:
+                pass
+            self._map_job = None
+        self._set_map_hot(True)
+        self._map_job = self.root.after(duration_ms, self._cool_map)
+
+    def _cool_map(self) -> None:
+        self._map_job = None
+        self._set_map_hot(False)
+
+    def _set_map_hot(self, hot: bool) -> None:
+        self.map_icon.configure(image=self._map_images[bool(hot)])
 
     def set_status(self, connected: bool) -> None:
         self.status.configure(fg=STATUS_ON if connected else STATUS_OFF)

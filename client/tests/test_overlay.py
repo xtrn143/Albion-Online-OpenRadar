@@ -1,5 +1,5 @@
 from albion_aware.overlay import (GLOW_LAYERS, GLOW_STEP, PAD, ROW_H, TOP_H, WIDTH,
-                                  OverlayWindow, format_ip, ip_color, sound_icon)
+                                  OverlayWindow, format_ip, ip_color, map_icon, sound_icon)
 
 
 class _FakeRoot:
@@ -167,3 +167,40 @@ def test_click_through_warning_icon_shows_only_when_enabled():
     assert window.click_icon.packed == 1
     window.set_click_through(False)
     assert window.click_icon.forgotten == 1
+
+
+def test_map_icon_highlights_in_gold():
+    normal = map_icon(False)
+    hot = map_icon(True)
+    assert normal.size == hot.size == (12, 12)
+    assert normal.getpixel((1, 1))[3] == 0
+
+    def has_gold(image):
+        return any(r > 180 and g > 140 and b < 120 and a > 0 for r, g, b, a in image.getdata())
+
+    assert has_gold(hot) is True
+    assert has_gold(normal) is False
+
+
+def test_flash_map_icon_swaps_image_then_cools():
+    class _Root:
+        def __init__(self):
+            self.jobs = {}
+
+        def after(self, ms, callback):
+            self.jobs["last"] = (ms, callback)
+            return "job-1"
+
+        def after_cancel(self, job):
+            self.jobs["cancelled"] = job
+
+    window = OverlayWindow.__new__(OverlayWindow)
+    window.root = _Root()
+    window.map_icon = _FakeLabel()
+    window._map_images = {False: "off-image", True: "hot-image"}
+    window._map_job = None
+    window.flash_map_icon(5000)
+    assert window.map_icon.kwargs["image"] == "hot-image"
+    assert window.root.jobs["last"][0] == 5000
+    window.root.jobs["last"][1]()
+    assert window.map_icon.kwargs["image"] == "off-image"
