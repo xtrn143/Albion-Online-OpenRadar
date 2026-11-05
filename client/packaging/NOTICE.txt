@@ -27,3 +27,7 @@ EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
 OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+
+Avalon map screenshots and resource data come from the avalon-gold-finder
+community project and https://portaler.pages.dev. They are bundled for
+offline convenience only; all rights remain with their original authors.

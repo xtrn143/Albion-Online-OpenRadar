@@ -18,3 +18,6 @@ AlbionAware 使用说明 / Usage
 包含 OpenRadar（MIT，作者 Nouuu，官方未修改二进制）。
 物品图标已随包内置（data/icons），全程离线可用，不需要联网。
 本程序不含 Npcap，不注入游戏、不读写游戏内存、不修改游戏文件。
+
+阿瓦隆查图（F6）：地图截图与资源数据来自 avalon-gold-finder 与 portaler.pages.dev，
+仅供离线查询使用，版权归原作者所有。

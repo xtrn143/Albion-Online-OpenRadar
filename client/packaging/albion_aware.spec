@@ -8,6 +8,7 @@ a = Analysis(
         ("../albion_aware/lang", "albion_aware/lang"),
         ("../data/items.min.json", "data"),
         ("../data/icons", "data/icons"),
+        ("../data/avalon", "data/avalon"),
     ],
     hiddenimports=["pystray._win32", "PIL._tkinter_finder"],
     hookspath=[],
