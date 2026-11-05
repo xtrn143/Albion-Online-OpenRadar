@@ -8,6 +8,7 @@
   "tray.reset_position": "重置位置",
   "tray.opacity": "透明度",
   "tray.sound": "提示音",
+  "tray.map_lookup": "阿瓦隆查图 (F6)",
   "tray.language": "语言",
   "tray.language.auto": "跟随系统",
   "tray.language.zh": "中文",
@@ -59,5 +60,14 @@
   "about.version": "版本 {version}",
   "about.license": "包含 OpenRadar（MIT，作者 Nouuu）",
   "common.ok": "确定",
-  "common.cancel": "取消"
+  "common.cancel": "取消",
+  "map.title": "阿瓦隆查图",
+  "map.loading": "地图数据加载中…",
+  "map.missing": "地图数据缺失，请重新安装",
+  "map.no_result": "没有匹配的区",
+  "map.current": "当前",
+  "map.no_image": "该区暂无截图",
+  "map.hint": "输入 HET LUA 或 SEC QI ODE · Enter 查看 · ↑↓ 选择 · Esc 关闭",
+  "map.count": "{count} 个结果",
+  "map.tier": "T{tier}"
 }

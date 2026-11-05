@@ -18,8 +18,11 @@ DEFAULT_CONFIG = {
         "mark_party": "F9",
         "toggle_visible": "F8",
         "toggle_sound": "F7",
+        "map_lookup": "F6",
     },
-    "overlay": {"x": None, "y": None, "opacity": 0.9, "sound": False},
+    "overlay": {"x": None, "y": None, "opacity": 0.9, "sound": False,
+                "map_x": None, "map_y": None},
+    "map_history": [],
     "radar": {
         "base_url": "http://localhost:5001",
         "ws_url": "ws://localhost:5001/ws",

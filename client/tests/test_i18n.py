@@ -28,3 +28,13 @@ def test_unknown_language_falls_back_to_english():
 def test_format_placeholders():
     i18n = I18n("en", LANG_DIR)
     assert i18n.t("about.version", version="1.0.0") == "Version 1.0.0"
+
+
+def test_map_texts_exist_in_both_languages():
+    zh = I18n("zh-CN", LANG_DIR)
+    en = I18n("en", LANG_DIR)
+    for key in ("map.title", "map.loading", "map.missing",
+                "map.no_result", "map.current", "map.no_image", "map.hint",
+                "map.count", "map.tier", "tray.map_lookup"):
+        assert zh.t(key) != key, key
+        assert en.t(key) != key, key

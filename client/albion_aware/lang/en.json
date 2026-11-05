@@ -8,6 +8,7 @@
   "tray.reset_position": "Reset position",
   "tray.opacity": "Opacity",
   "tray.sound": "Alert sound",
+  "tray.map_lookup": "Avalon map (F6)",
   "tray.language": "Language",
   "tray.language.auto": "Follow system",
   "tray.language.zh": "中文",
@@ -59,5 +60,14 @@
   "about.version": "Version {version}",
   "about.license": "Includes OpenRadar (MIT, by Nouuu)",
   "common.ok": "OK",
-  "common.cancel": "Cancel"
+  "common.cancel": "Cancel",
+  "map.title": "Avalon map lookup",
+  "map.loading": "Loading map data…",
+  "map.missing": "Map data missing, please reinstall",
+  "map.no_result": "No matching zone",
+  "map.current": "Current",
+  "map.no_image": "No screenshot for this zone",
+  "map.hint": "Type HET LUA or SEC QI ODE · Enter view · ↑↓ select · Esc close",
+  "map.count": "{count} results",
+  "map.tier": "T{tier}"
 }

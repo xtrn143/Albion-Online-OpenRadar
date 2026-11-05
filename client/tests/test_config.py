@@ -79,3 +79,11 @@ def test_migrated_config_keeps_user_sound_choice(tmp_path):
                     encoding="utf-8")
     cfg = Config(path)
     assert cfg.get("overlay.sound") is True
+
+
+def test_map_defaults_present():
+    cfg = default_config()
+    assert cfg["hotkeys"]["map_lookup"] == "F6"
+    assert cfg["overlay"]["map_x"] is None
+    assert cfg["overlay"]["map_y"] is None
+    assert cfg["map_history"] == []
