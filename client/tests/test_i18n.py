@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 from albion_aware.i18n import I18n
@@ -30,11 +31,18 @@ def test_format_placeholders():
     assert i18n.t("about.version", version="1.0.0") == "Version 1.0.0"
 
 
+def test_language_files_share_the_same_key_set():
+    """直接比对原始 JSON：I18n 会回落英文，缺键时 t() 仍返回文本，无法防漏翻译。"""
+    zh = json.loads((LANG_DIR / "zh-CN.json").read_text(encoding="utf-8"))
+    en = json.loads((LANG_DIR / "en.json").read_text(encoding="utf-8"))
+    assert set(zh) == set(en)
+
+
 def test_map_texts_exist_in_both_languages():
-    zh = I18n("zh-CN", LANG_DIR)
-    en = I18n("en", LANG_DIR)
+    zh = json.loads((LANG_DIR / "zh-CN.json").read_text(encoding="utf-8"))
+    en = json.loads((LANG_DIR / "en.json").read_text(encoding="utf-8"))
     for key in ("map.title", "map.loading", "map.missing",
                 "map.no_result", "map.current", "map.no_image", "map.hint",
                 "map.count", "map.tier", "tray.map_lookup"):
-        assert zh.t(key) != key, key
-        assert en.t(key) != key, key
+        assert zh.get(key), key
+        assert en.get(key), key

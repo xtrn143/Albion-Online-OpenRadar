@@ -87,3 +87,16 @@ def test_map_defaults_present():
     assert cfg["overlay"]["map_x"] is None
     assert cfg["overlay"]["map_y"] is None
     assert cfg["map_history"] == []
+
+
+def test_legacy_config_gains_map_defaults_on_load(tmp_path):
+    """老配置没有 map_* 键，加载时必须补齐默认值，否则 Task 6 会读到 None。"""
+    path = tmp_path / "config.json"
+    path.write_text(json.dumps({"config_version": 2, "overlay": {"opacity": 0.8}}),
+                    encoding="utf-8")
+    cfg = Config(path)
+    assert cfg.get("map_history") == []
+    assert cfg.get("hotkeys.map_lookup") == "F6"
+    assert cfg.get("overlay.map_x") is None
+    assert cfg.get("overlay.map_y") is None
+    assert cfg.get("overlay.opacity") == 0.8
