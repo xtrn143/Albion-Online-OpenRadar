@@ -1,6 +1,6 @@
 ; client/packaging/albion_aware.iss
 #define MyAppName "AlbionAware"
-#define MyAppVersion "0.1.0"
+#define MyAppVersion "0.2.0"
 #define MyAppPublisher "portaler.pages.dev"
 
 [Setup]

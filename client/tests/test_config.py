@@ -33,7 +33,7 @@ def test_partial_config_is_merged_with_defaults(tmp_path):
     path.write_text(json.dumps({"self_name": "X"}), encoding="utf-8")
     cfg = Config(path)
     assert cfg.get("self_name") == "X"
-    assert cfg.get("hotkeys.toggle_click_through") == "F10"
+    assert cfg.get("hotkeys.toggle_click_through") == "F11"
 
 
 def test_language_auto_detects_chinese_windows():
@@ -54,7 +54,7 @@ def test_explicit_language_wins():
 def test_default_config_is_not_shared():
     a, b = default_config(), default_config()
     a["hotkeys"]["mark_party"] = "F7"
-    assert b["hotkeys"]["mark_party"] == "F9"
+    assert b["hotkeys"]["mark_party"] == "F10"
 
 
 def test_alert_sound_is_off_by_default():
@@ -66,11 +66,11 @@ def test_legacy_config_forces_sound_off_once(tmp_path):
     path.write_text(json.dumps({"overlay": {"sound": True}}), encoding="utf-8")
     cfg = Config(path)
     assert cfg.get("overlay.sound") is False
-    assert cfg.get("config_version") == 2
+    assert cfg.get("config_version") == 3
     # 迁移结果写入磁盘，用户之后手动打开提示音不会被覆盖
     raw = json.loads(path.read_text(encoding="utf-8"))
     assert raw["overlay"]["sound"] is False
-    assert raw["config_version"] == 2
+    assert raw["config_version"] == 3
 
 
 def test_migrated_config_keeps_user_sound_choice(tmp_path):
@@ -83,7 +83,7 @@ def test_migrated_config_keeps_user_sound_choice(tmp_path):
 
 def test_map_defaults_present():
     cfg = default_config()
-    assert cfg["hotkeys"]["map_lookup"] == "F6"
+    assert cfg["hotkeys"]["map_lookup"] == "F9"
     assert cfg["overlay"]["map_x"] is None
     assert cfg["overlay"]["map_y"] is None
     assert cfg["map_history"] == []
@@ -96,7 +96,26 @@ def test_legacy_config_gains_map_defaults_on_load(tmp_path):
                     encoding="utf-8")
     cfg = Config(path)
     assert cfg.get("map_history") == []
-    assert cfg.get("hotkeys.map_lookup") == "F6"
+    assert cfg.get("hotkeys.map_lookup") == "F9"
     assert cfg.get("overlay.map_x") is None
     assert cfg.get("overlay.map_y") is None
     assert cfg.get("overlay.opacity") == 0.8
+
+
+def test_v2_config_gets_new_hotkey_layout(tmp_path):
+    path = tmp_path / "config.json"
+    path.write_text(json.dumps({"config_version": 2, "hotkeys": {"map_lookup": "F6"}}),
+                    encoding="utf-8")
+    cfg = Config(path)
+    assert cfg.get("hotkeys.map_lookup") == "F9"
+    assert cfg.get("hotkeys.toggle_visible") == "F12"
+    assert cfg.get("config_version") == 3
+
+
+def test_current_version_keeps_custom_hotkeys(tmp_path):
+    path = tmp_path / "config.json"
+    path.write_text(json.dumps({"config_version": 3,
+                                "hotkeys": {"map_lookup": "Ctrl+F6"}}),
+                    encoding="utf-8")
+    cfg = Config(path)
+    assert cfg.get("hotkeys.map_lookup") == "Ctrl+F6"

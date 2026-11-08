@@ -3,7 +3,7 @@ import copy
 import json
 from pathlib import Path
 
-CONFIG_VERSION = 2
+CONFIG_VERSION = 3
 
 DEFAULT_CONFIG = {
     "config_version": CONFIG_VERSION,
@@ -14,11 +14,11 @@ DEFAULT_CONFIG = {
     "sort_mode": "recent",
     "icon_cache_days": 30,
     "hotkeys": {
-        "toggle_click_through": "F10",
-        "mark_party": "F9",
-        "toggle_visible": "F8",
-        "toggle_sound": "F7",
-        "map_lookup": "F6",
+        "toggle_sound": "F8",
+        "map_lookup": "F9",
+        "toggle_visible": "F12",
+        "mark_party": "F10",
+        "toggle_click_through": "F11",
     },
     "overlay": {"x": None, "y": None, "opacity": 0.9, "sound": False,
                 "map_x": None, "map_y": None},
@@ -86,10 +86,15 @@ class Config:
         return self.data
 
     def _migrate(self, version) -> None:
-        """老配置一次性升级：v2 起提示音默认关闭，避免城里持续蜂鸣。"""
+        """老配置一次性升级：v2 起提示音默认关闭；v3 起换用新的默认热键布局。"""
         if isinstance(version, int) and version >= CONFIG_VERSION:
             return
-        self.data["overlay"]["sound"] = False
+        legacy = version if isinstance(version, int) else 0
+        if legacy < 2:
+            # 避免城里持续蜂鸣
+            self.data["overlay"]["sound"] = False
+        if legacy < 3:
+            self.data["hotkeys"] = copy.deepcopy(DEFAULT_CONFIG["hotkeys"])
         self.data["config_version"] = CONFIG_VERSION
         self.save()
 

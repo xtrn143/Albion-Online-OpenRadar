@@ -286,7 +286,7 @@ class OverlayWindow:
         return "break"
 
     def flash_map_icon(self, duration_ms: int = MAP_HOT_MS) -> None:
-        """进入阿瓦隆时短暂变金，提示可以按 F6 查图。"""
+        """进入阿瓦隆时短暂变金，提示可以查图。"""
         if self._map_job is not None:
             try:
                 self.root.after_cancel(self._map_job)

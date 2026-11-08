@@ -76,18 +76,38 @@ class HotkeyListener(threading.Thread):
 
     def __init__(self, bindings: dict[str, callable]):
         super().__init__(name="hotkey-listener", daemon=True)
-        self._bindings = [(parse_hotkey(text), callback) for text, callback in bindings.items()]
+        self._texts: list[str] = []
+        parsed = []
+        for text, callback in bindings.items():
+            try:
+                parsed.append((parse_hotkey(text), callback))
+            except ValueError:
+                continue  # 用户手改配置写错时跳过，不让程序启动崩溃
+            self._texts.append(text)
+        self._bindings = parsed
+        self.failed: list[str] = []     # 注册失败（被其他程序占用）的热键
+        self.ready = threading.Event()  # 首次注册完成后置位，供调用方读取 failed
         self._stopping = threading.Event()
 
     def stop(self) -> None:
         self._stopping.set()
+        if self.is_alive() and threading.current_thread() is not self:
+            # 等旧线程注销热键，避免重建时 RegisterHotKey 因冲突失败
+            self.join(timeout=1.0)
 
     def run(self) -> None:
         if sys.platform != "win32":
+            self.ready.set()
             return
         user32 = _user32()
-        registered = [index for index, ((mods, vk), _) in enumerate(self._bindings, start=1)
-                      if user32.RegisterHotKey(None, index, mods, vk)]
+        registered = []
+        self.failed = []
+        for index, ((mods, vk), _) in enumerate(self._bindings, start=1):
+            if user32.RegisterHotKey(None, index, mods, vk):
+                registered.append(index)
+            else:
+                self.failed.append(self._texts[index - 1])
+        self.ready.set()
         try:
             message = ctypes.wintypes.MSG()
             while not self._stopping.is_set():

@@ -31,6 +31,7 @@ from albion_aware.event_parser import (
     parse_message,
 )
 from albion_aware.i18n import I18n
+from albion_aware.hotkey_window import HOTKEY_ACTIONS, HotkeyWindow
 from albion_aware.icons import IconCache, ItemDatabase, draw_enchant_badge, enchant_level
 from albion_aware.launcher import (
     FEEDBACK_URL,
@@ -167,13 +168,7 @@ class AlbionAwareApp:
 
         self.client = RadarClient(self.config.get("radar.ws_url", "ws://localhost:5001/ws"),
                                   on_frames=self._on_frames, on_state=self._on_state)
-        self.hotkeys = HotkeyListener({
-            self.config.get("hotkeys.toggle_click_through", "F10"): self._queue_toggle_click_through,
-            self.config.get("hotkeys.mark_party", "F9"): self._queue_mark_selected,
-            self.config.get("hotkeys.toggle_visible", "F8"): self._queue_toggle_visible,
-            self.config.get("hotkeys.toggle_sound", "F7"): self._queue_toggle_sound,
-            self.config.get("hotkeys.map_lookup", "F6"): self._queue_toggle_maps,
-        })
+        self.hotkeys = HotkeyListener(self._hotkey_bindings())
         self.tray = build_tray(self.i18n, self._tray_actions())
 
     # ---------- 线程边界：WS/热键/托盘只入队，Tk 操作在主线程 ----------
@@ -197,6 +192,34 @@ class AlbionAwareApp:
 
     def _queue_toggle_maps(self):
         self._queue_action(self._toggle_maps)
+
+    def _hotkey_bindings(self) -> dict[str, callable]:
+        return {
+            self.config.get("hotkeys.toggle_sound", "F8"): self._queue_toggle_sound,
+            self.config.get("hotkeys.map_lookup", "F9"): self._queue_toggle_maps,
+            self.config.get("hotkeys.toggle_visible", "F12"): self._queue_toggle_visible,
+            self.config.get("hotkeys.mark_party", "F10"): self._queue_mark_selected,
+            self.config.get("hotkeys.toggle_click_through", "F11"): self._queue_toggle_click_through,
+        }
+
+    def _open_hotkeys(self) -> None:
+        values = {action: self.config.get(f"hotkeys.{action}", "")
+                  for action in HOTKEY_ACTIONS}
+        HotkeyWindow(self.window.root, self.i18n, values, self._apply_hotkeys)
+
+    def _apply_hotkeys(self, values: dict[str, str]) -> None:
+        for action, text in values.items():
+            self.config.set(f"hotkeys.{action}", text)
+        self.config.save()
+        self.hotkeys.stop()
+        self.hotkeys = HotkeyListener(self._hotkey_bindings())
+        self.hotkeys.start()
+        self.hotkeys.ready.wait(0.5)
+        if self.hotkeys.failed:
+            # 被其他程序占用的键不会生效，明确告知而不是静默失灵
+            messagebox.showwarning(
+                "AlbionAware",
+                self.i18n.t("hotkeys.occupied", keys=", ".join(self.hotkeys.failed)))
 
     def _toggle_maps(self) -> None:
         if self._map_window is not None and self._map_window.is_open:
@@ -548,6 +571,7 @@ class AlbionAwareApp:
             "toggle_visible": lambda: self._queue_action(self._toggle_visible),
             "click_through": lambda: self._queue_action(self._toggle_click_through),
             "map_lookup": self._queue_open_maps,
+            "hotkeys": lambda: self._queue_action(self._open_hotkeys),
             "reset_position": lambda: self._queue_action(self.window.reset_position),
             "set_opacity": lambda value: self._queue_action(self._set_opacity, value),
             "toggle_sound": lambda: self._queue_action(self._toggle_sound),
