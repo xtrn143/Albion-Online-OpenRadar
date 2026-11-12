@@ -70,6 +70,35 @@
         </div>
     </div>
 
+    <!-- Gathering Targets Section -->
+    <div id="gatheringCard" class="card bg-base-200">
+        <div class="card-body">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <h3 class="text-xl font-semibold text-base-content flex items-center gap-2">
+                    Gathering Targets
+                    <span id="gatheringStateBadge" class="badge badge-primary badge-sm hidden">采集中</span>
+                    <label class="flex items-center gap-1.5 cursor-pointer" title="Show gathering targets on radar">
+                        <input type="checkbox" id="settingShowGatheringTargets" class="checkbox checkbox-primary checkbox-xs">
+                        <span class="text-xs text-base-content/60 font-normal">Show</span>
+                    </label>
+                </h3>
+                <div class="flex items-center gap-2">
+                    <select id="settingGatheringSort" class="select select-sm select-bordered">
+                        <option value="nearest">就近优先</option>
+                        <option value="tier">高级优先</option>
+                        <option value="efficiency">效率优先</option>
+                    </select>
+                    <input type="number" id="settingGatheringMaxTargets" class="input input-sm input-bordered w-16" min="1" max="10" title="Max targets">
+                </div>
+            </div>
+            <div class="flex items-center gap-4 mt-2">
+                <div id="gatheringCompass" class="shrink-0"></div>
+                <div id="gatheringTargets" class="flex-1 grid gap-1"></div>
+            </div>
+            <div id="gatheringEmpty" class="hidden py-4 text-center text-sm text-base-content/40">No resources in range</div>
+        </div>
+    </div>
+
     <!-- Detected Players Section -->
     <div id="playersSection" class="card bg-base-200">
         <div class="card-body">
@@ -192,6 +221,28 @@ window.onGlobalsReady(function() {
             addListener(el, 'change', () => settingsSync.setBool(id, el.checked));
         }
     });
+
+    const showTargetsEl = document.getElementById('settingShowGatheringTargets');
+    if (showTargetsEl) {
+        showTargetsEl.checked = settingsSync.getBool('settingShowGatheringTargets', true);
+        addListener(showTargetsEl, 'change', () => settingsSync.setBool('settingShowGatheringTargets', showTargetsEl.checked));
+    }
+
+    const gatheringModeEl = document.getElementById('settingGatheringSort');
+    if (gatheringModeEl) {
+        gatheringModeEl.value = settingsSync.get('settingGatheringSort', 'nearest');
+        addListener(gatheringModeEl, 'change', () => settingsSync.set('settingGatheringSort', gatheringModeEl.value));
+    }
+
+    const maxTargetsEl = document.getElementById('settingGatheringMaxTargets');
+    if (maxTargetsEl) {
+        maxTargetsEl.value = settingsSync.getNumber('settingGatheringMaxTargets', 5);
+        addListener(maxTargetsEl, 'change', () => {
+            const value = Math.max(1, Math.min(10, Number(maxTargetsEl.value) || 5));
+            maxTargetsEl.value = value;
+            settingsSync.setNumber('settingGatheringMaxTargets', value);
+        });
+    }
 
     // Zoom controls
     const zoomSlider = document.getElementById('settingRadarZoom');
