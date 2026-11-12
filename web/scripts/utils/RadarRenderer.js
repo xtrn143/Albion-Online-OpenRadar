@@ -319,10 +319,20 @@ export class RadarRenderer {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
         this.renderDistanceRings(ctx);
+        this.renderGatheringGuide(ctx);
         this.renderZoneInfo(ctx);
         this.renderStatsBox(ctx);
         this.renderThreatBorder(ctx);
         this.renderFlashOverlay(ctx);
+    }
+
+    /**
+     * Draw the gathering guide line for the selected target.
+     */
+    renderGatheringGuide(ctx) {
+        const advisor = this.handlers?.gatheringAdvisor;
+        if (!advisor || !settingsSync.getBool('settingShowGatheringTargets', true)) return;
+        this.drawings?.gatheringDrawing?.draw(ctx, advisor, this.drawingUtils, this.lpX, this.lpY);
     }
 
     renderFlashOverlay(ctx) {

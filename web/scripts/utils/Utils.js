@@ -23,6 +23,10 @@ import {CATEGORIES} from '../constants/LoggerConstants.js';
 import {createRadarRenderer} from './RadarRenderer.js';
 import {destroyEventQueue, getEventQueue} from './WebSocketEventQueue.js';
 import pictureInPictureManager from './PictureInPictureManager.js';
+import settingsSync from './SettingsSync.js';
+import {GatheringAdvisor} from './GatheringAdvisor.js';
+import {GatheringDrawing} from '../drawings/GatheringDrawing.js';
+import * as GatheringPanel from '../core/GatheringPanel.js';
 
 import * as WebSocketManager from '../core/WebSocketManager.js';
 import * as DatabaseLoader from '../core/DatabaseLoader.js';
@@ -35,18 +39,20 @@ let radarRenderer = null;
 let eventQueue = null;
 let playerListIntervalId = null;
 let cleanupIntervalId = null;
+let gatheringIntervalId = null;
 let buttonClickHandler = null;
 let lastPlayerListHash = '';
 
 let handlers = {
     harvestables: null, mobs: null, players: null, chests: null,
-    dungeons: null, wispCage: null, fishing: null, mistsDungeon: null
+    dungeons: null, wispCage: null, fishing: null, mistsDungeon: null,
+    gatheringAdvisor: null
 };
 
 let drawings = {
     harvestables: null, mobs: null, players: null, chests: null,
     dungeons: null, wispCage: null, mistsWisp: null, fishing: null, maps: null,
-    mistsDungeon: null
+    mistsDungeon: null, gathering: null
 };
 
 let drawingUtils = null;
@@ -96,7 +102,8 @@ function initializeRadarRenderer() {
             dungeonsHandler: handlers.dungeons,
             wispCageHandler: handlers.wispCage,
             fishingHandler: handlers.fishing,
-            mistsDungeonHandler: handlers.mistsDungeon
+            mistsDungeonHandler: handlers.mistsDungeon,
+            gatheringAdvisor: handlers.gatheringAdvisor
         },
         drawings: {
             mapsDrawing: drawings.maps,
@@ -108,7 +115,8 @@ function initializeRadarRenderer() {
             wispCageDrawing: drawings.wispCage,
             fishingDrawing: drawings.fishing,
             mistsWispDrawing: drawings.mistsWisp,
-            mistsDungeonDrawing: drawings.mistsDungeon
+            mistsDungeonDrawing: drawings.mistsDungeon,
+            gatheringDrawing: drawings.gathering
         },
         drawingUtils
     });
@@ -166,6 +174,7 @@ export async function initRadar() {
         handlers.wispCage = new WispCageHandler();
         handlers.fishing = new FishingHandler();
         handlers.mistsDungeon = new MistsDungeonHandler();
+        handlers.gatheringAdvisor = new GatheringAdvisor();
 
         drawings.maps = new MapDrawing();
         drawings.harvestables = new HarvestablesDrawing();
@@ -177,6 +186,7 @@ export async function initRadar() {
         drawings.mistsWisp = new MistsWispDrawing();
         drawings.fishing = new FishingDrawing();
         drawings.mistsDungeon = new MistsDungeonDrawing();
+        drawings.gathering = new GatheringDrawing();
 
         window.harvestablesHandler = handlers.harvestables;
         window.mobsHandler = handlers.mobs;
@@ -232,6 +242,25 @@ export async function initRadar() {
                 PlayerListRenderer.update(handlers.players);
             }
         }, 1500);
+
+        GatheringPanel.init(handlers.gatheringAdvisor);
+
+        gatheringIntervalId = setInterval(() => {
+            const advisor = handlers.gatheringAdvisor;
+            if (!advisor || !handlers.harvestables) return;
+            const local = handlers.players?.localPlayer;
+            const playerPos = Number.isFinite(local?.posX) && Number.isFinite(local?.posY)
+                ? {x: local.posX, y: local.posY}
+                : {x: 0, y: 0};
+            const settings = {
+                mode: settingsSync.get('settingGatheringSort', 'nearest'),
+                maxTargets: settingsSync.getNumber('settingGatheringMaxTargets', 5),
+            };
+            advisor.update(handlers.harvestables.harvestableList, playerPos, settings);
+            handlers.players?.setGatheringState?.(advisor.isGathering);
+            GatheringPanel.update(advisor);
+        }, 1000);
+
         cleanupIntervalId = setInterval(cleanupStaleEntities, 60000);
 
         const buttonElement = document.getElementById('button');
@@ -280,6 +309,11 @@ export function destroyRadar() {
         clearInterval(cleanupIntervalId);
         cleanupIntervalId = null;
     }
+    if (gatheringIntervalId) {
+        clearInterval(gatheringIntervalId);
+        gatheringIntervalId = null;
+    }
+    GatheringPanel.destroy();
 
     if (window.pipManager) {
         pictureInPictureManager.destroy();
@@ -310,6 +344,8 @@ export function destroyRadar() {
 
     PlayerListRenderer.reset();
     EventRouter.reset();
+    handlers.gatheringAdvisor = null;
+    drawings.gathering = null;
     lastPlayerListHash = '';
 
     isInitialized = false;
