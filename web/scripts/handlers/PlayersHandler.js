@@ -22,6 +22,7 @@ class Player {
         this.spells = spells || null;
         this.mounted = false;
         this.detectedAt = Date.now();
+        this.leftAt = null;
         this.lastUpdateTime = Date.now();
     }
 
@@ -200,6 +201,7 @@ export class PlayersHandler {
             if (guildName !== undefined) existingPlayer.guildName = guildName;
             if (hasAllianceName) existingPlayer.allianceName = allianceName;
             if (hasFaction) existingPlayer.faction = faction;
+            existingPlayer.leftAt = null;
             existingPlayer.touch();
         } else if (this.playersList.length < maxPlayers) {
             const player = new Player(0, 0, id, nickname, guildName, faction, allianceName, equipments, spells);
@@ -262,7 +264,9 @@ export class PlayersHandler {
     }
 
     removePlayer(id) {
-        this.playersList = this.playersList.filter(player => player.id !== id);
+        const player = this.playersList.find(target => target.id === id);
+        if (!player) return;
+        player.leftAt = Date.now();
     }
 
     updateLocalPlayerPosition(posX, posY) {
@@ -355,9 +359,12 @@ export class PlayersHandler {
         const now = Date.now();
         const before = this.playersList.length;
 
-        this.playersList = this.playersList.filter(player =>
-            (now - player.lastUpdateTime) < maxAgeMs
-        );
+        this.playersList = this.playersList.filter(player => {
+            if (player.leftAt) {
+                return (now - player.leftAt) < 30000;
+            }
+            return (now - player.lastUpdateTime) < maxAgeMs;
+        });
 
         const removed = before - this.playersList.length;
         if (removed > 0) {
@@ -403,7 +410,12 @@ export class PlayersHandler {
 
         const pvpType = zonesDatabase.getPvpType(window.currentMapId);
 
+        const now = Date.now();
         return this.playersList.filter(player => {
+            if (player.leftAt) {
+                return (now - player.leftAt) < 30000;
+            }
+
             // In blackzone, ALL players are threats - use showDangerous setting
             if (pvpType === 'black') {
                 return showDangerous;
@@ -438,6 +450,6 @@ export class PlayersHandler {
 
     getThreatPlayers() {
         const pvpType = zonesDatabase.getPvpType(window.currentMapId);
-        return this.playersList.filter(p => this.isPlayerThreat(p.faction, pvpType));
+        return this.playersList.filter(p => !p.leftAt && this.isPlayerThreat(p.faction, pvpType));
     }
 }

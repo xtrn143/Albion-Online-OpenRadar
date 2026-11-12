@@ -603,15 +603,34 @@ describe('PlayersHandler', () => {
     // Lifecycle
     // ---------------------------------------------------------------------------
     describe('lifecycle', () => {
-        // @verified 2026-04-18: removePlayer removes matching entity from list.
-        test('synthetic: removePlayer removes the target entity', () => {
+        // removePlayer 改为标记 leftAt，保留短时间用于展示“已离开”
+        test('synthetic: removePlayer marks leftAt and keeps the entity', () => {
             handler.handleNewPlayerEvent(1, {1: 'A', 8: '', 53: 0, 51: null, 40: [], 43: []});
             handler.handleNewPlayerEvent(2, {1: 'B', 8: '', 53: 0, 51: null, 40: [], 43: []});
 
             handler.removePlayer(1);
 
-            expect(handler.getSize()).toBe(1);
-            expect(handler.playersList[0].id).toBe(2);
+            const left = handler.playersList.find(p => p.id === 1);
+            expect(left).toBeTruthy();
+            expect(left.leftAt).toBeGreaterThan(0);
+            expect(handler.getSize()).toBe(2);
+        });
+
+        test('synthetic: 已离开玩家不再出现在威胁列表', () => {
+            zonesDatabase.getPvpType.mockReturnValue('black');
+            handler.handleNewPlayerEvent(1, {1: 'A', 8: '', 53: 0, 51: null, 40: [], 43: []});
+
+            handler.removePlayer(1);
+
+            expect(handler.getThreatPlayers()).toHaveLength(0);
+        });
+
+        test('synthetic: 超过 30 秒的离开记录不再出现在筛选列表', () => {
+            handler.handleNewPlayerEvent(1, {1: 'A', 8: '', 53: 0, 51: null, 40: [], 43: []});
+            handler.removePlayer(1);
+            handler.playersList[0].leftAt = Date.now() - 31000;
+
+            expect(handler.getFilteredPlayers()).toHaveLength(0);
         });
 
         // @verified 2026-04-18: Clear empties playersList and resets alreadyIgnoredPlayers.

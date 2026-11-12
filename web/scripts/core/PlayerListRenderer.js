@@ -49,7 +49,7 @@ function renderPlayerTypeBadge(effectiveType, factionCityName) {
 }
 
 function renderPlayerCard(player, threatType = null) {
-    const timeStr = formatElapsedTime(player.detectedAt);
+    const timeStr = player.leftAt ? `left ${formatElapsedTime(player.leftAt)}` : formatElapsedTime(player.detectedAt);
     const guildBadge = renderGuildBadge(player.guildName);
     const allianceBadge = renderAllianceBadge(player.allianceName);
 
@@ -163,7 +163,12 @@ function updateSectionPlayers(listContainer, players, threatType) {
             // Update existing card - minimal DOM operations
             const timeEl = existingCard.querySelector('[data-time]');
             if (timeEl) {
-                timeEl.textContent = formatElapsedTime(player.detectedAt);
+                timeEl.textContent = player.leftAt
+                    ? `left ${formatElapsedTime(player.leftAt)}`
+                    : formatElapsedTime(player.detectedAt);
+            }
+            if (player.leftAt) {
+                existingCard.classList.add('opacity-50');
             }
 
             if (player.currentHealth !== lastRender.health) {
