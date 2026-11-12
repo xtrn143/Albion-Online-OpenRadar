@@ -311,6 +311,7 @@ export class PlayersHandler {
         if (!uPlayer) return;
 
         uPlayer.currentHealth = Parameters[3];
+        uPlayer.leftAt = null;
         uPlayer.touch();
     }
 

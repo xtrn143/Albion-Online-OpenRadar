@@ -653,6 +653,24 @@ describe('PlayersHandler', () => {
             expect(handler.playersList.map(p => p.id)).toContain(3);
         });
 
+        test('synthetic: 离开后收到坐骑更新会清空 leftAt', () => {
+            handler.handleNewPlayerEvent(1, {1: 'A', 8: '', 53: 0, 51: null, 40: [], 43: []});
+            handler.removePlayer(1);
+
+            handler.updatePlayerMounted(1, true);
+
+            expect(handler.playersList[0].leftAt).toBeNull();
+        });
+
+        test('synthetic: 离开后收到血量更新会清空 leftAt', () => {
+            handler.handleNewPlayerEvent(1, {1: 'A', 8: '', 53: 0, 51: null, 40: [], 43: []});
+            handler.removePlayer(1);
+
+            handler.UpdatePlayerHealth({0: 1, 2: 900, 3: 1000});
+
+            expect(handler.playersList[0].leftAt).toBeNull();
+        });
+
         // @verified 2026-04-18: Clear empties playersList and resets alreadyIgnoredPlayers.
         test('synthetic: Clear empties playersList and resets alreadyIgnoredPlayers', () => {
             handler.handleNewPlayerEvent(1, {1: 'A', 8: '', 53: 0, 51: null, 40: [], 43: []});
