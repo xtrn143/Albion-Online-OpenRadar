@@ -211,3 +211,22 @@ describe('RadarRenderer._collectClusterCandidates on decoded MobsHandler state',
         expect(renderer._collectClusterCandidates()).toHaveLength(0);
     });
 });
+
+describe('RadarRenderer roam mode', () => {
+    beforeEach(() => {
+        vi.clearAllMocks();
+        settingsSync.get.mockImplementation((_k, d) => d);
+        window.logger = {debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn()};
+    });
+
+    test('roam 模式下不产生聚类候选', () => {
+        settingsSync.get.mockImplementation((key, def) => (key === 'settingGatheringMode' ? 'roam' : def));
+        settingsSync.getJSON.mockImplementation(() => allTrue());
+        const renderer = makeRenderer({
+            harvestableList: [{id: 1, stringType: 'Fiber', tier: 4, charges: 0, mobileTypeId: -1, hX: 1, hY: 1}],
+            mobsList: [{id: 2, type: 11, name: 'Fiber', tier: 4, enchantmentLevel: 0, hX: 2, hY: 2}],
+        });
+
+        expect(renderer._collectClusterCandidates()).toEqual([]);
+    });
+});

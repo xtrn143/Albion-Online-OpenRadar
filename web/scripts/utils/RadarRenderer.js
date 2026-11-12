@@ -194,8 +194,9 @@ export class RadarRenderer {
         }
 
         // Cluster detection with caching (recalculated every CLUSTER_UPDATE_INTERVAL)
+        const isRoam = settingsSync.get('settingGatheringMode', 'gather') === 'roam';
         let clustersForInfo = null;
-        if (settingsSync.getBool('settingResourceClusters') && context) {
+        if (!isRoam && settingsSync.getBool('settingResourceClusters') && context) {
             const currentTime = performance.now();
             const timeSinceLastUpdate = currentTime - this.lastClusterUpdate;
 
@@ -292,7 +293,7 @@ export class RadarRenderer {
             }
         }
 
-        if (clustersForInfo?.length && context) {
+        if (!isRoam && clustersForInfo?.length && context) {
             for (const cluster of clustersForInfo) {
                 try {
                     if (typeof this.drawingUtils?.drawClusterInfoBox === 'function') {
