@@ -206,6 +206,7 @@ export class GatheringAdvisor {
             selectedId: this.selectedId,
             isGathering: this.isGathering,
             lastHarvestAt: this.lastHarvestAt,
+            lastHarvestId: this.lastHarvestId,
         };
     }
 }

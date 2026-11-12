@@ -286,6 +286,7 @@ describe('GatheringAdvisor', () => {
 
         advisor.update([node(1, 0, 10, {size: 2})], player, {mode: 'nearest'});
         expect(advisor.isGathering).toBe(true);
+        expect(advisor.getState().lastHarvestId).toBe(1);
 
         now += 9000;
         advisor.update([node(1, 0, 10, {size: 2})], player, {mode: 'nearest'});
