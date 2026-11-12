@@ -226,7 +226,7 @@ export async function initRadar() {
 
         playerListIntervalId = setInterval(() => {
             const players = handlers.players?.getFilteredPlayers?.() || [];
-            const hash = `${players.length}:` + players.map(p => `${p.id}:${p.currentHealth}:${p.mounted ? 1 : 0}`).join(',');
+            const hash = `${players.length}:` + players.map(p => `${p.id}:${p.currentHealth}:${p.mounted ? 1 : 0}:${p.leftAt ?? ''}`).join(',');
             if (hash !== lastPlayerListHash) {
                 lastPlayerListHash = hash;
                 PlayerListRenderer.update(handlers.players);

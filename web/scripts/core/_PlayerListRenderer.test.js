@@ -90,4 +90,27 @@ describe('player equipment resolves to the correct items', () => {
 
         expect(document.body.innerHTML).toContain('/images/Items/T4_HEAD_LEATHER_SET2.webp');
     });
+
+    // @verified 2026-11-12: 玩家回流后复用同一张卡片，opacity-50 必须被移除，否则"已离开"样式会残留。
+    test('departed card loses opacity-50 when the same player returns', async () => {
+        const renderer = await import('./PlayerListRenderer.js');
+        const id = 4242;
+
+        handler.handleNewPlayerEvent(id, {1: 'Returner', 8: '', 53: 0, 51: null, 40: [], 43: []});
+        handler.removePlayer(id);
+
+        document.body.innerHTML = '<div id="playersList"><div id="playersPassive"><div id="passiveList"></div></div></div>';
+        renderer.reset();
+        renderer.update(handler);
+        await new Promise(resolve => requestAnimationFrame(resolve));
+
+        const card = document.querySelector(`[data-player-id="${id}"]`);
+        expect(card.classList.contains('opacity-50')).toBe(true);
+
+        handler.playersList[0].leftAt = null;
+        renderer.update(handler);
+        await new Promise(resolve => requestAnimationFrame(resolve));
+
+        expect(card.classList.contains('opacity-50')).toBe(false);
+    });
 });

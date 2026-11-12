@@ -416,7 +416,7 @@ export class RadarRenderer {
      * Render stats box (top right, conditional based on settings)
      */
     renderStatsBox(ctx) {
-        const playerCount = this.handlers.playersHandler?.getFilteredPlayers?.()?.length ?? 0;
+        const playerCount = this.handlers.playersHandler?.getFilteredPlayers?.()?.filter(p => !p.leftAt)?.length ?? 0;
         const resourceCount = this.drawings.harvestablesDrawing?.lastVisibleCount ?? 0;
         const mobCount = this.drawings.mobsDrawing?.lastVisibleCount ?? 0;
 

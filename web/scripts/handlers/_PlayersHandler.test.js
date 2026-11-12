@@ -633,6 +633,26 @@ describe('PlayersHandler', () => {
             expect(handler.getFilteredPlayers()).toHaveLength(0);
         });
 
+        test('synthetic: 离开后同一 id 再次出现会清空 leftAt', () => {
+            handler.handleNewPlayerEvent(1, {1: 'A', 8: '', 53: 0, 51: null, 40: [], 43: []});
+            handler.removePlayer(1);
+
+            handler.handleNewPlayerEvent(1, {1: 'A', 8: '', 53: 0, 51: null, 40: [], 43: []});
+
+            expect(handler.playersList[0].leftAt).toBeNull();
+        });
+
+        test('synthetic: 已离开记录不占用最大显示名额', () => {
+            settingsSync.getNumber.mockImplementation((k, d) => k === 'settingMaxPlayersDisplay' ? 2 : d);
+            handler.handleNewPlayerEvent(1, {1: 'A', 8: '', 53: 0, 51: null, 40: [], 43: []});
+            handler.handleNewPlayerEvent(2, {1: 'B', 8: '', 53: 0, 51: null, 40: [], 43: []});
+            handler.removePlayer(2);
+
+            handler.handleNewPlayerEvent(3, {1: 'C', 8: '', 53: 0, 51: null, 40: [], 43: []});
+
+            expect(handler.playersList.map(p => p.id)).toContain(3);
+        });
+
         // @verified 2026-04-18: Clear empties playersList and resets alreadyIgnoredPlayers.
         test('synthetic: Clear empties playersList and resets alreadyIgnoredPlayers', () => {
             handler.handleNewPlayerEvent(1, {1: 'A', 8: '', 53: 0, 51: null, 40: [], 43: []});

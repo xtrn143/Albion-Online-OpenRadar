@@ -131,7 +131,9 @@ function renderPlayerCard(player, threatType = null) {
     // Build card
     const accentBarClass = `bg-${playerTypeColor}`;
 
-    return `<div class="group relative p-4 pl-5 bg-gradient-to-br from-base-300 to-base-200 rounded-lg transition-all duration-200 hover:from-base-300/90 hover:to-base-200/90 hover:translate-x-0.5" data-player-id="${player.id}"><div class="absolute left-0 top-0 bottom-0 w-[3px] ${accentBarClass} opacity-90 group-hover:opacity-100 group-hover:w-1 transition-all"></div><div class="flex justify-between items-start gap-3"><div class="flex-1 min-w-0"><span class="block text-sm font-semibold text-base-content truncate">${player.nickname}</span><div class="flex flex-wrap items-center gap-1.5 mt-1">${guildBadge}${allianceBadge}</div></div><div class="flex flex-col items-end gap-1 shrink-0">${playerTypeBadge}<span data-time class="text-[10px] font-mono text-base-content/40">${timeStr}</span></div></div><div class="flex flex-wrap items-center gap-1.5 mt-2">${ipBadge}${mountedBadge}</div>${equipHtml}${spellsHtml}${healthHtml}${idStr}</div>`;
+    const departedClass = player.leftAt ? ' opacity-50' : '';
+
+    return `<div class="group relative p-4 pl-5${departedClass} bg-gradient-to-br from-base-300 to-base-200 rounded-lg transition-all duration-200 hover:from-base-300/90 hover:to-base-200/90 hover:translate-x-0.5" data-player-id="${player.id}"><div class="absolute left-0 top-0 bottom-0 w-[3px] ${accentBarClass} opacity-90 group-hover:opacity-100 group-hover:w-1 transition-all"></div><div class="flex justify-between items-start gap-3"><div class="flex-1 min-w-0"><span class="block text-sm font-semibold text-base-content truncate">${player.nickname}</span><div class="flex flex-wrap items-center gap-1.5 mt-1">${guildBadge}${allianceBadge}</div></div><div class="flex flex-col items-end gap-1 shrink-0">${playerTypeBadge}<span data-time class="text-[10px] font-mono text-base-content/40">${timeStr}</span></div></div><div class="flex flex-wrap items-center gap-1.5 mt-2">${ipBadge}${mountedBadge}</div>${equipHtml}${spellsHtml}${healthHtml}${idStr}</div>`;
 }
 
 function updateSectionPlayers(listContainer, players, threatType) {
@@ -167,9 +169,7 @@ function updateSectionPlayers(listContainer, players, threatType) {
                     ? `left ${formatElapsedTime(player.leftAt)} ago`
                     : formatElapsedTime(player.detectedAt);
             }
-            if (player.leftAt) {
-                existingCard.classList.add('opacity-50');
-            }
+            existingCard.classList.toggle('opacity-50', Boolean(player.leftAt));
 
             if (player.currentHealth !== lastRender.health) {
                 const healthBar = existingCard.querySelector('[data-health-bar]');

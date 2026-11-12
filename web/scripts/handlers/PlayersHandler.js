@@ -3,6 +3,8 @@ import zonesDatabase from "../data/ZonesDatabase.js";
 import settingsSync from "../utils/SettingsSync.js";
 import alertSound from "../utils/AlertSound.js";
 
+const DEPARTED_TTL_MS = 30000;
+
 class Player {
     constructor(posX, posY, id, nickname, guildName1, faction, allianceName, equipments, spells) {
         this.posX = posX;
@@ -203,7 +205,7 @@ export class PlayersHandler {
             if (hasFaction) existingPlayer.faction = faction;
             existingPlayer.leftAt = null;
             existingPlayer.touch();
-        } else if (this.playersList.length < maxPlayers) {
+        } else if (this.playersList.filter(p => !p.leftAt).length < maxPlayers) {
             const player = new Player(0, 0, id, nickname, guildName, faction, allianceName, equipments, spells);
             this.playersList.push(player);
         }
@@ -259,6 +261,7 @@ export class PlayersHandler {
         const player = this.playersList.find(p => p.id === id);
         if (player) {
             player.setMounted(mounted);
+            player.leftAt = null;
             player.touch();
         }
     }
@@ -298,6 +301,7 @@ export class PlayersHandler {
 
         uPlayer.currentHealth = Parameters[2];
         uPlayer.initialHealth = Parameters[3];
+        uPlayer.leftAt = null;
         uPlayer.touch();
     }
 
@@ -361,7 +365,7 @@ export class PlayersHandler {
 
         this.playersList = this.playersList.filter(player => {
             if (player.leftAt) {
-                return (now - player.leftAt) < 30000;
+                return (now - player.leftAt) < DEPARTED_TTL_MS;
             }
             return (now - player.lastUpdateTime) < maxAgeMs;
         });
@@ -412,9 +416,7 @@ export class PlayersHandler {
 
         const now = Date.now();
         return this.playersList.filter(player => {
-            if (player.leftAt) {
-                return (now - player.leftAt) < 30000;
-            }
+            if (player.leftAt && (now - player.leftAt) >= DEPARTED_TTL_MS) return false;
 
             // In blackzone, ALL players are threats - use showDangerous setting
             if (pvpType === 'black') {
