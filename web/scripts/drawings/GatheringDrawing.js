@@ -30,10 +30,12 @@ export class GatheringDrawing {
         if (!target) return;
         if (!Number.isFinite(target.distance) || !Number.isFinite(target.bearingDeg)) return;
 
-        const canvasCenter = drawingUtils.getCanvasCenter();
-        const center = {x: canvasCenter, y: canvasCenter};
+        const width = ctx.canvas?.width;
+        const center = {x: Number.isFinite(width) && width > 0 ? width / 2 : drawingUtils.getCanvasCenter(), y: 0};
+        center.y = center.x;
         const projected = drawingUtils.transformPoint(-(target.posX - lpX), target.posY - lpY);
-        const maxLength = canvasCenter - 8;
+        const maxLength = Math.max(0, center.x - 8);
+        if (maxLength <= 0) return;
         const end = clipGuide(center, projected, maxLength);
 
         ctx.save();

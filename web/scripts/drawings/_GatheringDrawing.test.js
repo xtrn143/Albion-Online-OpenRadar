@@ -27,19 +27,28 @@ describe('clipGuide', () => {
 });
 
 describe('GatheringDrawing.draw', () => {
-    test('缺少本地坐标时不绘制引导线', () => {
-        const ctx = {
+    function createFakeCtx(width = 500) {
+        const lineToCalls = [];
+        const arcCalls = [];
+        return {
+            canvas: {width},
+            lineToCalls,
+            arcCalls,
             save: vi.fn(),
             restore: vi.fn(),
             beginPath: vi.fn(),
-            moveTo: vi.fn(),
-            lineTo: vi.fn(),
-            stroke: vi.fn(),
-            setLineDash: vi.fn(),
-            arc: vi.fn(),
-            fill: vi.fn(),
             closePath: vi.fn(),
+            stroke: vi.fn(),
+            fill: vi.fn(),
+            setLineDash: vi.fn(),
+            moveTo: vi.fn(),
+            lineTo: vi.fn((x, y) => { lineToCalls.push({x, y}); }),
+            arc: vi.fn((x, y, r) => { arcCalls.push({x, y, r}); }),
         };
+    }
+
+    test('缺少本地坐标时不绘制引导线', () => {
+        const ctx = createFakeCtx();
         const advisor = {
             isGathering: false,
             getSelectedTarget: () => ({distance: null, bearingDeg: null, posX: 1, posY: 1}),
@@ -52,5 +61,46 @@ describe('GatheringDrawing.draw', () => {
         new GatheringDrawing().draw(ctx, advisor, drawingUtils, 0, 0);
 
         expect(ctx.save).not.toHaveBeenCalled();
+    });
+
+    test('越界目标的所有折点都在画布内', () => {
+        const ctx = createFakeCtx(500);
+        const advisor = {
+            isGathering: false,
+            getSelectedTarget: () => ({distance: 40, bearingDeg: 0, posX: 1000, posY: 1}),
+        };
+        const drawingUtils = {
+            getCanvasCenter: () => 250,
+            transformPoint: () => ({x: 5000, y: 250}),
+        };
+
+        new GatheringDrawing().draw(ctx, advisor, drawingUtils, 0, 0);
+
+        expect(ctx.lineToCalls.length).toBeGreaterThan(0);
+        for (const {x, y} of ctx.lineToCalls) {
+            expect(x).toBeGreaterThanOrEqual(0);
+            expect(x).toBeLessThanOrEqual(500);
+            expect(y).toBeGreaterThanOrEqual(0);
+            expect(y).toBeLessThanOrEqual(500);
+        }
+    });
+
+    test('采集态多绘制一个圆环', () => {
+        const makeAdvisor = isGathering => ({
+            isGathering,
+            getSelectedTarget: () => ({distance: 10, bearingDeg: 0, posX: 110, posY: 0}),
+        });
+        const drawingUtils = {
+            getCanvasCenter: () => 250,
+            transformPoint: () => ({x: 300, y: 250}),
+        };
+
+        const gatheringCtx = createFakeCtx(500);
+        new GatheringDrawing().draw(gatheringCtx, makeAdvisor(true), drawingUtils, 0, 0);
+        const idleCtx = createFakeCtx(500);
+        new GatheringDrawing().draw(idleCtx, makeAdvisor(false), drawingUtils, 0, 0);
+
+        expect(gatheringCtx.arcCalls.length).toBeGreaterThanOrEqual(2);
+        expect(gatheringCtx.arcCalls.length).toBe(idleCtx.arcCalls.length + 1);
     });
 });

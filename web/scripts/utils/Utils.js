@@ -344,8 +344,6 @@ export function destroyRadar() {
 
     PlayerListRenderer.reset();
     EventRouter.reset();
-    handlers.gatheringAdvisor = null;
-    drawings.gathering = null;
     lastPlayerListHash = '';
 
     isInitialized = false;
