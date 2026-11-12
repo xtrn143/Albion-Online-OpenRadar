@@ -150,3 +150,62 @@ export function detectHarvestedNode(previousSizes, harvestables, playerPos) {
 
     return {harvestedId: changed[0].id, nextSizes};
 }
+
+export class GatheringAdvisor {
+    constructor({rotate = rotateIsometric, now = () => Date.now(), idleMs = 8000} = {}) {
+        this.rotate = rotate;
+        this.now = now;
+        this.idleMs = idleMs;
+        this.targets = [];
+        this.selectedId = null;
+        this.isGathering = false;
+        this.lastHarvestAt = 0;
+        this.lastHarvestId = null;
+        this.previousSizes = new Map();
+    }
+
+    update(harvestables, playerPos, {mode = 'nearest', maxTargets = 5} = {}) {
+        this.targets = buildTargets({
+            harvestables,
+            playerPos,
+            mode,
+            maxTargets,
+            rotate: this.rotate,
+        });
+
+        const {harvestedId, nextSizes} = detectHarvestedNode(this.previousSizes, harvestables, playerPos);
+        this.previousSizes = nextSizes;
+
+        const now = this.now();
+        if (harvestedId !== null) {
+            this.lastHarvestId = harvestedId;
+            this.lastHarvestAt = now;
+            this.isGathering = true;
+        } else if (this.isGathering && now - this.lastHarvestAt > this.idleMs) {
+            this.isGathering = false;
+        }
+
+        if (this.selectedId === null || !this.targets.some(t => t.id === this.selectedId)) {
+            this.selectedId = this.targets.length > 0 ? this.targets[0].id : null;
+        }
+
+        return this.targets;
+    }
+
+    select(id) {
+        this.selectedId = id;
+    }
+
+    getSelectedTarget() {
+        return this.targets.find(target => target.id === this.selectedId) || null;
+    }
+
+    getState() {
+        return {
+            targets: this.targets,
+            selectedId: this.selectedId,
+            isGathering: this.isGathering,
+            lastHarvestAt: this.lastHarvestAt,
+        };
+    }
+}

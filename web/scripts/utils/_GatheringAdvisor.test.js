@@ -264,3 +264,41 @@ describe('detectHarvestedNode', () => {
         expect(result.harvestedId).toBeNull();
     });
 });
+
+const {GatheringAdvisor} = await import('./GatheringAdvisor.js');
+
+describe('GatheringAdvisor', () => {
+    test('更新后产出目标并自动选中第一名', () => {
+        const advisor = new GatheringAdvisor();
+        advisor.update([node(1, 10, 0), node(2, 30, 0)], PLAYER, {mode: 'nearest'});
+
+        expect(advisor.targets.map(t => t.id)).toEqual([1, 2]);
+        expect(advisor.getSelectedTarget().id).toBe(1);
+    });
+
+    test('层数下降进入采集态，空闲超时后退出', () => {
+        let now = 1000;
+        const advisor = new GatheringAdvisor({now: () => now, idleMs: 8000});
+        const player = {x: 1000, y: 1000};
+
+        advisor.update([node(1, 0, 10, {size: 3})], player, {mode: 'nearest'});
+        expect(advisor.isGathering).toBe(false);
+
+        advisor.update([node(1, 0, 10, {size: 2})], player, {mode: 'nearest'});
+        expect(advisor.isGathering).toBe(true);
+
+        now += 9000;
+        advisor.update([node(1, 0, 10, {size: 2})], player, {mode: 'nearest'});
+        expect(advisor.isGathering).toBe(false);
+    });
+
+    test('选中的目标离开列表后回落到第一名', () => {
+        const advisor = new GatheringAdvisor();
+        advisor.update([node(1, 10, 0), node(2, 30, 0)], PLAYER, {mode: 'nearest'});
+        advisor.select(2);
+        expect(advisor.getSelectedTarget().id).toBe(2);
+
+        advisor.update([node(1, 10, 0)], PLAYER, {mode: 'nearest'});
+        expect(advisor.getSelectedTarget().id).toBe(1);
+    });
+});
