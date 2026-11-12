@@ -126,6 +126,7 @@ export function update(advisor) {
         && state.targets.every(t => t.distance === null);
 
     elements.body?.classList.toggle('hidden', !showTargets);
+    elements.empty?.classList.toggle('hidden', state.targets.length > 0);
     elements.badge?.classList.toggle('hidden', !showTargets || !state.isGathering);
     elements.noPosition?.classList.toggle('hidden', !waitingForPosition);
     if (!showTargets) {

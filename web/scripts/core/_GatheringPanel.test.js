@@ -109,6 +109,19 @@ describe('GatheringPanel DOM update', () => {
         expect(document.getElementById('gatheringNoPosition').classList.contains('hidden')).toBe(false);
     });
 
+    test('空目标时显示空态文案，有目标时隐藏', () => {
+        const advisor = fakeAdvisor([]);
+        init(advisor);
+        update(advisor);
+
+        expect(document.getElementById('gatheringEmpty').classList.contains('hidden')).toBe(false);
+
+        advisor.getState = () => ({targets: [target], selectedId: null, isGathering: false, lastHarvestAt: 0, lastHarvestId: null});
+        update(advisor);
+
+        expect(document.getElementById('gatheringEmpty').classList.contains('hidden')).toBe(true);
+    });
+
     test('仅方位变化也会重渲染箭头与方位盘', () => {
         const targets = [{...target}];
         const advisor = fakeAdvisor(targets);
