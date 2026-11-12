@@ -87,6 +87,7 @@ export class PlayersHandler {
         this.lastFlashAt = 0;
         this.FLASH_DURATION_MS = 300;
         this.lastThreatSoundAt = -Infinity;
+        this.gathering = {isGathering: false};
     }
 
     playThreatSound() {
@@ -127,8 +128,13 @@ export class PlayersHandler {
         );
     }
 
-    isPlayerThreat(faction, pvpType) {
+    setGatheringState(isGathering) {
+        this.gathering.isGathering = !!isGathering;
+    }
+
+    isPlayerThreat(faction, pvpType, gathering = this.gathering?.isGathering) {
         if (pvpType === 'safe') return false;
+        if (gathering && settingsSync.getBool('settingGatherAlertMode', false)) return true;
         if (pvpType === 'black') return true;
         if (pvpType === 'red' || pvpType === 'yellow') return faction === 255;
         return faction === 255;

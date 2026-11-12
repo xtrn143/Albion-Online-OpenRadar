@@ -857,4 +857,36 @@ describe('PlayersHandler', () => {
             expect(handler.getThreatPlayers()).toHaveLength(2);
         });
     });
+
+    describe('gathering alert escalation', () => {
+        test('采集模式下黄区被动玩家也告警', () => {
+            settingsSync.getBool.mockImplementation((key, d) =>
+                key === 'settingGatherAlertMode' ? true : (d ?? true));
+            handler.setGatheringState(true);
+
+            expect(handler.isPlayerThreat(0, 'yellow')).toBe(true);
+        });
+
+        test('未开启采集模式时黄区被动玩家不告警', () => {
+            settingsSync.getBool.mockImplementation((key, d) =>
+                key === 'settingGatherAlertMode' ? false : (d ?? true));
+            handler.setGatheringState(true);
+
+            expect(handler.isPlayerThreat(0, 'yellow')).toBe(false);
+        });
+
+        test('采集模式下安全区仍不告警', () => {
+            settingsSync.getBool.mockReturnValue(true);
+            handler.setGatheringState(true);
+
+            expect(handler.isPlayerThreat(0, 'safe')).toBe(false);
+        });
+
+        test('采集模式下红区被动玩家告警', () => {
+            settingsSync.getBool.mockReturnValue(true);
+            handler.setGatheringState(true);
+
+            expect(handler.isPlayerThreat(0, 'red')).toBe(true);
+        });
+    });
 });
