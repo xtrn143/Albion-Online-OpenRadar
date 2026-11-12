@@ -229,10 +229,11 @@ window.onGlobalsReady(function() {
         addListener(showTargetsEl, 'change', () => settingsSync.setBool('settingShowGatheringTargets', showTargetsEl.checked));
     }
 
-    const gatheringModeEl = document.getElementById('settingGatheringSort');
-    if (gatheringModeEl) {
-        gatheringModeEl.value = settingsSync.get('settingGatheringSort', 'nearest');
-        addListener(gatheringModeEl, 'change', () => settingsSync.set('settingGatheringSort', gatheringModeEl.value));
+    const sortValueEl = document.getElementById('settingGatheringSort');
+    if (sortValueEl) {
+        const savedSort = settingsSync.get('settingGatheringSort', 'nearest');
+        sortValueEl.value = ['nearest', 'tier', 'efficiency'].includes(savedSort) ? savedSort : 'nearest';
+        addListener(sortValueEl, 'change', () => settingsSync.set('settingGatheringSort', sortValueEl.value));
     }
 
     const maxTargetsEl = document.getElementById('settingGatheringMaxTargets');

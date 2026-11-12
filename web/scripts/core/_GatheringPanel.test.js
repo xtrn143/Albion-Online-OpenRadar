@@ -99,4 +99,30 @@ describe('GatheringPanel DOM update', () => {
 
         expect(document.getElementById('gatheringNoPosition').classList.contains('hidden')).toBe(false);
     });
+
+    test('仅方位变化也会重渲染箭头与方位盘', () => {
+        const targets = [{...target}];
+        const advisor = fakeAdvisor(targets);
+        init(advisor);
+        update(advisor);
+
+        targets[0] = {...targets[0], bearingDeg: 5};
+        update(advisor);
+
+        const html = document.getElementById('gatheringTargets').innerHTML;
+        expect(html).toContain('rotate(5deg)');
+        expect(html).not.toContain('rotate(90deg)');
+    });
+
+    test('tier/enchant 缺失时不产生 undefined 与 NaN', () => {
+        const broken = {...target, tier: undefined, enchant: undefined, distance: undefined, bearingDeg: undefined};
+
+        const html = renderTargetRow(broken, null);
+        expect(html).not.toContain('undefined');
+        expect(html).not.toContain('NaN');
+
+        const svg = renderCompass([broken], null);
+        expect(svg).not.toContain('NaN');
+        expect((svg.match(/<circle/g) || []).length).toBe(2);
+    });
 });

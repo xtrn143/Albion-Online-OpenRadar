@@ -1,9 +1,14 @@
 import settingsSync from '../utils/SettingsSync.js';
+import {MAX_RANGE} from '../utils/GatheringAdvisor.js';
 
 const ICON_TYPES = {
     log: 'log', wood: 'log', logs: 'log',
     rock: 'rock', fiber: 'fiber', hide: 'hide', ore: 'ore',
 };
+
+const COMPASS_SIZE = 68;
+const COMPASS_CENTER = 34;
+const COMPASS_RADIUS = 30;
 
 let elements = null;
 let advisorRef = null;
@@ -12,12 +17,14 @@ let hoverHandler = null;
 let lastHash = '';
 
 export function renderTargetRow(target, selectedId) {
+    const tier = Number.isFinite(target.tier) ? target.tier : 0;
+    const enchant = Number.isFinite(target.enchant) ? target.enchant : 0;
     const type = ICON_TYPES[(target.stringType || '').toLowerCase()] || 'rock';
-    const icon = `/images/Resources/${type}_${target.tier}_${target.enchant}.webp`;
-    const distance = target.distance === null ? '--' : `${Math.round(target.distance)}m`;
-    const arrow = target.bearingDeg === null
-        ? '<span class="text-xs text-base-content/40">--</span>'
-        : `<i class="inline-block text-xs text-base-content/60" style="transform: rotate(${Math.round(target.bearingDeg)}deg)">➜</i>`;
+    const icon = `/images/Resources/${type}_${tier}_${enchant}.webp`;
+    const distance = Number.isFinite(target.distance) ? `${Math.round(target.distance)}m` : '--';
+    const arrow = Number.isFinite(target.bearingDeg)
+        ? `<i class="inline-block text-xs text-base-content/60" style="transform: rotate(${Math.round(target.bearingDeg)}deg)">➜</i>`
+        : '<span class="text-xs text-base-content/40">--</span>';
     const active = target.id === selectedId
         ? 'bg-primary/10 border-primary/40'
         : 'border-transparent hover:bg-base-300/60';
@@ -25,7 +32,7 @@ export function renderTargetRow(target, selectedId) {
 
     return `<div class="flex items-center gap-3 px-3 py-2 rounded-lg border ${active} ${dimmed} cursor-pointer transition-colors" data-target-id="${target.id}">
         <img src="${icon}" alt="" class="w-6 h-6 object-contain" loading="lazy">
-        <span class="font-mono text-xs text-base-content/70">T${target.tier}.${target.enchant}</span>
+        <span class="font-mono text-xs text-base-content/70">T${tier}.${enchant}</span>
         <span class="text-sm text-base-content/80 flex-1 truncate">${target.stringType || '?'}</span>
         <span class="flex items-center gap-1">${arrow}<span class="text-xs text-base-content/60">${distance}</span></span>
         <span class="font-mono text-xs text-base-content/50">${target.size}</span>
@@ -33,26 +40,25 @@ export function renderTargetRow(target, selectedId) {
 }
 
 export function renderCompass(targets, selectedId) {
-    const center = 34;
-    const radius = 30;
     const dots = (targets || []).map(target => {
-        if (target.distance === null || target.bearingDeg === null) return '';
+        if (!Number.isFinite(target.distance) || !Number.isFinite(target.bearingDeg)) return '';
         const radians = target.bearingDeg * Math.PI / 180;
-        const ratio = Math.min(1, target.distance / 80);
-        const cx = (center + Math.cos(radians) * ratio * radius).toFixed(1);
-        const cy = (center + Math.sin(radians) * ratio * radius).toFixed(1);
+        const ratio = Math.min(1, target.distance / MAX_RANGE);
+        const cx = (COMPASS_CENTER + Math.cos(radians) * ratio * COMPASS_RADIUS).toFixed(1);
+        const cy = (COMPASS_CENTER + Math.sin(radians) * ratio * COMPASS_RADIUS).toFixed(1);
         const active = target.id === selectedId;
         return `<circle cx="${cx}" cy="${cy}" r="${active ? 3 : 2}" fill="currentColor" opacity="${active ? 1 : 0.45}"/>`;
     }).join('');
 
-    return `<svg viewBox="0 0 68 68" width="68" height="68" class="text-base-content/60" aria-hidden="true">
-        <circle cx="34" cy="34" r="30" fill="none" stroke="currentColor" stroke-opacity="0.2"/>
-        <circle cx="34" cy="34" r="2.5" fill="currentColor"/>
+    return `<svg viewBox="0 0 ${COMPASS_SIZE} ${COMPASS_SIZE}" width="${COMPASS_SIZE}" height="${COMPASS_SIZE}" class="text-base-content/60" aria-hidden="true">
+        <circle cx="${COMPASS_CENTER}" cy="${COMPASS_CENTER}" r="${COMPASS_RADIUS}" fill="none" stroke="currentColor" stroke-opacity="0.2"/>
+        <circle cx="${COMPASS_CENTER}" cy="${COMPASS_CENTER}" r="2.5" fill="currentColor"/>
         ${dots}
     </svg>`;
 }
 
 export function init(advisor) {
+    destroy();
     advisorRef = advisor;
     elements = {
         card: document.getElementById('gatheringCard'),
@@ -88,7 +94,7 @@ export function update(advisor) {
     const state = advisor.getState();
     const waitingForPosition = state.targets.length > 0 && state.targets.every(t => t.distance === null);
     const hash = `${state.selectedId}:${state.isGathering}:`
-        + state.targets.map(t => `${t.id}:${t.size}:${t.distance === null ? '-' : Math.round(t.distance)}`).join(',');
+        + state.targets.map(t => `${t.id}:${t.size}:${t.distance === null ? '-' : Math.round(t.distance)}:${t.bearingDeg === null ? '-' : Math.round(t.bearingDeg)}`).join(',');
     if (hash === lastHash) return;
     lastHash = hash;
 
