@@ -22,6 +22,7 @@ export function toScreenVector(nodePos, playerPos, rotate = rotateIsometric) {
 }
 
 export function hasPlayerPosition(playerPos) {
+    // (0,0) 是"尚未收到本地坐标"的哨兵值，不是合法位置
     return !!playerPos && !(playerPos.x === 0 && playerPos.y === 0);
 }
 
@@ -62,29 +63,35 @@ export function buildTargets({
     let maxSize = 1;
 
     for (const harvestable of harvestables || []) {
-        if (!harvestable || harvestable.size <= 0) continue;
+        if (!harvestable) continue;
+        const size = Number(harvestable.size);
+        if (!Number.isFinite(size) || size <= 0) continue;
         if (!filter(harvestable)) continue;
 
         let distance = null;
         let bearingDeg = null;
-        if (hasPos) {
+        const hasCoords = hasPos
+            && Number.isFinite(harvestable.posX)
+            && Number.isFinite(harvestable.posY);
+        if (hasCoords) {
             distance = distanceBetween(harvestable, playerPos);
             if (distance > MAX_RANGE) continue;
             const vector = toScreenVector(harvestable, playerPos, rotate);
+            // bearingDeg 以画布 +X 为 0 度、Y 轴向下、顺时针增大（不是罗盘以正北为 0 度）
             bearingDeg = Math.atan2(vector.y, vector.x) * 180 / Math.PI;
         }
 
-        if (harvestable.size > maxSize) maxSize = harvestable.size;
-        candidates.push({harvestable, distance, bearingDeg});
+        if (size > maxSize) maxSize = size;
+        candidates.push({harvestable, size, distance, bearingDeg});
     }
 
     return candidates
-        .map(({harvestable, distance, bearingDeg}) => {
+        .map(({harvestable, size, distance, bearingDeg}) => {
             const proximity = distance === null ? 0 : 1 - distance / MAX_RANGE;
             const score = weights.distance * proximity
                 + weights.tier * ((harvestable.tier || 0) / 8)
                 + weights.enchant * ((harvestable.charges || 0) / 4)
-                + weights.size * (harvestable.size / maxSize);
+                + weights.size * (size / maxSize);
 
             return {
                 id: harvestable.id,
@@ -93,13 +100,20 @@ export function buildTargets({
                 stringType: harvestable.stringType,
                 tier: harvestable.tier,
                 enchant: harvestable.charges,
-                size: harvestable.size,
+                size,
                 isLiving: !isPureStatic(harvestable),
                 distance,
                 bearingDeg,
                 score,
             };
         })
-        .sort((a, b) => b.score - a.score)
+        .sort((a, b) => {
+            if (a.score !== b.score) return b.score - a.score;
+            if (a.distance === null && b.distance === null) return a.id - b.id;
+            if (a.distance === null) return 1;
+            if (b.distance === null) return -1;
+            if (a.distance !== b.distance) return a.distance - b.distance;
+            return a.id - b.id;
+        })
         .slice(0, maxTargets);
 }
