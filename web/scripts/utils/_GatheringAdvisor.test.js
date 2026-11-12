@@ -230,3 +230,37 @@ describe('buildTargets', () => {
         expect(shouldRenderStaticResource).not.toHaveBeenCalled();
     });
 });
+
+const {detectHarvestedNode} = await import('./GatheringAdvisor.js');
+
+describe('detectHarvestedNode', () => {
+    test('识别层数下降的节点', () => {
+        const previous = new Map([[1, {size: 3}], [2, {size: 2}]]);
+        const result = detectHarvestedNode(
+            previous,
+            [node(1, 0, 10, {size: 3}), node(2, 0, 30, {size: 1})],
+            PLAYER,
+        );
+
+        expect(result.harvestedId).toBe(2);
+        expect(result.nextSizes.get(1).size).toBe(3);
+    });
+
+    test('多个节点同时下降时取离玩家最近的', () => {
+        const previous = new Map([[1, {size: 3}], [2, {size: 3}]]);
+        const result = detectHarvestedNode(
+            previous,
+            [node(1, 0, 40, {size: 2}), node(2, 0, 5, {size: 2})],
+            PLAYER,
+        );
+
+        expect(result.harvestedId).toBe(2);
+    });
+
+    test('没有变化时返回 null', () => {
+        const previous = new Map([[1, {size: 3}]]);
+        const result = detectHarvestedNode(previous, [node(1, 0, 10, {size: 3})], PLAYER);
+
+        expect(result.harvestedId).toBeNull();
+    });
+});

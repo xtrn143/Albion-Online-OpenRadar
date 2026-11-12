@@ -117,3 +117,36 @@ export function buildTargets({
         })
         .slice(0, maxTargets);
 }
+
+export function detectHarvestedNode(previousSizes, harvestables, playerPos) {
+    const nextSizes = new Map();
+    const changed = [];
+
+    for (const harvestable of harvestables || []) {
+        if (!harvestable || typeof harvestable.size !== 'number') continue;
+        nextSizes.set(harvestable.id, {
+            size: harvestable.size,
+            posX: harvestable.posX,
+            posY: harvestable.posY,
+        });
+
+        const previous = previousSizes instanceof Map
+            ? previousSizes.get(harvestable.id)
+            : previousSizes?.[harvestable.id];
+        const previousSize = previous && typeof previous === 'object' ? previous.size : previous;
+
+        if (typeof previousSize === 'number' && harvestable.size < previousSize) {
+            changed.push(harvestable);
+        }
+    }
+
+    if (changed.length === 0) {
+        return {harvestedId: null, nextSizes};
+    }
+
+    if (hasPlayerPosition(playerPos) && changed.length > 1) {
+        changed.sort((a, b) => distanceBetween(a, playerPos) - distanceBetween(b, playerPos));
+    }
+
+    return {harvestedId: changed[0].id, nextSizes};
+}
