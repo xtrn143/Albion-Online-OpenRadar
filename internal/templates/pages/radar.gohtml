@@ -82,6 +82,10 @@
                         <input type="checkbox" id="settingShowGatheringTargets" class="checkbox checkbox-primary checkbox-xs">
                         <span class="text-xs text-base-content/60 font-normal">Show</span>
                     </label>
+                    <label class="flex items-center gap-1.5 cursor-pointer" title="Alert on any player while gathering">
+                        <input type="checkbox" id="settingGatherAlertMode" class="checkbox checkbox-primary checkbox-xs">
+                        <span class="text-xs text-base-content/60 font-normal">采集告警</span>
+                    </label>
                 </h3>
                 <div class="flex items-center gap-2 flex-wrap">
                     <span id="gatheringModeSwitch"></span>
@@ -229,6 +233,12 @@ window.onGlobalsReady(function() {
     if (showTargetsEl) {
         showTargetsEl.checked = settingsSync.getBool('settingShowGatheringTargets', true);
         addListener(showTargetsEl, 'change', () => settingsSync.setBool('settingShowGatheringTargets', showTargetsEl.checked));
+    }
+
+    const gatherAlertEl = document.getElementById('settingGatherAlertMode');
+    if (gatherAlertEl) {
+        gatherAlertEl.checked = settingsSync.getBool('settingGatherAlertMode', false);
+        addListener(gatherAlertEl, 'change', () => settingsSync.setBool('settingGatherAlertMode', gatherAlertEl.checked));
     }
 
     const sortValueEl = document.getElementById('settingGatheringSort');

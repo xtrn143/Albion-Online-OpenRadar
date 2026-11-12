@@ -108,6 +108,11 @@ export function buildTargets({
             };
         })
         .sort((a, b) => {
+            if (!hasPos) {
+                const tierDiff = (b.tier || 0) - (a.tier || 0);
+                if (tierDiff !== 0) return tierDiff;
+                return a.id - b.id;
+            }
             if (a.score !== b.score) return b.score - a.score;
             if (a.distance === null && b.distance === null) return a.id - b.id;
             if (a.distance === null) return 1;
@@ -123,9 +128,11 @@ export function detectHarvestedNode(previousSizes, harvestables, playerPos) {
     const changed = [];
 
     for (const harvestable of harvestables || []) {
-        if (!harvestable || typeof harvestable.size !== 'number') continue;
+        if (!harvestable) continue;
+        const size = Number(harvestable.size);
+        if (!Number.isFinite(size)) continue;
         nextSizes.set(harvestable.id, {
-            size: harvestable.size,
+            size,
             posX: harvestable.posX,
             posY: harvestable.posY,
         });
@@ -135,7 +142,7 @@ export function detectHarvestedNode(previousSizes, harvestables, playerPos) {
             : previousSizes?.[harvestable.id];
         const previousSize = previous && typeof previous === 'object' ? previous.size : previous;
 
-        if (typeof previousSize === 'number' && harvestable.size < previousSize) {
+        if (typeof previousSize === 'number' && size < previousSize) {
             changed.push(harvestable);
         }
     }
@@ -194,6 +201,15 @@ export class GatheringAdvisor {
 
     select(id) {
         this.selectedId = id;
+    }
+
+    reset() {
+        this.targets = [];
+        this.selectedId = null;
+        this.isGathering = false;
+        this.lastHarvestAt = 0;
+        this.lastHarvestId = null;
+        this.previousSizes.clear();
     }
 
     getSelectedTarget() {

@@ -88,6 +88,20 @@ describe('buildTargets', () => {
         expect(targets[0].bearingDeg).toBeNull();
     });
 
+    test('坐标缺失时只按 tier 排序，size 不影响顺序', () => {
+        const targets = buildTargets({
+            harvestables: [
+                node(1, 10, 0, {tier: 5, size: 9}),
+                node(2, 10, 0, {tier: 8, size: 1}),
+            ],
+            playerPos: {x: 0, y: 0},
+            mode: 'nearest',
+            filter: () => true,
+        });
+
+        expect(targets.map(t => t.id)).toEqual([2, 1]);
+    });
+
     test('方位角在屏幕空间计算：世界正东对应画布 45 度', () => {
         const {x, y} = toScreenVector({posX: PLAYER.x + 10, posY: PLAYER.y}, PLAYER);
         expect(x).toBeGreaterThan(0);
@@ -263,6 +277,14 @@ describe('detectHarvestedNode', () => {
 
         expect(result.harvestedId).toBeNull();
     });
+
+    test('数字字符串 size 也能识别层数变化', () => {
+        const previous = new Map([[1, {size: 3}]]);
+        const result = detectHarvestedNode(previous, [node(1, 0, 10, {size: '2'})], PLAYER);
+
+        expect(result.harvestedId).toBe(1);
+        expect(result.nextSizes.get(1).size).toBe(2);
+    });
 });
 
 const {GatheringAdvisor} = await import('./GatheringAdvisor.js');
@@ -301,5 +323,30 @@ describe('GatheringAdvisor', () => {
 
         advisor.update([node(1, 10, 0)], PLAYER, {mode: 'nearest'});
         expect(advisor.getSelectedTarget().id).toBe(1);
+    });
+
+    test('reset 清空采集会话且可重新识别采集', () => {
+        let now = 1000;
+        const advisor = new GatheringAdvisor({now: () => now, idleMs: 8000});
+
+        advisor.update([node(1, 0, 10, {size: 3})], PLAYER, {mode: 'nearest'});
+        advisor.update([node(1, 0, 10, {size: 2})], PLAYER, {mode: 'nearest'});
+        expect(advisor.targets.length).toBeGreaterThan(0);
+        expect(advisor.isGathering).toBe(true);
+
+        advisor.reset();
+
+        const state = advisor.getState();
+        expect(state.targets).toEqual([]);
+        expect(state.selectedId).toBeNull();
+        expect(state.isGathering).toBe(false);
+
+        now += 1000;
+        advisor.update([node(1, 0, 10, {size: 2})], PLAYER, {mode: 'nearest'});
+        expect(advisor.isGathering).toBe(false);
+
+        now += 1000;
+        advisor.update([node(1, 0, 10, {size: 1})], PLAYER, {mode: 'nearest'});
+        expect(advisor.isGathering).toBe(true);
     });
 });

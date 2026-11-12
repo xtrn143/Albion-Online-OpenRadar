@@ -138,6 +138,8 @@ function clearHandlers(preserveSession = false) {
     handlers.mobs.Clear();
     handlers.players.Clear();
     handlers.wispCage.Clear();
+    handlers.gatheringAdvisor?.reset?.();
+    handlers.players?.setGatheringState?.(false);
 
     if (!preserveSession) {
         try {
@@ -236,7 +238,9 @@ export async function initRadar() {
 
         playerListIntervalId = setInterval(() => {
             const players = handlers.players?.getFilteredPlayers?.() || [];
-            const hash = `${players.length}:` + players.map(p => `${p.id}:${p.currentHealth}:${p.mounted ? 1 : 0}:${p.leftAt ?? ''}`).join(',');
+            const hasDeparted = players.some(p => p.leftAt);
+            const timeBucket = hasDeparted ? Math.floor(Date.now() / 1000) : '';
+            const hash = `${players.length}:${timeBucket}:` + players.map(p => `${p.id}:${p.currentHealth}:${p.mounted ? 1 : 0}:${p.leftAt ?? ''}`).join(',');
             if (hash !== lastPlayerListHash) {
                 lastPlayerListHash = hash;
                 PlayerListRenderer.update(handlers.players);
