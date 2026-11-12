@@ -77,6 +77,7 @@
                 <h3 class="text-xl font-semibold text-base-content flex items-center gap-2">
                     Gathering Targets
                     <span id="gatheringStateBadge" class="badge badge-primary badge-sm hidden">采集中</span>
+                    <span id="gatheringNoPosition" class="badge badge-ghost badge-sm hidden">waiting for position</span>
                     <label class="flex items-center gap-1.5 cursor-pointer" title="Show gathering targets on radar">
                         <input type="checkbox" id="settingShowGatheringTargets" class="checkbox checkbox-primary checkbox-xs">
                         <span class="text-xs text-base-content/60 font-normal">Show</span>
@@ -91,11 +92,11 @@
                     <input type="number" id="settingGatheringMaxTargets" class="input input-sm input-bordered w-16" min="1" max="10" title="Max targets">
                 </div>
             </div>
-            <div class="flex items-center gap-4 mt-2">
+            <div id="gatheringBody" class="flex items-center gap-4 mt-2">
                 <div id="gatheringCompass" class="shrink-0"></div>
                 <div id="gatheringTargets" class="flex-1 grid gap-1"></div>
+                <div id="gatheringEmpty" class="hidden py-4 text-center text-sm text-base-content/40">No resources in range</div>
             </div>
-            <div id="gatheringEmpty" class="hidden py-4 text-center text-sm text-base-content/40">No resources in range</div>
         </div>
     </div>
 

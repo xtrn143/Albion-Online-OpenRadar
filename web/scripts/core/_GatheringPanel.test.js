@@ -1,4 +1,4 @@
-import {describe, test, expect, vi} from 'vitest';
+import {describe, test, expect, vi, beforeEach, afterEach} from 'vitest';
 
 vi.mock('../utils/SettingsSync.js', () => ({
     default: {
@@ -8,7 +8,8 @@ vi.mock('../utils/SettingsSync.js', () => ({
     },
 }));
 
-const {renderTargetRow, renderCompass} = await import('./GatheringPanel.js');
+const {renderTargetRow, renderCompass, init, update, destroy} = await import('./GatheringPanel.js');
+const settingsSync = (await import('../utils/SettingsSync.js')).default;
 
 const target = {
     id: 7,
@@ -47,5 +48,55 @@ describe('GatheringPanel render helpers', () => {
 
         expect(html).toContain('--');
         expect(html).not.toContain('NaN');
+    });
+});
+
+function setupDom() {
+    document.body.innerHTML = `
+        <div id="gatheringCard">
+            <span id="gatheringStateBadge" class="hidden"></span>
+            <span id="gatheringNoPosition" class="hidden"></span>
+            <div id="gatheringBody">
+                <div id="gatheringCompass"></div>
+                <div id="gatheringTargets"></div>
+                <div id="gatheringEmpty" class="hidden"></div>
+            </div>
+        </div>`;
+}
+
+function fakeAdvisor(targets) {
+    return {
+        getState: () => ({targets, selectedId: null, isGathering: false, lastHarvestAt: 0, lastHarvestId: null}),
+        select: vi.fn(),
+    };
+}
+
+describe('GatheringPanel DOM update', () => {
+    beforeEach(() => {
+        settingsSync.getBool.mockReturnValue(true);
+        setupDom();
+    });
+
+    afterEach(() => {
+        destroy();
+        document.body.innerHTML = '';
+    });
+
+    test('隐藏时只隐藏卡片主体，卡片头部开关仍可达', () => {
+        settingsSync.getBool.mockReturnValue(false);
+        const advisor = fakeAdvisor([target]);
+        init(advisor);
+        update(advisor);
+
+        expect(document.getElementById('gatheringBody').classList.contains('hidden')).toBe(true);
+        expect(document.getElementById('gatheringCard').classList.contains('hidden')).toBe(false);
+    });
+
+    test('目标全部缺少本地坐标时提示 waiting for position', () => {
+        const advisor = fakeAdvisor([{...target, distance: null, bearingDeg: null}]);
+        init(advisor);
+        update(advisor);
+
+        expect(document.getElementById('gatheringNoPosition').classList.contains('hidden')).toBe(false);
     });
 });

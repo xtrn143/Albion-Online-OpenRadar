@@ -56,9 +56,11 @@ export function init(advisor) {
     advisorRef = advisor;
     elements = {
         card: document.getElementById('gatheringCard'),
+        body: document.getElementById('gatheringBody'),
         list: document.getElementById('gatheringTargets'),
         empty: document.getElementById('gatheringEmpty'),
         badge: document.getElementById('gatheringStateBadge'),
+        noPosition: document.getElementById('gatheringNoPosition'),
         compass: document.getElementById('gatheringCompass'),
     };
     if (!elements.list) return;
@@ -80,10 +82,11 @@ export function init(advisor) {
 export function update(advisor) {
     if (!elements?.list || !advisor) return;
     const visible = settingsSync.getBool('settingShowGatheringTargets', true);
-    elements.card?.classList.toggle('hidden', !visible);
+    elements.body?.classList.toggle('hidden', !visible);
     if (!visible) return;
 
     const state = advisor.getState();
+    const waitingForPosition = state.targets.length > 0 && state.targets.every(t => t.distance === null);
     const hash = `${state.selectedId}:${state.isGathering}:`
         + state.targets.map(t => `${t.id}:${t.size}:${t.distance === null ? '-' : Math.round(t.distance)}`).join(',');
     if (hash === lastHash) return;
@@ -92,6 +95,7 @@ export function update(advisor) {
     elements.list.innerHTML = state.targets.map(t => renderTargetRow(t, state.selectedId)).join('');
     elements.empty?.classList.toggle('hidden', state.targets.length > 0);
     elements.badge?.classList.toggle('hidden', !state.isGathering);
+    elements.noPosition?.classList.toggle('hidden', !waitingForPosition);
     if (elements.compass) {
         elements.compass.innerHTML = renderCompass(state.targets, state.selectedId);
     }
