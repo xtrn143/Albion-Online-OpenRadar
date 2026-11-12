@@ -78,7 +78,7 @@ export function init(advisor) {
     destroy();
     advisorRef = advisor;
     elements = {
-        card: document.getElementById('gatheringCard'),
+        body: document.getElementById('gatheringBody'),
         list: document.getElementById('gatheringTargets'),
         empty: document.getElementById('gatheringEmpty'),
         badge: document.getElementById('gatheringStateBadge'),
@@ -89,7 +89,7 @@ export function init(advisor) {
     if (!elements.list) return;
 
     if (elements.modeSwitch) {
-        elements.modeSwitch.innerHTML = renderModeSwitch(settingsSync.get('settingGatheringMode', 'gather'));
+        elements.modeSwitch.innerHTML = renderModeSwitch(settingsSync.getGatheringMode());
         modeSelectRef = elements.modeSwitch.querySelector('#settingGatheringMode');
         if (modeSelectRef) {
             modeChangeHandler = () => settingsSync.set('settingGatheringMode', modeSelectRef.value);
@@ -114,11 +114,10 @@ export function init(advisor) {
 export function update(advisor) {
     if (!elements?.list || !advisor) return;
 
-    const mode = settingsSync.get('settingGatheringMode', 'gather');
+    const mode = settingsSync.getGatheringMode();
     if (elements.modeSwitch) {
         const current = shouldShowTargets(mode) ? 'gather' : 'roam';
-        const select = elements.modeSwitch.querySelector('#settingGatheringMode');
-        if (select && select.value !== current) select.value = current;
+        if (modeSelectRef && modeSelectRef.value !== current) modeSelectRef.value = current;
     }
 
     const state = advisor.getState();
@@ -126,9 +125,7 @@ export function update(advisor) {
     const waitingForPosition = showTargets && state.targets.length > 0
         && state.targets.every(t => t.distance === null);
 
-    elements.list.classList.toggle('hidden', !showTargets);
-    elements.compass?.classList.toggle('hidden', !showTargets);
-    elements.empty?.classList.toggle('hidden', !showTargets || state.targets.length > 0);
+    elements.body?.classList.toggle('hidden', !showTargets);
     elements.badge?.classList.toggle('hidden', !showTargets || !state.isGathering);
     elements.noPosition?.classList.toggle('hidden', !waitingForPosition);
     if (!showTargets) {

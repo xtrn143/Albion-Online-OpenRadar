@@ -8,6 +8,7 @@ import {installRealDatabasesOnWindow} from '../__fixtures__/realDatabases.js';
 vi.mock('./SettingsSync.js', () => ({
     default: {
         get: vi.fn((_k, d) => d),
+        getGatheringMode: vi.fn(() => 'gather'),
         getBool: vi.fn(() => true),
         getJSON: vi.fn(() => null),
         getNumber: vi.fn((_k, d) => d ?? 0),
@@ -216,11 +217,12 @@ describe('RadarRenderer roam mode', () => {
     beforeEach(() => {
         vi.clearAllMocks();
         settingsSync.get.mockImplementation((_k, d) => d);
+        settingsSync.getGatheringMode.mockReturnValue('gather');
         window.logger = {debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn()};
     });
 
     test('roam 模式下不产生聚类候选', () => {
-        settingsSync.get.mockImplementation((key, def) => (key === 'settingGatheringMode' ? 'roam' : def));
+        settingsSync.getGatheringMode.mockReturnValue('roam');
         settingsSync.getJSON.mockImplementation(() => allTrue());
         const renderer = makeRenderer({
             harvestableList: [{id: 1, stringType: 'Fiber', tier: 4, charges: 0, mobileTypeId: -1, hX: 1, hY: 1}],

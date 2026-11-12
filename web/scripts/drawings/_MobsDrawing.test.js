@@ -11,6 +11,7 @@ import {installRealDatabasesOnWindow} from '../__fixtures__/realDatabases.js';
 vi.mock('../utils/SettingsSync.js', () => ({
     default: {
         get: vi.fn((_k, d) => d),
+        getGatheringMode: vi.fn(() => 'gather'),
         getBool: vi.fn(() => true),
         getJSON: vi.fn(() => null),
         getNumber: vi.fn((_k, d) => d ?? 0),
@@ -501,5 +502,51 @@ describe('MobsDrawing hostile/drone/events filter at render (moved from spawn)',
         drawing.invalidate(ctx, [hostile({id: 1, type: EnemyType.Enemy})]);
         expect(drawing.drawFilledCircle).toHaveBeenCalledWith(ctx, 10, 20, 6, expect.any(String));
         expect(drawing.getMarkerSize).toHaveBeenCalledWith(6);
+    });
+});
+
+describe('MobsDrawing roam mode', () => {
+    let drawing;
+    let ctx;
+
+    beforeEach(() => {
+        vi.clearAllMocks();
+        settingsSync.getGatheringMode.mockReturnValue('gather');
+        window.logger = {debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn()};
+        drawing = new MobsDrawing();
+        drawing.DrawCustomImage = vi.fn();
+        drawing.transformPoint = vi.fn((x, y) => ({x, y}));
+        drawing.interpolateEntity = vi.fn();
+        drawing.drawTextItems = vi.fn();
+        drawing.drawFilledCircle = vi.fn();
+        drawing.drawDistanceIndicator = vi.fn();
+        drawing.drawHealthBar = vi.fn();
+        drawing.getEnemyColor = vi.fn(() => '#ffffff');
+        drawing.getEnemyTypeName = vi.fn(() => 'unknown');
+        drawing.getScaledSize = vi.fn(s => s);
+        drawing.getMarkerSize = vi.fn(s => s);
+        drawing.getScaledFontSize = vi.fn(s => s);
+        ctx = {font: '', measureText: vi.fn(() => ({width: 12}))};
+        settingsSync.getBool.mockImplementation(key => key !== 'settingShowMinimumHealthEnemies');
+        settingsSync.getJSON.mockReturnValue(null);
+    });
+
+    // @verified 2026-11-12: roam hides only living resources; hostile mobs are still drawn for player alerts.
+    test('roam 模式下活体资源跳过绘制，普通怪物照常绘制', () => {
+        settingsSync.getGatheringMode.mockReturnValue('roam');
+        const living = {
+            id: 1, typeId: 529, hX: 10, hY: 20, tier: 4, enchantmentLevel: 0, name: 'Fiber',
+            type: EnemyType.LivingHarvestable, getCurrentHP: () => 100, maxHealth: 100,
+        };
+        const hostileMob = {
+            id: 2, typeId: 2067, hX: 30, hY: 40, tier: 5, enchantmentLevel: 0, name: 'Known',
+            identified: true, type: EnemyType.Enemy, getCurrentHP: () => 100, maxHealth: 100,
+        };
+
+        drawing.invalidate(ctx, [living, hostileMob]);
+
+        expect(drawing.DrawCustomImage).not.toHaveBeenCalled();
+        expect(drawing.drawFilledCircle).toHaveBeenCalledTimes(1);
+        expect(drawing.transformPoint).toHaveBeenCalledTimes(1);
     });
 });

@@ -8,6 +8,7 @@ import {installRealDatabasesOnWindow} from '../__fixtures__/realDatabases.js';
 vi.mock('../utils/SettingsSync.js', () => ({
     default: {
         get: vi.fn((_k, d) => d),
+        getGatheringMode: vi.fn(() => 'gather'),
         getBool: vi.fn(() => false),
         getJSON: vi.fn(() => null),
         getFloat: vi.fn(() => null),
@@ -338,6 +339,7 @@ describe('shouldDrawResourceLayer', () => {
     beforeEach(() => {
         vi.clearAllMocks();
         settingsSync.get.mockImplementation((_k, d) => d);
+        settingsSync.getGatheringMode.mockReturnValue('gather');
         settingsSync.getBool.mockReturnValue(false);
         drawing = buildDrawing();
         ctx = {};
@@ -353,7 +355,7 @@ describe('shouldDrawResourceLayer', () => {
     });
 
     test('常规模式短路绘制并把资源计数归零', () => {
-        settingsSync.get.mockImplementation(key => (key === 'settingGatheringMode' ? 'roam' : 'gather'));
+        settingsSync.getGatheringMode.mockReturnValue('roam');
         drawing.lastVisibleCount = 3;
 
         drawing.invalidate(ctx, [{id: 1, hX: 10, hY: 20, size: 3, tier: 5, charges: 2, stringType: 'Fiber', mobileTypeId: -1, type: 14}]);

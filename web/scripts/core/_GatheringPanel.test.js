@@ -3,6 +3,9 @@ import {describe, test, expect, vi, beforeEach, afterEach} from 'vitest';
 vi.mock('../utils/SettingsSync.js', () => ({
     default: {
         get: vi.fn((_k, d) => d),
+        getGatheringMode: vi.fn(function () {
+            return this.get('settingGatheringMode', 'gather') === 'roam' ? 'roam' : 'gather';
+        }),
         getBool: vi.fn((_k, d) => d ?? true),
         getNumber: vi.fn((_k, d) => d),
     },
@@ -88,14 +91,13 @@ describe('GatheringPanel DOM update', () => {
         document.body.innerHTML = '';
     });
 
-    test('隐藏时只隐藏列表与方位盘，卡片头部开关仍可达', () => {
+    test('隐藏时只隐藏卡片内容区，卡片头部开关仍可达', () => {
         settingsSync.getBool.mockReturnValue(false);
         const advisor = fakeAdvisor([target]);
         init(advisor);
         update(advisor);
 
-        expect(document.getElementById('gatheringTargets').classList.contains('hidden')).toBe(true);
-        expect(document.getElementById('gatheringCompass').classList.contains('hidden')).toBe(true);
+        expect(document.getElementById('gatheringBody').classList.contains('hidden')).toBe(true);
         expect(document.getElementById('gatheringCard').classList.contains('hidden')).toBe(false);
     });
 
@@ -133,22 +135,21 @@ describe('GatheringPanel DOM update', () => {
         expect((svg.match(/<circle/g) || []).length).toBe(2);
     });
 
-    test('常规模式收起目标列表但保留卡片头部', () => {
+    test('常规模式收起内容区但保留卡片头部，切回后恢复目标列表', () => {
         const advisor = fakeAdvisor([target]);
         init(advisor);
 
         setMode('roam');
         update(advisor);
 
-        expect(document.getElementById('gatheringTargets').classList.contains('hidden')).toBe(true);
-        expect(document.getElementById('gatheringCompass').classList.contains('hidden')).toBe(true);
+        expect(document.getElementById('gatheringBody').classList.contains('hidden')).toBe(true);
         expect(document.getElementById('gatheringCard').classList.contains('hidden')).toBe(false);
 
         setMode('gather');
         update(advisor);
 
-        expect(document.getElementById('gatheringTargets').classList.contains('hidden')).toBe(false);
-        expect(document.getElementById('gatheringCompass').classList.contains('hidden')).toBe(false);
+        expect(document.getElementById('gatheringBody').classList.contains('hidden')).toBe(false);
+        expect(document.getElementById('gatheringTargets').innerHTML).toContain('data-target-id="7"');
     });
 });
 

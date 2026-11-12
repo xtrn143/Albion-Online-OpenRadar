@@ -23,9 +23,13 @@ export class MobsDrawing extends DrawingUtils
     {
         // Note: cluster detection & drawing is handled centrally in Utils.render (merged static + living resources)
         this.lastVisibleCount = 0;
+        const isRoam = settingsSync.getGatheringMode() === 'roam';
 
         for (const mobOne of mobs)
         {
+            const isLivingResourceType = mobOne.type == EnemyType.LivingSkinnable || mobOne.type == EnemyType.LivingHarvestable;
+            if (isRoam && isLivingResourceType) continue;
+
             const point = this.transformPoint(mobOne.hX, mobOne.hY);
 
             let imageName = undefined;
@@ -36,10 +40,9 @@ export class MobsDrawing extends DrawingUtils
             let drawId = settingsSync.getBool("settingEnemiesID");
             let isLivingResource = false;
 
-            if (mobOne.type == EnemyType.LivingSkinnable || mobOne.type == EnemyType.LivingHarvestable)
+            if (isLivingResourceType)
             {
                 isLivingResource = true;
-                if (settingsSync.get('settingGatheringMode', 'gather') === 'roam') continue;
                 if (!shouldRenderLivingResource(mobOne, key => settingsSync.getJSON(key))) {
                     continue;
                 }

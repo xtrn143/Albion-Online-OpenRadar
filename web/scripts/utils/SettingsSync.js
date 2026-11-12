@@ -116,6 +116,11 @@ export class SettingsSync {
 
     set(key, value) { this.broadcast(key, value); }
 
+    getGatheringMode() {
+        const value = this.get('settingGatheringMode', 'gather');
+        return value === 'roam' ? 'roam' : 'gather';
+    }
+
     getBool(key, defaultValue = false) {
         const value = this._getCached(key);
         if (value === null) return defaultValue;

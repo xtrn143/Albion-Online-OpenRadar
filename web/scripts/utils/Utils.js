@@ -257,7 +257,7 @@ export async function initRadar() {
                 maxTargets: settingsSync.getNumber('settingGatheringMaxTargets', 5),
             };
             advisor.update(handlers.harvestables.harvestableList, playerPos, settings);
-            const gameMode = settingsSync.get('settingGatheringMode', 'gather');
+            const gameMode = settingsSync.getGatheringMode();
             handlers.players?.setGatheringState?.(gameMode !== 'roam' && advisor.isGathering);
             GatheringPanel.update(advisor);
         }, 1000);

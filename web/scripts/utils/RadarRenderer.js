@@ -194,7 +194,7 @@ export class RadarRenderer {
         }
 
         // Cluster detection with caching (recalculated every CLUSTER_UPDATE_INTERVAL)
-        const isRoam = settingsSync.get('settingGatheringMode', 'gather') === 'roam';
+        const isRoam = settingsSync.getGatheringMode() === 'roam';
         let clustersForInfo = null;
         if (!isRoam && settingsSync.getBool('settingResourceClusters') && context) {
             const currentTime = performance.now();
@@ -331,7 +331,7 @@ export class RadarRenderer {
      * Draw the gathering guide line for the selected target.
      */
     renderGatheringGuide(ctx) {
-        const mode = settingsSync.get('settingGatheringMode', 'gather');
+        const mode = settingsSync.getGatheringMode();
         if (mode === 'roam') return;
         const advisor = this.handlers?.gatheringAdvisor;
         if (!advisor || !settingsSync.getBool('settingShowGatheringTargets', true)) return;
@@ -493,7 +493,7 @@ export class RadarRenderer {
     }
 
     _collectClusterCandidates() {
-        if (settingsSync.get('settingGatheringMode', 'gather') === 'roam') return [];
+        if (settingsSync.getGatheringMode() === 'roam') return [];
         const getSetting = key => settingsSync.getJSON(key);
         const staticList = (this.handlers.harvestablesHandler?.harvestableList || []).filter(h => {
             const entity = {name: h.stringType, tier: h.tier, enchantmentLevel: h.charges};
