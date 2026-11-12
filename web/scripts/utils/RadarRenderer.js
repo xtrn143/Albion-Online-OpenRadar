@@ -330,6 +330,8 @@ export class RadarRenderer {
      * Draw the gathering guide line for the selected target.
      */
     renderGatheringGuide(ctx) {
+        const mode = settingsSync.get('settingGatheringMode', 'gather');
+        if (mode === 'roam') return;
         const advisor = this.handlers?.gatheringAdvisor;
         if (!advisor || !settingsSync.getBool('settingShowGatheringTargets', true)) return;
         this.drawings?.gatheringDrawing?.draw(ctx, advisor, this.drawingUtils, this.lpX, this.lpY);
@@ -490,6 +492,7 @@ export class RadarRenderer {
     }
 
     _collectClusterCandidates() {
+        if (settingsSync.get('settingGatheringMode', 'gather') === 'roam') return [];
         const getSetting = key => settingsSync.getJSON(key);
         const staticList = (this.handlers.harvestablesHandler?.harvestableList || []).filter(h => {
             const entity = {name: h.stringType, tier: h.tier, enchantmentLevel: h.charges};

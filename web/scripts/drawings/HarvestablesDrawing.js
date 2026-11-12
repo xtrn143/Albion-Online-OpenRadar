@@ -3,6 +3,10 @@ import settingsSync from "../utils/SettingsSync.js";
 import {CATEGORIES} from "../constants/LoggerConstants.js";
 import {shouldRenderLivingResource, shouldRenderStaticResource} from '../utils/LivingResourceFilter.js';
 
+export function shouldDrawResourceLayer(mode) {
+    return mode !== 'roam';
+}
+
 export class HarvestablesDrawing extends DrawingUtils  {
     constructor() {
         super();
@@ -20,6 +24,7 @@ export class HarvestablesDrawing extends DrawingUtils  {
         // Clusters are detected and drawn centrally in Utils.render when overlayCluster is enabled
         // (to merge static harvestables and living resources into the same clustering pass)
         this.lastVisibleCount = 0;
+        if (!shouldDrawResourceLayer(settingsSync.get('settingGatheringMode', 'gather'))) return;
 
         for (const harvestableOne of harvestables)
         {

@@ -8,8 +8,12 @@ vi.mock('../utils/SettingsSync.js', () => ({
     },
 }));
 
-const {renderTargetRow, renderCompass, init, update, destroy} = await import('./GatheringPanel.js');
+const {renderTargetRow, renderCompass, init, update, destroy, shouldShowTargets, renderModeSwitch} = await import('./GatheringPanel.js');
 const settingsSync = (await import('../utils/SettingsSync.js')).default;
+
+function setMode(mode) {
+    settingsSync.get.mockImplementation((key, def) => (key === 'settingGatheringMode' ? mode : def));
+}
 
 const target = {
     id: 7,
@@ -54,6 +58,7 @@ describe('GatheringPanel render helpers', () => {
 function setupDom() {
     document.body.innerHTML = `
         <div id="gatheringCard">
+            <span id="gatheringModeSwitch"></span>
             <span id="gatheringStateBadge" class="hidden"></span>
             <span id="gatheringNoPosition" class="hidden"></span>
             <div id="gatheringBody">
@@ -73,6 +78,7 @@ function fakeAdvisor(targets) {
 
 describe('GatheringPanel DOM update', () => {
     beforeEach(() => {
+        settingsSync.get.mockImplementation((_k, d) => d);
         settingsSync.getBool.mockReturnValue(true);
         setupDom();
     });
@@ -82,13 +88,14 @@ describe('GatheringPanel DOM update', () => {
         document.body.innerHTML = '';
     });
 
-    test('隐藏时只隐藏卡片主体，卡片头部开关仍可达', () => {
+    test('隐藏时只隐藏列表与方位盘，卡片头部开关仍可达', () => {
         settingsSync.getBool.mockReturnValue(false);
         const advisor = fakeAdvisor([target]);
         init(advisor);
         update(advisor);
 
-        expect(document.getElementById('gatheringBody').classList.contains('hidden')).toBe(true);
+        expect(document.getElementById('gatheringTargets').classList.contains('hidden')).toBe(true);
+        expect(document.getElementById('gatheringCompass').classList.contains('hidden')).toBe(true);
         expect(document.getElementById('gatheringCard').classList.contains('hidden')).toBe(false);
     });
 
@@ -124,5 +131,43 @@ describe('GatheringPanel DOM update', () => {
         const svg = renderCompass([broken], null);
         expect(svg).not.toContain('NaN');
         expect((svg.match(/<circle/g) || []).length).toBe(2);
+    });
+
+    test('常规模式收起目标列表但保留卡片头部', () => {
+        const advisor = fakeAdvisor([target]);
+        init(advisor);
+
+        setMode('roam');
+        update(advisor);
+
+        expect(document.getElementById('gatheringTargets').classList.contains('hidden')).toBe(true);
+        expect(document.getElementById('gatheringCompass').classList.contains('hidden')).toBe(true);
+        expect(document.getElementById('gatheringCard').classList.contains('hidden')).toBe(false);
+
+        setMode('gather');
+        update(advisor);
+
+        expect(document.getElementById('gatheringTargets').classList.contains('hidden')).toBe(false);
+        expect(document.getElementById('gatheringCompass').classList.contains('hidden')).toBe(false);
+    });
+});
+
+describe('gathering mode', () => {
+    test('采集模式展开目标列表', () => {
+        expect(shouldShowTargets('gather')).toBe(true);
+    });
+
+    test('常规模式收起目标列表', () => {
+        expect(shouldShowTargets('roam')).toBe(false);
+        expect(shouldShowTargets(undefined)).toBe(true);
+        expect(shouldShowTargets('invalid')).toBe(true);
+    });
+
+    test('模式切换控件包含两种模式且标出当前值', () => {
+        const html = renderModeSwitch('roam');
+
+        expect(html).toContain('value="gather"');
+        expect(html).toContain('value="roam"');
+        expect(html).toContain('roam" selected');
     });
 });

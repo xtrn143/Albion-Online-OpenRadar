@@ -7,13 +7,14 @@ import {installRealDatabasesOnWindow} from '../__fixtures__/realDatabases.js';
 
 vi.mock('../utils/SettingsSync.js', () => ({
     default: {
+        get: vi.fn((_k, d) => d),
         getBool: vi.fn(() => false),
         getJSON: vi.fn(() => null),
         getFloat: vi.fn(() => null),
     },
 }));
 
-const {HarvestablesDrawing} = await import('./HarvestablesDrawing.js');
+const {HarvestablesDrawing, shouldDrawResourceLayer} = await import('./HarvestablesDrawing.js');
 const {HarvestablesHandler} = await import('../handlers/HarvestablesHandler.js');
 const settingsSync = (await import('../utils/SettingsSync.js')).default;
 
@@ -327,5 +328,37 @@ describe('HarvestablesDrawing render-time routing', () => {
         expect(typeof call[5]).toBe('number');     // tier
         expect(typeof call[6]).toBe('number');     // enchant
         expect(call[7]).toBe(false);               // static, not living
+    });
+});
+
+describe('shouldDrawResourceLayer', () => {
+    let drawing;
+    let ctx;
+
+    beforeEach(() => {
+        vi.clearAllMocks();
+        settingsSync.get.mockImplementation((_k, d) => d);
+        settingsSync.getBool.mockReturnValue(false);
+        drawing = buildDrawing();
+        ctx = {};
+    });
+
+    test('采集模式绘制资源图层', () => {
+        expect(shouldDrawResourceLayer('gather')).toBe(true);
+        expect(shouldDrawResourceLayer(undefined)).toBe(true);
+    });
+
+    test('常规模式跳过资源图层', () => {
+        expect(shouldDrawResourceLayer('roam')).toBe(false);
+    });
+
+    test('常规模式短路绘制并把资源计数归零', () => {
+        settingsSync.get.mockImplementation(key => (key === 'settingGatheringMode' ? 'roam' : 'gather'));
+        drawing.lastVisibleCount = 3;
+
+        drawing.invalidate(ctx, [{id: 1, hX: 10, hY: 20, size: 3, tier: 5, charges: 2, stringType: 'Fiber', mobileTypeId: -1, type: 14}]);
+
+        expect(drawing.lastVisibleCount).toBe(0);
+        expect(drawing.DrawCustomImage).not.toHaveBeenCalled();
     });
 });

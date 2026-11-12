@@ -39,6 +39,7 @@ export class MobsDrawing extends DrawingUtils
             if (mobOne.type == EnemyType.LivingSkinnable || mobOne.type == EnemyType.LivingHarvestable)
             {
                 isLivingResource = true;
+                if (settingsSync.get('settingGatheringMode', 'gather') === 'roam') continue;
                 if (!shouldRenderLivingResource(mobOne, key => settingsSync.getJSON(key))) {
                     continue;
                 }

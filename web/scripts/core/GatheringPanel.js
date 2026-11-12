@@ -14,7 +14,24 @@ let elements = null;
 let advisorRef = null;
 let clickHandler = null;
 let hoverHandler = null;
+let modeSelectRef = null;
+let modeChangeHandler = null;
 let lastHash = '';
+
+export function shouldShowTargets(mode) {
+    return mode !== 'roam';
+}
+
+export function renderModeSwitch(mode) {
+    const current = shouldShowTargets(mode) ? 'gather' : 'roam';
+    return `<label class="flex items-center gap-2">
+        <span class="text-xs text-base-content/60">模式</span>
+        <select id="settingGatheringMode" class="select select-sm select-bordered">
+            <option value="gather"${current === 'gather' ? ' selected' : ''}>采集模式</option>
+            <option value="roam"${current === 'roam' ? ' selected' : ''}>常规模式</option>
+        </select>
+    </label>`;
+}
 
 export function renderTargetRow(target, selectedId) {
     const tier = Number.isFinite(target.tier) ? target.tier : 0;
@@ -62,14 +79,23 @@ export function init(advisor) {
     advisorRef = advisor;
     elements = {
         card: document.getElementById('gatheringCard'),
-        body: document.getElementById('gatheringBody'),
         list: document.getElementById('gatheringTargets'),
         empty: document.getElementById('gatheringEmpty'),
         badge: document.getElementById('gatheringStateBadge'),
         noPosition: document.getElementById('gatheringNoPosition'),
         compass: document.getElementById('gatheringCompass'),
+        modeSwitch: document.getElementById('gatheringModeSwitch'),
     };
     if (!elements.list) return;
+
+    if (elements.modeSwitch) {
+        elements.modeSwitch.innerHTML = renderModeSwitch(settingsSync.get('settingGatheringMode', 'gather'));
+        modeSelectRef = elements.modeSwitch.querySelector('#settingGatheringMode');
+        if (modeSelectRef) {
+            modeChangeHandler = () => settingsSync.set('settingGatheringMode', modeSelectRef.value);
+            modeSelectRef.addEventListener('change', modeChangeHandler);
+        }
+    }
 
     const selectFromEvent = event => {
         const row = event.target.closest('[data-target-id]');
@@ -87,21 +113,35 @@ export function init(advisor) {
 
 export function update(advisor) {
     if (!elements?.list || !advisor) return;
-    const visible = settingsSync.getBool('settingShowGatheringTargets', true);
-    elements.body?.classList.toggle('hidden', !visible);
-    if (!visible) return;
+
+    const mode = settingsSync.get('settingGatheringMode', 'gather');
+    if (elements.modeSwitch) {
+        const current = shouldShowTargets(mode) ? 'gather' : 'roam';
+        const select = elements.modeSwitch.querySelector('#settingGatheringMode');
+        if (select && select.value !== current) select.value = current;
+    }
 
     const state = advisor.getState();
-    const waitingForPosition = state.targets.length > 0 && state.targets.every(t => t.distance === null);
+    const showTargets = shouldShowTargets(mode) && settingsSync.getBool('settingShowGatheringTargets', true);
+    const waitingForPosition = showTargets && state.targets.length > 0
+        && state.targets.every(t => t.distance === null);
+
+    elements.list.classList.toggle('hidden', !showTargets);
+    elements.compass?.classList.toggle('hidden', !showTargets);
+    elements.empty?.classList.toggle('hidden', !showTargets || state.targets.length > 0);
+    elements.badge?.classList.toggle('hidden', !showTargets || !state.isGathering);
+    elements.noPosition?.classList.toggle('hidden', !waitingForPosition);
+    if (!showTargets) {
+        lastHash = '';
+        return;
+    }
+
     const hash = `${state.selectedId}:${state.isGathering}:`
         + state.targets.map(t => `${t.id}:${t.size}:${t.distance === null ? '-' : Math.round(t.distance)}:${t.bearingDeg === null ? '-' : Math.round(t.bearingDeg)}`).join(',');
     if (hash === lastHash) return;
     lastHash = hash;
 
     elements.list.innerHTML = state.targets.map(t => renderTargetRow(t, state.selectedId)).join('');
-    elements.empty?.classList.toggle('hidden', state.targets.length > 0);
-    elements.badge?.classList.toggle('hidden', !state.isGathering);
-    elements.noPosition?.classList.toggle('hidden', !waitingForPosition);
     if (elements.compass) {
         elements.compass.innerHTML = renderCompass(state.targets, state.selectedId);
     }
@@ -112,9 +152,14 @@ export function destroy() {
         if (clickHandler) elements.list.removeEventListener('click', clickHandler);
         if (hoverHandler) elements.list.removeEventListener('mouseover', hoverHandler);
     }
+    if (modeSelectRef && modeChangeHandler) {
+        modeSelectRef.removeEventListener('change', modeChangeHandler);
+    }
     elements = null;
     advisorRef = null;
     clickHandler = null;
     hoverHandler = null;
+    modeSelectRef = null;
+    modeChangeHandler = null;
     lastHash = '';
 }
