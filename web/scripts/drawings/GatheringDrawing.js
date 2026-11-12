@@ -28,6 +28,7 @@ export class GatheringDrawing {
         if (!ctx || !advisor || !drawingUtils) return;
         const target = advisor.getSelectedTarget();
         if (!target) return;
+        if (!Number.isFinite(target.distance) || !Number.isFinite(target.bearingDeg)) return;
 
         const canvasCenter = drawingUtils.getCanvasCenter();
         const center = {x: canvasCenter, y: canvasCenter};
@@ -55,8 +56,8 @@ export class GatheringDrawing {
         ctx.setLineDash([]);
 
         if (end.clipped) {
-            const tipX = center.x + end.unitX * (maxLength + 10);
-            const tipY = center.y + end.unitY * (maxLength + 10);
+            const tipX = end.x;
+            const tipY = end.y;
             ctx.beginPath();
             ctx.moveTo(tipX, tipY);
             ctx.lineTo(tipX - end.unitX * 12 - end.unitY * 6, tipY - end.unitY * 12 + end.unitX * 6);

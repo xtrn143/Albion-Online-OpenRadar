@@ -1,5 +1,5 @@
-import {describe, test, expect} from 'vitest';
-import {clipGuide} from './GatheringDrawing.js';
+import {describe, test, expect, vi} from 'vitest';
+import {clipGuide, GatheringDrawing} from './GatheringDrawing.js';
 
 describe('clipGuide', () => {
     test('目标在视野内时不裁剪', () => {
@@ -23,5 +23,34 @@ describe('clipGuide', () => {
         expect(result.clipped).toBe(false);
         expect(Number.isNaN(result.x)).toBe(false);
         expect(Number.isNaN(result.y)).toBe(false);
+    });
+});
+
+describe('GatheringDrawing.draw', () => {
+    test('缺少本地坐标时不绘制引导线', () => {
+        const ctx = {
+            save: vi.fn(),
+            restore: vi.fn(),
+            beginPath: vi.fn(),
+            moveTo: vi.fn(),
+            lineTo: vi.fn(),
+            stroke: vi.fn(),
+            setLineDash: vi.fn(),
+            arc: vi.fn(),
+            fill: vi.fn(),
+            closePath: vi.fn(),
+        };
+        const advisor = {
+            isGathering: false,
+            getSelectedTarget: () => ({distance: null, bearingDeg: null, posX: 1, posY: 1}),
+        };
+        const drawingUtils = {
+            getCanvasCenter: () => 250,
+            transformPoint: (x, y) => ({x, y}),
+        };
+
+        new GatheringDrawing().draw(ctx, advisor, drawingUtils, 0, 0);
+
+        expect(ctx.save).not.toHaveBeenCalled();
     });
 });
