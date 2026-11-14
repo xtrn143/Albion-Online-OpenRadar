@@ -94,8 +94,9 @@ class GatherSettingsWindow:
                            font=("Segoe UI", 9), highlightthickness=0).pack(
                                anchor="w", pady=(0, 4))
 
-            selected = set(raw_qualities.get(kind) or [])
-            if not selected:
+            if kind in raw_qualities:
+                selected = set(raw_qualities.get(kind) or [])
+            else:
                 selected = set(QUALITY_TEXTS)
             box = tk.Frame(page, bg=BG)
             box.pack(fill="x")
