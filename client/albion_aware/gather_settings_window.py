@@ -70,10 +70,10 @@ class GatherSettingsWindow:
                        activebackground=BG, activeforeground=FG, font=("Segoe UI", 9),
                        highlightthickness=0).pack(anchor="w", pady=(6, 2))
 
+        tk.Label(self.top, text=i18n.t("gather.settings.qualities"), bg=BG, fg=MUTED,
+                 font=("Segoe UI", 8), anchor="w").pack(fill="x", pady=(8, 2))
         quality_box = tk.Frame(self.top, bg=BG)
-        quality_box.pack(fill="x", pady=(8, 2))
-        tk.Label(quality_box, text=i18n.t("gather.settings.qualities"), bg=BG, fg=MUTED,
-                 font=("Segoe UI", 8), anchor="w").grid(row=0, column=0, sticky="w")
+        quality_box.pack(fill="x")
         selected = set(values.get("qualities")
                        or [f"{tier}.{enchant}" for tier, enchant in sorted(ALL_QUALITIES)])
         self.quality_vars: dict[tuple[int, int], tk.BooleanVar] = {}
@@ -170,8 +170,9 @@ class GatherSettingsWindow:
         for kind, var in self.kind_vars.items():
             var.set(kind in defaults["kinds"])
         self.living_var.set(defaults["show_living"])
-        for var in self.quality_vars.values():
-            var.set(True)
+        selected = set(defaults["qualities"])
+        for (tier, enchant), var in self.quality_vars.items():
+            var.set(f"{tier}.{enchant}" in selected)
         self.max_targets.delete(0, "end")
         self.max_targets.insert(0, str(defaults["max_targets"]))
         self.sort_var.set(defaults["sort"])

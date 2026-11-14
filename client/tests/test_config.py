@@ -172,3 +172,15 @@ def test_v4_tier_range_expands_to_qualities(tmp_path):
     assert "tier_min" not in cfg.get("gather")
     assert "tier_max" not in cfg.get("gather")
     assert cfg.get("config_version") == CONFIG_VERSION
+
+
+def test_v4_swapped_tier_range_normalizes(tmp_path):
+    path = tmp_path / "config.json"
+    path.write_text(json.dumps({"config_version": 4,
+                                "gather": {"tier_min": 6, "tier_max": 5}}),
+                    encoding="utf-8")
+    cfg = Config(path)
+    qualities = cfg.get("gather.qualities")
+    assert len(qualities) == 10
+    assert qualities[0] == "5.0"
+    assert qualities[-1] == "6.4"
