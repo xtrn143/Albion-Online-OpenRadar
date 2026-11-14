@@ -7,7 +7,7 @@ import pytest
 from albion_aware.gather_targets import GatherTarget
 from albion_aware.models import View
 from albion_aware.overlay import (ARROW_SIZE, GLOW_LAYERS, GLOW_STEP, PAD, ROW_H, TOP_H,
-                                  WIDTH, OverlayWindow, arrow_points, filter_icon,
+                                  WIDTH, OverlayWindow, arrow_parts, filter_icon,
                                   format_ip, ip_color, map_icon, sound_icon)
 
 
@@ -345,20 +345,34 @@ def test_render_players_resets_resource_cache():
     assert window._drawn == [1, 1]
 
 
-def test_arrow_points_tip_follows_angle():
-    east = arrow_points(0)
-    assert len(east) == 6
-    assert east[0] > ARROW_SIZE / 2
-    assert abs(east[1] - ARROW_SIZE / 2) < 0.001
-    south = arrow_points(90)
-    assert abs(south[0] - ARROW_SIZE / 2) < 0.001
-    assert south[1] > ARROW_SIZE / 2
+def test_arrow_parts_head_follows_angle():
+    shaft, head = arrow_parts(0)
+    assert len(shaft) == 4
+    assert len(head) == 6
+    assert head[0] > ARROW_SIZE / 2
+    assert abs(head[1] - ARROW_SIZE / 2) < 0.001
+    assert shaft[0] < ARROW_SIZE / 2
+    south_shaft, south_head = arrow_parts(90)
+    assert abs(south_head[0] - ARROW_SIZE / 2) < 0.001
+    assert south_head[1] > ARROW_SIZE / 2
+    assert south_shaft[1] < ARROW_SIZE / 2
 
 
-def test_arrow_points_stay_inside_canvas():
+def test_arrow_parts_stay_inside_canvas():
     for angle in list(range(0, 360, 15)) + [None, -135, 359.5]:
-        assert all(math.isfinite(value) for value in arrow_points(angle))
-        assert all(0 <= value <= ARROW_SIZE for value in arrow_points(angle))
+        shaft, head = arrow_parts(angle)
+        points = shaft + head
+        assert all(math.isfinite(value) for value in points)
+        assert all(0 <= value <= ARROW_SIZE for value in points)
+
+
+def test_arrow_parts_tip_leads_head():
+    center = ARROW_SIZE / 2
+    for angle in range(0, 360, 45):
+        shaft, head = arrow_parts(angle)
+        tip_dist = math.hypot(head[0] - center, head[1] - center)
+        back_dist = math.hypot(shaft[2] - center, shaft[3] - center)
+        assert tip_dist > back_dist > 0
 
 
 def test_short_kind_falls_back_to_upper_prefix():
