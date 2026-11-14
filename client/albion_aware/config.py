@@ -24,7 +24,6 @@ DEFAULT_CONFIG = {
                 "map_x": None, "map_y": None},
     "map_history": [],
     "gather": {
-        "mode": "roam",
         "kinds": ["Log", "Rock", "Fiber", "Hide", "Ore"],
         "show_living": True,
         "tier_min": 1,

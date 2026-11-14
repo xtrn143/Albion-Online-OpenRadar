@@ -35,10 +35,10 @@ from albion_aware.event_parser import (
     ZoneChanged,
     parse_message,
 )
-from albion_aware.gather_panel import GatheringPanel
 from albion_aware.gather_settings_window import GatherSettingsWindow
 from albion_aware.gather_store import GatherStore
 from albion_aware.gather_targets import GatherFilter, has_position, select_targets
+from albion_aware.zone_level import ZoneLevels, is_danger
 from albion_aware.i18n import I18n
 from albion_aware.hotkey_window import HOTKEY_ACTIONS, HotkeyWindow
 from albion_aware.icons import IconCache, ItemDatabase, draw_enchant_badge, enchant_level
@@ -84,10 +84,6 @@ def sound_for_zone(level: str, current: bool) -> bool:
     if level in ("safe", "yellow"):
         return False
     return bool(current)
-
-
-def normalize_mode(value) -> str:
-    return "gather" if value == "gather" else "roam"
 
 
 def has_new_stranger(before_ids: set[int], after_ids: set[int]) -> bool:
@@ -173,13 +169,15 @@ class AlbionAwareApp:
         self._map_history = ([str(name) for name in stored_history[:10]]
                              if isinstance(stored_history, list) else [])
 
-        # 采集状态必须先于 OverlayWindow 创建：窗口构造/reset_position 会回调 _save_position
+        # 采集与区域状态必须先于 OverlayWindow 创建：窗口构造会回调 _save_position
         self.gather = GatherStore()
         self.player_pos: tuple[float, float] | None = None
-        self._mode = normalize_mode(self.config.get("gather.mode", "roam"))
         self._gather_filters = GatherFilter.from_config(self.config)
-        self._gather_panel = None
         self._gather_last_at = 0.0
+        self._resource_targets: list = []
+        self._zone_levels = ZoneLevels.load(resource_dir / "data" / "zones.json")
+        self._zone_level = "safe"
+        self._danger = False
 
         self.window = OverlayWindow(
             i18n=self.i18n,
@@ -189,7 +187,6 @@ class AlbionAwareApp:
             on_drag_end=self._save_position,
             on_sound_click=self._toggle_sound,
             on_map_click=self._open_maps,
-            on_mode_click=self._toggle_mode,
             on_filter_click=self._open_gather_settings,
         )
         self.window.set_sound(bool(self.config.get("overlay.sound", False)))
@@ -206,17 +203,7 @@ class AlbionAwareApp:
         self.panel = DetailPanel(self.window.root, self.i18n, self._detail_icon,
                                  self._on_mark_party, lambda _player: None)
 
-        self.gather = GatherStore()
-        self.player_pos: tuple[float, float] | None = None
-        self._mode = normalize_mode(self.config.get("gather.mode", "roam"))
-        self._gather_filters = GatherFilter.from_config(self.config)
-        self._gather_panel = GatheringPanel(self.window.root, self.i18n)
-        self._gather_last_at = 0.0
-        self.window.set_mode(self._mode)
         self.window.set_filter_active(not self._gather_filters.is_default())
-        if self._mode == "gather":
-            self._gather_panel.attach(*self.window.position)
-            self._gather_panel.show()
 
         self.client = RadarClient(self.config.get("radar.ws_url", "ws://localhost:5001/ws"),
                                   on_frames=self._on_frames, on_state=self._on_state)
@@ -306,8 +293,7 @@ class AlbionAwareApp:
             self.window.set_status(self._state == "connected")
             if dirty:
                 self._refresh()
-            if self._mode == "gather":
-                self._update_gather()
+            self._update_gather()
             self._check_silence()
         except Exception:
             pass
@@ -452,7 +438,12 @@ class AlbionAwareApp:
                 self.store.clear()
                 self.gather.clear()
                 self.player_pos = None
+                self._resource_targets = []
+                self._gather_last_at = 0.0
                 self.panel.hide()
+                self._zone_level = self._zone_levels.level(event.zone_id, self._zone_level)
+                self._danger = is_danger(self._zone_level) or self._zone_level == "unknown"
+                self._apply_sound_for_zone(self._zone_level)
                 in_roads = is_roads_zone(event.zone_id)
                 if in_roads:
                     if not self._in_roads:
@@ -470,7 +461,7 @@ class AlbionAwareApp:
         if len(self.party.names) != party_names_before:
             self.party.save()
         after = {player.id for player in self._view_rows()}
-        if applied and has_new_stranger(before, after):
+        if applied and self._danger and has_new_stranger(before, after):
             self._flash_pending = True
         return applied
 
@@ -485,7 +476,10 @@ class AlbionAwareApp:
                                sort_mode=self.config.get("sort_mode", "recent"),
                                ip_getter=self._item_power)
         self._rows = view.rows
-        self.window.render(view, self._item_power)
+        if display_mode(self._danger, bool(view.rows)) == "players":
+            self.window.render(view, self._item_power)
+        else:
+            self.window.render_resources(self._resource_targets)
         if self._flash_pending:
             self._flash_pending = False
             self.window.flash()
@@ -569,36 +563,28 @@ class AlbionAwareApp:
         self.config.set("overlay.x", int(x))
         self.config.set("overlay.y", int(y))
         self.config.save()
-        panel = getattr(self, "_gather_panel", None)
-        if getattr(self, "_mode", "roam") == "gather" and panel is not None:
-            panel.attach(x, y)
 
-    # ---------- 采集模式 ----------
-    def _toggle_mode(self) -> None:
-        self._apply_mode("roam" if self._mode == "gather" else "gather")
-        self.config.set("gather.mode", self._mode)
-        self.config.save()
+    def _apply_sound_for_zone(self, level: str) -> None:
+        current = bool(self.config.get("overlay.sound", False))
+        enabled = sound_for_zone(level, current)
+        if enabled != current:
+            self.config.set("overlay.sound", enabled)
+            self.config.save()
+        self.window.set_sound(enabled)
 
-    def _apply_mode(self, mode: str) -> None:
-        self._mode = normalize_mode(mode)
-        self.window.set_mode(self._mode)
-        if self._mode == "gather":
-            self._gather_panel.attach(*self.window.position)
-            self._gather_panel.show()
-            self._update_gather(force=True)
-        else:
-            self._gather_panel.hide()
-
+    # ---------- 采集 ----------
     def _update_gather(self, force: bool = False) -> None:
         now = time.monotonic()
         if not force and now - self._gather_last_at < GATHER_REFRESH_S:
             return
         self._gather_last_at = now
-        targets = select_targets(self.gather.snapshot(), self.player_pos,
-                                 self._gather_filters)
-        status = "" if has_position(self.player_pos) else self.i18n.t("gather.no_position")
-        self._gather_panel.attach(*self.window.position)
-        self._gather_panel.update(targets, status)
+        if not has_position(self.player_pos):
+            self._resource_targets = []
+        else:
+            self._resource_targets = select_targets(self.gather.snapshot(), self.player_pos,
+                                                     self._gather_filters)
+        if display_mode(self._danger, bool(self._rows)) == "resources":
+            self.window.render_resources(self._resource_targets)
 
     def _open_gather_settings(self) -> None:
         GatherSettingsWindow(self.window.root, self.i18n,
@@ -611,6 +597,7 @@ class AlbionAwareApp:
         self.config.save()
         self._gather_filters = GatherFilter.from_config(self.config)
         self.window.set_filter_active(not self._gather_filters.is_default())
+        self.window.invalidate_resources()
         self._update_gather(force=True)
 
     def _set_opacity(self, value: float) -> None:
@@ -625,7 +612,8 @@ class AlbionAwareApp:
         self.window.set_sound(enabled)
 
     def _play_sound(self) -> None:
-        if not bool(self.config.get("overlay.sound", False)) or sys.platform != "win32":
+        if (not bool(self.config.get("overlay.sound", False)) or not self._danger
+                or sys.platform != "win32"):
             return
         now = time.monotonic()
         # 同一批新玩家只响一次，避免瞬间连续蜂鸣
@@ -643,13 +631,8 @@ class AlbionAwareApp:
         threading.Thread(target=beep, daemon=True).start()
 
     def _toggle_visible(self) -> None:
-        visible = self.window.toggle_visible()
-        if visible and self._mode == "gather":
-            self._gather_panel.attach(*self.window.position)
-            self._gather_panel.show()
+        if self.window.toggle_visible():
             self._update_gather(force=True)
-        else:
-            self._gather_panel.hide()
 
     def _toggle_click_through(self) -> None:
         self.window.set_click_through(not self.window.click_through)
@@ -668,7 +651,7 @@ class AlbionAwareApp:
         self.i18n = I18n(self.config.language())
         self.window.i18n = self.i18n
         self.panel.i18n = self.i18n
-        self._gather_panel.set_i18n(self.i18n)
+        self.window.invalidate_resources()
         if self._diag_window is not None:
             self._diag_window.close()
             self._diag_window = None
@@ -712,7 +695,6 @@ class AlbionAwareApp:
         if self._map_window is not None:
             self._map_window.destroy()
             self._map_window = None
-        self._gather_panel.destroy()
         self.client.stop()
         self.hotkeys.stop()
         try:
