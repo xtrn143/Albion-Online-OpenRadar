@@ -70,6 +70,22 @@ RADAR_RETRY_S = 15.0
 GATHER_REFRESH_S = 0.5
 
 
+def display_mode(danger: bool, has_strangers: bool) -> str:
+    """危险区有人先看人，否则看资源。"""
+    if danger and has_strangers:
+        return "players"
+    return "resources"
+
+
+def sound_for_zone(level: str, current: bool) -> bool:
+    """红/黑区强制开启提示音，蓝/黄区强制关闭，未知区保持原状。"""
+    if level in ("red", "black"):
+        return True
+    if level in ("safe", "yellow"):
+        return False
+    return bool(current)
+
+
 def normalize_mode(value) -> str:
     return "gather" if value == "gather" else "roam"
 

@@ -2,8 +2,9 @@
 import sys
 from pathlib import Path
 
-from albion_aware.main import (AlbionAwareApp, push_history, sound_cooldown_ok,
-                               _resource_dir, has_new_stranger, user_data_dir)
+from albion_aware.main import (AlbionAwareApp, display_mode, push_history,
+                               sound_cooldown_ok, sound_for_zone, _resource_dir,
+                               has_new_stranger, user_data_dir)
 
 
 def test_user_data_dir_uses_app_dir_when_not_frozen(tmp_path, monkeypatch):
@@ -68,3 +69,19 @@ def test_map_index_ready_resets_loading_flag_on_failure():
     app._map_index_ready(None)
     assert app._map_index_loading is False
     assert app._map_index is None
+
+
+def test_display_mode_only_shows_players_when_dangerous_and_present():
+    assert display_mode(True, True) == "players"
+    assert display_mode(True, False) == "resources"
+    assert display_mode(False, True) == "resources"
+    assert display_mode(False, False) == "resources"
+
+
+def test_sound_for_zone_follows_danger_levels():
+    assert sound_for_zone("red", False) is True
+    assert sound_for_zone("black", False) is True
+    assert sound_for_zone("safe", True) is False
+    assert sound_for_zone("yellow", True) is False
+    assert sound_for_zone("unknown", True) is True
+    assert sound_for_zone("unknown", False) is False
