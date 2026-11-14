@@ -1,6 +1,6 @@
 ; client/packaging/albion_aware.iss
 #define MyAppName "AlbionAware"
-#define MyAppVersion "0.2.0"
+#define MyAppVersion "0.2.1"
 #define MyAppPublisher "portaler.pages.dev"
 
 [Setup]
@@ -26,7 +26,7 @@ Name: "chinesesimplified"; MessagesFile: "Languages\ChineseSimplified.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
 
 [Files]
-Source: "..\dist\AlbionAware\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\dist\AlbionAware\*"; DestDir: "{app}"; Excludes: "*.bak-*,logs\*,logs"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\data\items.min.json"; DestDir: "{app}\data"; Flags: ignoreversion
 Source: "LICENSES\*"; DestDir: "{app}\LICENSES"; Flags: ignoreversion
 Source: "NOTICE.txt"; DestDir: "{app}"; Flags: ignoreversion

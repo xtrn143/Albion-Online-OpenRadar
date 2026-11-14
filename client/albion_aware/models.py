@@ -7,6 +7,7 @@ class Player:
 
     id: int
     nickname: str = ""
+    guid: str = ""
     guild: str = ""
     alliance: str = ""
     faction: int = 0

@@ -100,9 +100,17 @@ class LocalPlayerMoved:
     y: float
 
 
+@dataclass
+class EquipmentInspect:
+    """查看玩家装备(op143 响应)：携带游戏 UI 同源的真实平均 IP（含专精加成）。"""
+
+    guid: str
+    item_power: float | None
+
+
 DomainEvent = (PlayerSeen | PlayerUpdated | PlayerLeft | ZoneChanged | PartyEvent
                | HarvestableBatchSpawned | HarvestableSpawned | HarvestableStateChanged
-               | HarvestableLeft | LocalPlayerMoved)
+               | HarvestableLeft | LocalPlayerMoved | EquipmentInspect)
 
 
 def _as_int(value: Any) -> int | None:
@@ -245,10 +253,26 @@ def extract(message: dict) -> tuple[str, dict]:
     return str(message.get("code") or ""), parameters
 
 
+def _guid_hex(value: Any) -> str | None:
+    """16 字节角色 GUID 转十六进制字符串；NewCharacter p7 与 op143 p0 同源。"""
+    if isinstance(value, dict) and isinstance(value.get("data"), list):
+        data = value["data"]
+    elif isinstance(value, list):
+        data = value
+    else:
+        return None
+    if len(data) == 16 and all(isinstance(b, int) and 0 <= b <= 255 for b in data):
+        return bytes(data).hex()
+    return None
+
+
 def _character_fields(p: dict) -> dict:
     fields: dict[str, Any] = {}
     if isinstance(p.get("1"), str):
         fields["nickname"] = p["1"]
+    guid = _guid_hex(p.get("7"))
+    if guid:
+        fields["guid"] = guid
     if isinstance(p.get("8"), str):
         fields["guild"] = p["8"]
     if isinstance(p.get("51"), str):
@@ -273,6 +297,11 @@ def parse_message(message: dict) -> list[DomainEvent]:
 
     if code == "response":
         op = _as_int(p.get(OP_CODE_KEY))
+        if op == 143:
+            # 查看装备响应：p3 为游戏 UI 同源的真实平均 IP（含专精），可能缺省
+            guid = _guid_hex(p.get("0"))
+            if guid:
+                return [EquipmentInspect(guid, _as_float(p.get("3")))]
         if op in (41, 2):
             zone = p.get("0" if op == 41 else "8")
             if isinstance(zone, (str, int)) and str(zone).strip():

@@ -27,6 +27,7 @@ from albion_aware.event_parser import (
     HarvestableLeft,
     HarvestableSpawned,
     HarvestableStateChanged,
+    EquipmentInspect,
     LocalPlayerMoved,
     MistChoice,
     PartyEvent,
@@ -155,6 +156,8 @@ class AlbionAwareApp:
         self._rows = []
         self._photo_cache = {}
         self._icon_pending: set[int] = set()
+        # 查看装备(op143)缓存：GUID → 游戏真实平均 IP（含专精）
+        self._real_ip: dict[str, float] = {}
         self._state = "connecting"
         self._flash_pending = False
         self._events: list[list] = []
@@ -473,6 +476,9 @@ class AlbionAwareApp:
             elif isinstance(event, MistChoice):
                 self._mist_lethal = event.lethal
                 self._mist_choice_at = time.monotonic()
+            elif isinstance(event, EquipmentInspect):
+                if event.item_power is not None:
+                    self._real_ip[event.guid] = event.item_power
         self.party.resolve(self.store)
         if len(self.party.names) != party_names_before:
             self.party.save()
@@ -502,6 +508,10 @@ class AlbionAwareApp:
             self._play_sound()
 
     def _item_power(self, player):
+        # 查看过装备的玩家优先用游戏同源真实 IP；未查看的退回基础 IP（无专精）
+        real = self._real_ip.get(player.guid) if player.guid else None
+        if real is not None:
+            return round(real)
         return self.db.average_ip(player.equip)
 
     # ---------- 图标 ----------

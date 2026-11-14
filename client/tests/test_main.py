@@ -92,6 +92,24 @@ def test_no_new_stranger_when_only_removals():
     assert has_new_stranger(set(), set()) is False
 
 
+def test_item_power_prefers_inspected_real_ip():
+    # 查看过装备的玩家：用 op143 真实 IP（四舍五入），而不是基础 IP
+    from types import SimpleNamespace
+    from albion_aware.models import Player
+    app = SimpleNamespace(_real_ip={"deadbeef" * 2: 687.91583})
+    player = Player(id=1, guid="deadbeef" * 2, equip=[0] * 10)
+    assert AlbionAwareApp._item_power(app, player) == 688
+
+
+def test_item_power_falls_back_to_base_ip_without_inspect():
+    from types import SimpleNamespace
+    from albion_aware.models import Player
+    app = SimpleNamespace(_real_ip={}, db=SimpleNamespace(average_ip=lambda e: 808))
+    assert AlbionAwareApp._item_power(app, Player(id=1, equip=[0] * 10)) == 808
+    # 有 guid 但没查看过：同样退回基础 IP
+    assert AlbionAwareApp._item_power(app, Player(id=1, guid="cafe" * 4)) == 808
+
+
 def test_sound_cooldown_blocks_bursts():
     assert sound_cooldown_ok(None, 100.0, cooldown=2.0) is True
     assert sound_cooldown_ok(100.0, 101.5, cooldown=2.0) is False

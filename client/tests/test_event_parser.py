@@ -1,4 +1,5 @@
 from albion_aware.event_parser import (
+    EquipmentInspect,
     HarvestableBatchSpawned,
     HarvestableLeft,
     HarvestableSpawned,
@@ -35,6 +36,43 @@ def test_new_character_maps_all_known_fields():
 def test_missing_optional_fields_are_omitted():
     events = parse_message(frame({"252": 29, "0": 7}))
     assert events[0].fields == {}
+
+
+def test_new_character_extracts_guid_from_param7():
+    # p7 是 16 字节角色 GUID，与查看装备响应 op143 的 p0 同源，用于关联真实 IP
+    events = parse_message(frame({
+        "252": 29, "0": 12345, "1": "Razoth",
+        "7": {"type": "Buffer", "data": list(range(16))},
+    }))
+    assert events[0].fields["guid"] == bytes(range(16)).hex()
+
+
+def test_new_character_ignores_non_guid_param7():
+    events = parse_message(frame({
+        "252": 29, "0": 12345, "1": "Razoth", "7": [1, 2, 3],
+    }))
+    assert "guid" not in events[0].fields
+
+
+def test_inspect_response_op143_carries_real_item_power():
+    # 查看装备响应的 p3 = 游戏 UI 显示的真实平均 IP（含专精加成）
+    events = parse_message({"code": "response", "dictionary": {"parameters": {
+        "253": 143,
+        "0": {"type": "Buffer", "data": list(range(16))},
+        "3": 687.91583,
+    }}})
+    assert isinstance(events[0], EquipmentInspect)
+    assert events[0].guid == bytes(range(16)).hex()
+    assert events[0].item_power == 687.91583
+
+
+def test_inspect_response_op143_without_power():
+    events = parse_message({"code": "response", "dictionary": {"parameters": {
+        "253": 143,
+        "0": {"type": "Buffer", "data": list(range(16))},
+    }}})
+    assert isinstance(events[0], EquipmentInspect)
+    assert events[0].item_power is None
 
 
 def test_equip_accepts_buffer_wrapped_array():
