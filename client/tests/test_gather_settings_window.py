@@ -5,8 +5,7 @@ def values(**overrides):
     base = {
         "kinds": ["Log", "Ore"],
         "show_living": True,
-        "tier_min": 1,
-        "tier_max": 8,
+        "qualities": ["1.0", "8.4"],
         "sort": "nearest",
         "max_targets": 5,
     }
@@ -22,9 +21,8 @@ def test_requires_at_least_one_kind():
     assert validate_settings(values(kinds=[]))[0] == "gather.settings.no_kinds"
 
 
-def test_tier_order_must_be_increasing():
-    assert validate_settings(values(tier_min=6, tier_max=3))[0] == "gather.settings.tier_order"
-    assert validate_settings(values(tier_min="x"))[0] == "gather.settings.tier_order"
+def test_requires_at_least_one_quality():
+    assert validate_settings(values(qualities=[]))[0] == "gather.settings.no_qualities"
 
 
 def test_max_targets_range():

@@ -1,9 +1,9 @@
-"""采集筛选设置窗：资源种类、活体开关、层级范围、排序与数量。"""
+"""采集筛选设置窗：资源种类、活体开关、品质矩阵、排序与数量。"""
 import tkinter as tk
 
 from albion_aware.config import DEFAULT_CONFIG
-from albion_aware.gather_targets import (DEFAULT_MAX_TARGETS, DEFAULT_SORT, KIND_ORDER,
-                                         SORT_MODES)
+from albion_aware.gather_targets import (ALL_QUALITIES, DEFAULT_MAX_TARGETS, DEFAULT_SORT,
+                                         KIND_ORDER, SORT_MODES)
 
 BG = "#1b1b1b"
 FG = "#e6e6e6"
@@ -14,10 +14,8 @@ def validate_settings(values: dict) -> tuple[str, str] | None:
     """返回 (错误 key, 出错内容)；全部合法返回 None。"""
     if not values.get("kinds"):
         return ("gather.settings.no_kinds", "")
-    tier_min = _as_int(values.get("tier_min"))
-    tier_max = _as_int(values.get("tier_max"))
-    if tier_min is None or tier_max is None or tier_min > tier_max:
-        return ("gather.settings.tier_order", "")
+    if not values.get("qualities"):
+        return ("gather.settings.no_qualities", "")
     max_targets = _as_int(values.get("max_targets"))
     if max_targets is None or not 1 <= max_targets <= 10:
         return ("gather.settings.max_targets_invalid", str(values.get("max_targets")))
@@ -47,7 +45,7 @@ class GatherSettingsWindow:
         self.top.configure(bg=BG, padx=14, pady=12)
         self.top.protocol("WM_DELETE_WINDOW", self.close)
         self.top.geometry("+%d+%d" % (master.winfo_screenwidth() // 2 - 170,
-                                      master.winfo_screenheight() // 2 - 150))
+                                      master.winfo_screenheight() // 2 - 220))
 
         tk.Label(self.top, text=i18n.t("gather.settings.title"), bg=BG, fg=FG,
                  font=("Segoe UI", 10, "bold"), anchor="w").pack(fill="x")
@@ -72,19 +70,37 @@ class GatherSettingsWindow:
                        activebackground=BG, activeforeground=FG, font=("Segoe UI", 9),
                        highlightthickness=0).pack(anchor="w", pady=(6, 2))
 
-        tier_row = tk.Frame(self.top, bg=BG)
-        tier_row.pack(fill="x", pady=2)
-        tk.Label(tier_row, text=i18n.t("gather.settings.tier"), bg=BG, fg=FG,
-                 font=("Segoe UI", 9), anchor="w").pack(side="left")
-        self.tier_min = tk.Spinbox(tier_row, from_=1, to=8, width=4)
-        self.tier_min.delete(0, "end")
-        self.tier_min.insert(0, str(values.get("tier_min", 1)))
-        self.tier_min.pack(side="left", padx=(6, 4))
-        tk.Label(tier_row, text="~", bg=BG, fg=FG, font=("Segoe UI", 9)).pack(side="left")
-        self.tier_max = tk.Spinbox(tier_row, from_=1, to=8, width=4)
-        self.tier_max.delete(0, "end")
-        self.tier_max.insert(0, str(values.get("tier_max", 8)))
-        self.tier_max.pack(side="left", padx=(4, 0))
+        quality_box = tk.Frame(self.top, bg=BG)
+        quality_box.pack(fill="x", pady=(8, 2))
+        tk.Label(quality_box, text=i18n.t("gather.settings.qualities"), bg=BG, fg=MUTED,
+                 font=("Segoe UI", 8), anchor="w").grid(row=0, column=0, sticky="w")
+        selected = set(values.get("qualities")
+                       or [f"{tier}.{enchant}" for tier, enchant in sorted(ALL_QUALITIES)])
+        self.quality_vars: dict[tuple[int, int], tk.BooleanVar] = {}
+        for column, tier in enumerate(range(1, 9), start=1):
+            tk.Label(quality_box, text=i18n.t("gather.settings.tier_column", value=tier),
+                     bg=BG, fg=FG, font=("Segoe UI", 8)).grid(row=0, column=column,
+                                                              padx=1)
+            for row, enchant in enumerate(range(0, 5), start=1):
+                if column == 1:
+                    tk.Label(quality_box, text=str(enchant), bg=BG, fg=MUTED,
+                             font=("Segoe UI", 8)).grid(row=row, column=0)
+                text = f"{tier}.{enchant}"
+                var = tk.BooleanVar(value=text in selected)
+                self.quality_vars[(tier, enchant)] = var
+                tk.Checkbutton(quality_box, text=text, variable=var, bg=BG, fg=FG,
+                               selectcolor="#2a2a2a", activebackground=BG,
+                               activeforeground=FG, font=("Segoe UI", 7),
+                               highlightthickness=0, bd=0, padx=0).grid(
+                                   row=row, column=column, sticky="w")
+
+        quality_buttons = tk.Frame(self.top, bg=BG)
+        quality_buttons.pack(fill="x", pady=(2, 0))
+        tk.Button(quality_buttons, text=i18n.t("gather.settings.all"),
+                  command=lambda: self._set_all_qualities(True)).pack(side="left")
+        tk.Button(quality_buttons, text=i18n.t("gather.settings.clear"),
+                  command=lambda: self._set_all_qualities(False)).pack(side="left",
+                                                                      padx=(6, 0))
 
         sort_row = tk.Frame(self.top, bg=BG)
         sort_row.pack(fill="x", pady=(6, 2))
@@ -128,11 +144,15 @@ class GatherSettingsWindow:
         return {
             "kinds": [kind for kind, var in self.kind_vars.items() if var.get()],
             "show_living": bool(self.living_var.get()),
-            "tier_min": self.tier_min.get().strip(),
-            "tier_max": self.tier_max.get().strip(),
+            "qualities": [f"{tier}.{enchant}"
+                          for (tier, enchant), var in self.quality_vars.items() if var.get()],
             "sort": self.sort_var.get(),
             "max_targets": self.max_targets.get().strip(),
         }
+
+    def _set_all_qualities(self, value: bool) -> None:
+        for var in self.quality_vars.values():
+            var.set(value)
 
     def _save(self) -> None:
         values = self._collect()
@@ -141,8 +161,6 @@ class GatherSettingsWindow:
             key, detail = problem
             self._error.set(self.i18n.t(key, value=detail))
             return
-        values["tier_min"] = _as_int(values["tier_min"])
-        values["tier_max"] = _as_int(values["tier_max"])
         values["max_targets"] = _as_int(values["max_targets"])
         self._on_save(values)
         self.close()
@@ -152,11 +170,10 @@ class GatherSettingsWindow:
         for kind, var in self.kind_vars.items():
             var.set(kind in defaults["kinds"])
         self.living_var.set(defaults["show_living"])
-        for widget, value in ((self.tier_min, defaults["tier_min"]),
-                              (self.tier_max, defaults["tier_max"]),
-                              (self.max_targets, defaults["max_targets"])):
-            widget.delete(0, "end")
-            widget.insert(0, str(value))
+        for var in self.quality_vars.values():
+            var.set(True)
+        self.max_targets.delete(0, "end")
+        self.max_targets.insert(0, str(defaults["max_targets"]))
         self.sort_var.set(defaults["sort"])
         self._error.set("")
 
