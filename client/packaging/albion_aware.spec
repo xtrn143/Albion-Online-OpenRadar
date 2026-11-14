@@ -9,6 +9,7 @@ a = Analysis(
         ("../data/items.min.json", "data"),
         ("../data/icons", "data/icons"),
         ("../data/avalon", "data/avalon"),
+        ("../data/zones.json", "data"),
     ],
     hiddenimports=["pystray._win32", "PIL._tkinter_finder"],
     hookspath=[],

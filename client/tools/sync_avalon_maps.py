@@ -25,6 +25,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "client"))
 
 from albion_aware.map_index import build_index_records, key3  # noqa: E402
+from albion_aware.zone_level import build_level_map  # noqa: E402
 
 ZONES = ROOT / "web" / "ao-bin-dumps" / "zones.json"
 DEST = ROOT / "client" / "data" / "avalon"
@@ -131,13 +132,24 @@ def sync(source: Path, dest: Path, zones_path: Path, allow_download: bool = True
     if collisions:
         print(f"WARNING: {len(collisions)} duplicate 3-letter keys, first: {list(collisions)[:3]}")
 
+    levels = build_level_map(zones)
+    if not levels:
+        raise SystemExit("no zone pvp levels found in zones.json")
+    zones_dest = dest.parent / "zones.json"
+    zones_payload = {"version": 1, "zones": levels}
+    zones_tmp = zones_dest.with_name(zones_dest.name + ".tmp")
+    zones_tmp.write_text(
+        json.dumps(zones_payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")),
+        encoding="utf-8")
+    zones_tmp.replace(zones_dest)
+
     payload = {"version": 1, "maps": records}
     index_path = dest / "index.json"
     tmp_path = index_path.with_name(index_path.name + ".tmp")
     tmp_path.write_text(json.dumps(payload, ensure_ascii=False, indent=1), encoding="utf-8")
     tmp_path.replace(index_path)
     return {"maps": len(records), "images": available, "missing_images": missing,
-            "key_collisions": len(collisions)}
+            "key_collisions": len(collisions), "zones": len(levels)}
 
 
 def main() -> None:
