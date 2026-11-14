@@ -1,4 +1,8 @@
 import math
+import tkinter as tk
+from tkinter import font as tkfont
+
+import pytest
 
 from albion_aware.gather_targets import GatherTarget
 from albion_aware.models import View
@@ -380,3 +384,34 @@ def test_arrow_points_stay_inside_canvas():
     for angle in list(range(0, 360, 15)) + [None, -135, 359.5]:
         assert all(math.isfinite(value) for value in arrow_points(angle))
         assert all(0 <= value <= ARROW_SIZE for value in arrow_points(angle))
+
+
+def test_short_kind_falls_back_to_upper_prefix():
+    window = OverlayWindow.__new__(OverlayWindow)
+
+    class _I18n:
+        def t(self, key):
+            return {"gather.short.Log": "木"}.get(key, key)
+
+    window.i18n = _I18n()
+    assert window._short_kind("Log") == "木"
+    assert window._short_kind("Ore") == "OR"
+    assert window._short_kind("") == "--"
+
+
+def test_resource_row_text_fits_content_width():
+    try:
+        root = tk.Tk()
+    except tk.TclError:
+        pytest.skip("no display")
+    try:
+        bold = tkfont.Font(family="Segoe UI", size=8, weight="bold")
+        normal = tkfont.Font(family="Segoe UI", size=8)
+        small = tkfont.Font(family="Segoe UI", size=7)
+        content = WIDTH - GLOW_LAYERS * GLOW_STEP * 2 - 2 * 2 - PAD * 2
+        for short in ("木", "石", "LG", "RK"):
+            used = (bold.measure(short) + 1 + normal.measure("T8.4")
+                    + small.measure("80m") + ARROW_SIZE)
+            assert used <= content, (short, used, content)
+    finally:
+        root.destroy()

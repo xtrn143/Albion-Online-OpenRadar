@@ -251,11 +251,14 @@ class OverlayWindow:
         self.root.geometry(f"{WIDTH}x{height}+{x}+{y}")
 
     # ---------- 渲染 ----------
-    def render(self, view, ip_getter) -> None:
-        self._resources_hash = None
+    def _clear_rows(self) -> None:
         for child in self.inner.winfo_children():
             child.destroy()
         self._images.clear()
+
+    def render(self, view, ip_getter) -> None:
+        self._resources_hash = None
+        self._clear_rows()
 
         for player in view.rows:
             self._add_row(player, ip_getter)
@@ -303,12 +306,10 @@ class OverlayWindow:
         key = targets_hash(targets)
         if key == self._resources_hash:
             return
-        self._resources_hash = key
-        for child in self.inner.winfo_children():
-            child.destroy()
-        self._images.clear()
+        self._clear_rows()
         for target in targets:
             self._add_resource_row(target)
+        self._resources_hash = key
         self._resize(len(targets))
 
     def invalidate_resources(self) -> None:
@@ -324,15 +325,6 @@ class OverlayWindow:
         row.pack(fill="x", padx=PAD)
         row.pack_propagate(False)
 
-        kind = tk.Label(row, text=self._short_kind(target.kind), bg=BG,
-                        fg=KIND_COLORS.get(target.kind, KIND_FALLBACK),
-                        font=("Segoe UI", 8, "bold"), anchor="w")
-        kind.pack(side="left")
-
-        detail = tk.Label(row, text=format_tier_enchant(target.tier, target.enchant),
-                          bg=BG, fg=IP_GREY, font=("Segoe UI", 8), anchor="w")
-        detail.pack(side="left", padx=(3, 0))
-
         arrow = tk.Canvas(row, width=ARROW_SIZE, height=ARROW_SIZE, bg=BG,
                           bd=0, highlightthickness=0)
         arrow.pack(side="right")
@@ -344,7 +336,19 @@ class OverlayWindow:
 
         if target.distance is not None:
             tk.Label(row, text=format_distance(target.distance), bg=BG, fg=RESOURCE_MUTED,
-                     font=("Segoe UI", 8), anchor="e").pack(side="right", padx=(0, 2))
+                     font=("Segoe UI", 7), anchor="e", bd=0, padx=0,
+                     highlightthickness=0).pack(side="right")
+
+        kind = tk.Label(row, text=self._short_kind(target.kind), bg=BG,
+                        fg=KIND_COLORS.get(target.kind, KIND_FALLBACK),
+                        font=("Segoe UI", 8, "bold"), anchor="w", bd=0, padx=0,
+                        highlightthickness=0)
+        kind.pack(side="left")
+
+        detail = tk.Label(row, text=format_tier_enchant(target.tier, target.enchant),
+                          bg=BG, fg=IP_GREY, font=("Segoe UI", 8), anchor="w", bd=0,
+                          padx=0, highlightthickness=0)
+        detail.pack(side="left", padx=(1, 0))
 
         for widget in row.winfo_children() + [row]:
             widget.bind("<ButtonPress-1>", self._start_drag)
