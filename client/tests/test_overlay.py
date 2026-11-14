@@ -8,7 +8,7 @@ from albion_aware.gather_targets import GatherTarget
 from albion_aware.models import View
 from albion_aware.overlay import (ARROW_SIZE, GLOW_LAYERS, GLOW_STEP, PAD, ROW_H, TOP_H,
                                   WIDTH, OverlayWindow, arrow_points, filter_icon,
-                                  format_ip, gather_icon, ip_color, map_icon, sound_icon)
+                                  format_ip, ip_color, map_icon, sound_icon)
 
 
 class _FakeRoot:
@@ -251,16 +251,6 @@ def _has_color(image, predicate):
     return any(predicate(r, g, b, a) for r, g, b, a in image.getdata())
 
 
-def test_gather_icon_is_green_in_gather_mode():
-    gather = gather_icon("gather")
-    roam = gather_icon("roam")
-    assert gather.size == roam.size == (12, 12)
-    assert gather.getpixel((0, 0))[3] == 0
-    green = lambda r, g, b, a: g > 150 and r < 140 and a > 0  # noqa: E731
-    assert _has_color(gather, green) is True
-    assert _has_color(roam, green) is False
-
-
 def test_filter_icon_turns_gold_when_active():
     active = filter_icon(True)
     normal = filter_icon(False)
@@ -268,19 +258,6 @@ def test_filter_icon_turns_gold_when_active():
     gold = lambda r, g, b, a: r > 180 and g > 140 and b < 120 and a > 0  # noqa: E731
     assert _has_color(active, gold) is True
     assert _has_color(normal, gold) is False
-
-
-def test_set_mode_swaps_icon_and_exposes_state():
-    window = OverlayWindow.__new__(OverlayWindow)
-    window._mode = "roam"
-    window.mode_icon = _FakeLabel()
-    window._mode_images = {"gather": "gather-image", "roam": "roam-image"}
-    window.set_mode("gather")
-    assert window.mode == "gather"
-    assert window.mode_icon.kwargs["image"] == "gather-image"
-    window.set_mode("bogus")
-    assert window.mode == "roam"
-    assert window.mode_icon.kwargs["image"] == "roam-image"
 
 
 def test_set_filter_active_swaps_icon():
@@ -302,14 +279,12 @@ def test_position_prefers_recorded_pos_over_winfo():
     assert window.position == (500, 600)
 
 
-def test_mode_click_invokes_callback_and_breaks():
+def test_filter_click_invokes_callback_and_breaks():
     window = OverlayWindow.__new__(OverlayWindow)
     calls = []
-    window._on_mode_click = lambda: calls.append("mode")
-    assert window._mode_click() == "break"
     window._on_filter_click = lambda: calls.append("filter")
     assert window._filter_click() == "break"
-    assert calls == ["mode", "filter"]
+    assert calls == ["filter"]
 
 
 class _ResourceInner:
