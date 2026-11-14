@@ -18,47 +18,55 @@
 - 颜色沿用 `RESOURCE_ARROW`。
 - 宽度预算：原最宽行 63px（LG/RK）+ 2px = 65px ≤ 66px；真实字体宽度测试上限保持 66。
 
-## 3. 品质筛选矩阵（UI）
+## 3. 品质筛选（UI）
 
-- 设置窗中「层级范围」一行替换为「品质」矩阵：
-  - 表头横向 T1~T8 共 8 列；左侧纵向附魔 0~4 共 5 行；40 个复选框。
-  - 复选框显示为层级缩写（如 `5.1`），悬停无需提示；列头用 i18n 短标签（T1…T8），行头为数字 0~4。
-  - 底部「全选 / 清空」两个按钮；清空后保存报错 `gather.settings.no_qualities`（至少选 1 项）。
-- 其余控件（种类、活体、排序、数量）不动；窗口高度随矩阵自然增高。
+资源种类改为页签（Log/Rock/Fiber/Hide/Ore 五个），每种资源独立配置品质：
+
+- 每个页签内：
+  - 顶部「显示该资源」复选框 → `gather.kinds`；取消勾选后整类资源不显示，但页签内的品质勾选保留。
+  - 品质矩阵：表头横向 T1~T8 共 8 列；左侧纵向附魔 0~4 共 5 行；40 个复选框，文本 `tier.enchant`。
+  - 矩阵下方「全选 / 清空」按钮，只作用于当前页签。
+- 全局控件（活体、排序、最多显示）留在页签外，保持原样。
+- 校验：至少启用一种资源（`gather.settings.no_kinds`）；每个已启用种类至少选一种品质（`gather.settings.no_qualities`，错误信息带种类名）。
 
 ## 4. 配置与迁移
 
-- 新键 `gather.qualities`：字符串数组，元素 `"tier.enchant"`（如 `"5.1"`、`"6.0"`）；默认 40 项全选。
+- `gather.kinds`：启用种类列表（沿用）。
+- `gather.qualities`：对象，键为种类，值为 `"tier.enchant"` 字符串数组（如 `"5.1"`）；保存全部 5 个种类，便于禁用后保留选择。
+- 默认：5 个种类均启用，每种 40 项全选。
 - 删除默认键 `gather.tier_min` / `gather.tier_max`。
-- `CONFIG_VERSION` 4 → 5；迁移：`legacy < 5` 且存在旧键时，展开 `[tier_min..tier_max] × [0..4]` 为 qualities（不放宽用户原有范围），随后删除旧键。
-- 非法值容错（quality 串不是 `t.e` 或超界）：丢弃该元素；全部非法/为空时回退全选默认。
+- `CONFIG_VERSION` 5 → 6；迁移：
+  - `legacy < 5` 且存在旧键：先展开为扁平字符串数组（`[tier_min..tier_max] × [0..4]`，不放宽原有范围），删除旧键。
+  - `legacy < 6` 且 qualities 是数组：转为按种类字典；已启用种类沿用该数组，未启用种类填 40 项默认。
+- 容错：某键缺失或非法 → 该种类回退 40 项；扁平数组仍被接受（应用到全部种类）。
 
 ## 5. 筛选判定（gather_targets.py）
 
-- `GatherFilter` 字段 `tier_min/tier_max` → `qualities: frozenset[tuple[int, int]]`（内部用元组集合，配置层负责字符串↔元组转换）。
-- `select_targets` 中层级区间判断替换为 `(node.tier, node.enchant) in filters.qualities`。
-- `to_dict()` 输出 qualities 字符串列表；`is_default()` 与默认 40 项全等判断。
+- `GatherFilter.qualities: dict[str, frozenset[tuple[int, int]]]`（配置层负责字符串↔元组转换）。
+- `kinds` 决定哪些种类参与；`select_targets` 先判 `node.kind`，再判 `(node.tier, node.enchant or 0) in qualities.get(node.kind, frozenset())`。
+- `to_dict()` 输出 5 个种类的字符串数组；`is_default()` 与默认值全等判断。
 
 ## 6. 改动文件
 
 | 文件 | 改动 |
 | --- | --- |
-| gather_targets.py | GatherFilter 字段、from_config、to_dict、select_targets 判定 |
-| gather_settings_window.py | 矩阵 UI、全选/清空、validate、_collect/_reset |
-| config.py | DEFAULT_CONFIG、CONFIG_VERSION=5、迁移 |
+| gather_targets.py | GatherFilter.qualities 按种类字典、from_config、to_dict、select_targets 判定 |
+| gather_settings_window.py | 资源种类页签、每页签品质矩阵、启用开关、全选/清空、validate、_collect/_reset |
+| config.py | DEFAULT_CONFIG、CONFIG_VERSION=6、迁移 |
 | overlay.py | ARROW_SIZE=12、带杆箭头绘制 |
-| lang/zh-CN.json、en.json | 新增 qualities/all/clear/no_qualities；删除 tier/tier_order |
+| lang/zh-CN.json、en.json | 新增 qualities/all/clear/no_qualities/show_kind；删除 tier/tier_order |
 | tests | test_gather_targets、test_gather_settings_window、test_config、test_overlay 对应更新 |
 
 ## 7. 测试要点
 
 - 箭头：12px 带杆坐标合法性（头在杆前方）、0°/90°/None 角度、资源行真实字体宽度 ≤66px。
-- 筛选：命中 `(5,1)` 显示；`(6,0)` 在选中 `6.0` 时显示；未选中 `(5,0)` 不显示；空集合回退默认；`to_dict`/`from_config` 回环。
-- 迁移：v4 配置 tier_min=5,tier_max=6 → qualities 含 5.0~6.4 全部 10 项，旧键删除。
-- 设置窗：清空后保存报错；全选回默认；勾选矩阵保存后立即生效（invalidate_resources 由 main 既有逻辑保证）。
+- 筛选：同一 tier/enchant 在 Fiber 选中时显示、在 Log 未选中时不显示；禁用种类不显示；某键缺失回退全选；`to_dict`/`from_config` 回环。
+- 迁移：v4 配置 tier_min=5,tier_max=6 → 10 项品质；v5 扁平数组且只启用 Fiber → Fiber 保留旧值、其它种类 40 项；旧键删除。
+- 设置窗：清空某已启用种类的品质后保存报错；全选回默认；勾选矩阵保存后立即生效（invalidate_resources 由 main 既有逻辑保证）。
 
 ## 8. 边界与已知限制
 
 - 迷雾/红黑区玩家行与本次改动无关。
-- 40 项矩阵使设置窗明显变高；可接受（低频操作）。
+- 五个页签各 40 项矩阵，设置窗变高变宽；可接受（低频操作）。
 - 老配置若 tier_min>tier_max（历史上层已交换），迁移前仍按 min/max 归一后展开。
+- `show_living` 仍为全局开关，不按页签区分。
