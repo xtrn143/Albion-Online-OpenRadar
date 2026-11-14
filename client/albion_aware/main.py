@@ -79,6 +79,11 @@ def display_mode(danger: bool, has_strangers: bool) -> str:
     return "resources"
 
 
+def scanning_enabled(danger: bool, override: bool | None) -> bool:
+    """手动开关优先；没手动设置时由区域等级决定是否探查。"""
+    return danger if override is None else override
+
+
 def sound_for_zone(level: str, current: bool) -> bool:
     """红/黑区强制开启提示音，蓝/黄区强制关闭，未知区保持原状。"""
     if level in ("red", "black"):
@@ -183,6 +188,8 @@ class AlbionAwareApp:
         self._danger = False
         self._mist_lethal: bool | None = None
         self._mist_choice_at = 0.0
+        self._alert_override: bool | None = None
+        self._alert = False
 
         self.window = OverlayWindow(
             i18n=self.i18n,
@@ -448,6 +455,7 @@ class AlbionAwareApp:
                 self.panel.hide()
                 self._zone_level = self._level_for_zone(event.zone_id)
                 self._danger = is_danger(self._zone_level) or self._zone_level == "unknown"
+                self._alert_override = None
                 self._apply_sound_for_zone(self._zone_level)
                 in_roads = is_roads_zone(event.zone_id)
                 if in_roads:
@@ -469,7 +477,7 @@ class AlbionAwareApp:
         if len(self.party.names) != party_names_before:
             self.party.save()
         after = {player.id for player in self._view_rows()}
-        if applied and self._danger and has_new_stranger(before, after):
+        if applied and self._scanning() and has_new_stranger(before, after):
             self._flash_pending = True
         return applied
 
@@ -484,7 +492,7 @@ class AlbionAwareApp:
                                sort_mode=self.config.get("sort_mode", "recent"),
                                ip_getter=self._item_power)
         self._rows = view.rows
-        if display_mode(self._danger, bool(view.rows)) == "players":
+        if display_mode(self._scanning(), bool(view.rows)) == "players":
             self.window.render(view, self._item_power)
         else:
             self.window.render_resources(self._resource_targets)
@@ -578,7 +586,11 @@ class AlbionAwareApp:
         if enabled != current:
             self.config.set("overlay.sound", enabled)
             self.config.save()
+        self._alert = enabled
         self.window.set_sound(enabled)
+
+    def _scanning(self) -> bool:
+        return scanning_enabled(self._danger, self._alert_override)
 
     def _level_for_zone(self, zone_id: str) -> str:
         """迷雾看入口选择，其他区查区域表；离开迷雾时丢弃未消费的选择。"""
@@ -605,7 +617,7 @@ class AlbionAwareApp:
         else:
             self._resource_targets = select_targets(self.gather.snapshot(), self.player_pos,
                                                      self._gather_filters)
-        if display_mode(self._danger, bool(self._rows)) == "resources":
+        if display_mode(self._scanning(), bool(self._rows)) == "resources":
             self.window.render_resources(self._resource_targets)
 
     def _open_gather_settings(self) -> None:
@@ -628,14 +640,17 @@ class AlbionAwareApp:
         self.config.save()
 
     def _toggle_sound(self) -> None:
-        enabled = not bool(self.config.get("overlay.sound", False))
+        """声音图标现在是手动总开关：同时打开/关闭玩家探查与告警音。"""
+        enabled = not self._alert
+        self._alert_override = enabled
+        self._alert = enabled
         self.config.set("overlay.sound", enabled)
         self.config.save()
         self.window.set_sound(enabled)
+        self._refresh()
 
     def _play_sound(self) -> None:
-        if (not bool(self.config.get("overlay.sound", False)) or not self._danger
-                or sys.platform != "win32"):
+        if not self._alert or sys.platform != "win32":
             return
         now = time.monotonic()
         # 同一批新玩家只响一次，避免瞬间连续蜂鸣
@@ -697,7 +712,7 @@ class AlbionAwareApp:
             "reset_position": lambda: self._queue_action(self.window.reset_position),
             "set_opacity": lambda value: self._queue_action(self._set_opacity, value),
             "toggle_sound": lambda: self._queue_action(self._toggle_sound),
-            "sound_on": lambda: bool(self.config.get("overlay.sound", False)),
+            "sound_on": lambda: self._alert,
             "feedback": lambda: self._queue_action(self._open_feedback),
             "about": lambda: self._queue_action(self._show_about),
             "set_language": lambda setting: self._queue_action(self._set_language, setting),

@@ -4,8 +4,8 @@ import time
 from pathlib import Path
 
 from albion_aware.main import (AlbionAwareApp, display_mode, push_history,
-                               sound_cooldown_ok, sound_for_zone, _resource_dir,
-                               has_new_stranger, user_data_dir)
+                               scanning_enabled, sound_cooldown_ok, sound_for_zone,
+                               _resource_dir, has_new_stranger, user_data_dir)
 
 
 def test_user_data_dir_uses_app_dir_when_not_frozen(tmp_path, monkeypatch):
@@ -29,6 +29,16 @@ def test_resource_dir_prefers_meipass(tmp_path, monkeypatch):
 def test_resource_dir_falls_back_to_app_dir(tmp_path, monkeypatch):
     monkeypatch.delattr(sys, "_MEIPASS", raising=False)
     assert _resource_dir(tmp_path) == tmp_path
+
+
+def test_scanning_follows_zone_without_override():
+    assert scanning_enabled(True, None) is True
+    assert scanning_enabled(False, None) is False
+
+
+def test_scanning_override_wins():
+    assert scanning_enabled(False, True) is True
+    assert scanning_enabled(True, False) is False
 
 
 class _FakeLevels:
