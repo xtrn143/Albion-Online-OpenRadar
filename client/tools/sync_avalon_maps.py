@@ -50,6 +50,17 @@ def _valid_webp(path: Path) -> bool:
     return True
 
 
+def _write_json(path: Path, payload: dict, *, indent: int | None = None) -> None:
+    """原子写 JSON：默认紧凑单行（区域表用）；indent 不为空时按缩进输出（索引用）。"""
+    tmp = path.with_name(path.name + ".tmp")
+    if indent is None:
+        text = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    else:
+        text = json.dumps(payload, ensure_ascii=False, indent=indent)
+    tmp.write_text(text, encoding="utf-8")
+    tmp.replace(path)
+
+
 def _download(filename: str, target: Path) -> bool:
     url = f"{REMOTE}/maps/{quote(filename, safe='')}"
     part = target.with_name(target.name + ".part")
@@ -135,19 +146,12 @@ def sync(source: Path, dest: Path, zones_path: Path, allow_download: bool = True
     levels = build_level_map(zones)
     if not levels:
         raise SystemExit("no zone pvp levels found in zones.json")
+    # 区域表固定放在 data 根目录，与 avalon 子目录同级；不随 --dest 改变位置
     zones_dest = dest.parent / "zones.json"
     zones_payload = {"version": 1, "zones": levels}
-    zones_tmp = zones_dest.with_name(zones_dest.name + ".tmp")
-    zones_tmp.write_text(
-        json.dumps(zones_payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")),
-        encoding="utf-8")
-    zones_tmp.replace(zones_dest)
+    _write_json(zones_dest, zones_payload)
 
-    payload = {"version": 1, "maps": records}
-    index_path = dest / "index.json"
-    tmp_path = index_path.with_name(index_path.name + ".tmp")
-    tmp_path.write_text(json.dumps(payload, ensure_ascii=False, indent=1), encoding="utf-8")
-    tmp_path.replace(index_path)
+    _write_json(dest / "index.json", {"version": 1, "maps": records}, indent=1)
     return {"maps": len(records), "images": available, "missing_images": missing,
             "key_collisions": len(collisions), "zones": len(levels)}
 
