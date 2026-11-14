@@ -4,6 +4,7 @@ from albion_aware.event_parser import (
     HarvestableSpawned,
     HarvestableStateChanged,
     LocalPlayerMoved,
+    MistChoice,
     PartyEvent,
     PlayerLeft,
     PlayerSeen,
@@ -100,6 +101,36 @@ def test_join_response_op2_ignores_unparsable_position():
         "253": 2, "8": "0311", "9": "not-a-position"}}})
     assert len(events) == 1
     assert isinstance(events[0], ZoneChanged)
+
+
+def test_mists_join_event_updates_zone():
+    # 事件 522 是进入迷雾的唯一地图变更来源，p2=实例 ID、p3=进入标记
+    events = parse_message(frame({
+        "252": 522, "0": 1, "2": "@MISTS@a40183ea-3d07-4d85-b7a2-4db690f4e434",
+        "3": True, "4": "0212",
+    }))
+    assert len(events) == 1
+    assert isinstance(events[0], ZoneChanged)
+    assert events[0].zone_id == "@MISTS@a40183ea-3d07-4d85-b7a2-4db690f4e434"
+
+
+def test_mists_join_event_without_flag_is_ignored():
+    events = parse_message(frame({"252": 522, "0": 1, "2": "@MISTS@x", "4": "0212"}))
+    assert events == []
+
+
+def test_mists_lethal_entrance_request_reports_choice():
+    events = parse_message(frame({"253": 477, "1": 8, "2": 1}, kind="request"))
+    assert events == [MistChoice(True)]
+
+
+def test_mists_non_lethal_entrance_request_reports_choice():
+    events = parse_message(frame({"253": 477, "1": 8}, kind="request"))
+    assert events == [MistChoice(False)]
+
+
+def test_other_mists_requests_are_ignored():
+    assert parse_message(frame({"253": 477, "1": 2}, kind="request")) == []
 
 
 def test_party_event_is_forwarded_raw():

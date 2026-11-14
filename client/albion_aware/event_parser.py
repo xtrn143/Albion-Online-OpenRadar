@@ -17,6 +17,10 @@ HARVEST_KIND_RANGES = (
 )
 # 批量刷新在协议里是 39；38 只在 [0] 为数组时按批量处理，避免误吞单体帧
 HARVEST_BATCH_EVENTS = (38, 39)
+# 进入迷雾：事件 522 携带迷雾实例 ID，请求 477 的 [2] 表示是否选了致命入口
+MISTS_JOINED_EVENT = 522
+MISTS_ENTRANCE_OP = 477
+MISTS_ENTRANCE_CHOICE = 8
 STATIC_MOBILE_IDS = (None, -1, 65535)
 
 
@@ -40,6 +44,11 @@ class PlayerLeft:
 @dataclass
 class ZoneChanged:
     zone_id: str
+
+
+@dataclass
+class MistChoice:
+    lethal: bool
 
 
 @dataclass
@@ -277,8 +286,12 @@ def parse_message(message: dict) -> list[DomainEvent]:
         return []
 
     if code == "request":
+        op = _as_int(p.get(OP_CODE_KEY))
+        # 迷雾入口请求：[1]=8 表示走静默入口，[2] 存在表示选择了致命迷雾
+        if op == MISTS_ENTRANCE_OP and _as_int(p.get("1")) == MISTS_ENTRANCE_CHOICE:
+            return [MistChoice("2" in p)]
         # 移动请求 21/22 携带本地玩家坐标
-        if _as_int(p.get(OP_CODE_KEY)) in (21, 22):
+        if op in (21, 22):
             position = _as_position(p.get("1"))
             if position is not None:
                 return [LocalPlayerMoved(*position)]
@@ -289,6 +302,13 @@ def parse_message(message: dict) -> list[DomainEvent]:
 
     event = _as_int(p.get(EVENT_CODE_KEY))
     player_id = _as_int(p.get("0"))
+
+    if event == MISTS_JOINED_EVENT:
+        # 只有 [3] 为 true 才是真正进入迷雾，其余只是会话信息
+        zone = p.get("2")
+        if p.get("3") is True and isinstance(zone, str) and zone.strip():
+            return [ZoneChanged(zone)]
+        return []
 
     if event == 1 and player_id is not None:
         # 同一 id 既可能是玩家也可能是资源，按两个消费方分别下发

@@ -1,7 +1,19 @@
 import json
 from pathlib import Path
 
-from albion_aware.zone_level import ZoneLevels, build_level_map, is_danger
+from albion_aware.zone_level import ZoneLevels, build_level_map, is_danger, mist_level
+
+
+def test_mist_level_follows_lethal_choice():
+    mist = "@MISTS@a40183ea-3d07-4d85-b7a2-4db690f4e434"
+    assert mist_level(mist, "safe", True) == "black"
+    assert mist_level(mist, "safe", False) == "yellow"
+
+
+def test_mist_level_inherits_without_choice():
+    mist = "@MISTS@a40183ea-3d07-4d85-b7a2-4db690f4e434"
+    assert mist_level(mist, "red", None) == "red"
+    assert mist_level(mist, "black", None) == "black"
 
 
 def test_build_level_map_keeps_four_levels_and_forces_tunnels_black():

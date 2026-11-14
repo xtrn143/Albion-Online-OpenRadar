@@ -62,5 +62,14 @@ class ZoneLevels:
         return self._levels.get(zone) or self._levels.get(zone.split("-", 1)[0]) or "unknown"
 
 
+def mist_level(zone_id, previous: str, lethal: bool | None) -> str:
+    """迷雾等级：选过致命入口按黑区、非致命按黄区，没选过则继承进入前等级。"""
+    if lethal is True:
+        return "black"
+    if lethal is False:
+        return "yellow"
+    return previous
+
+
 def is_danger(level: str) -> bool:
     return level in DANGER

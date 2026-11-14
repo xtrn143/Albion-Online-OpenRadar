@@ -28,6 +28,7 @@ from albion_aware.event_parser import (
     HarvestableSpawned,
     HarvestableStateChanged,
     LocalPlayerMoved,
+    MistChoice,
     PartyEvent,
     PlayerLeft,
     PlayerSeen,
@@ -38,7 +39,7 @@ from albion_aware.event_parser import (
 from albion_aware.gather_settings_window import GatherSettingsWindow
 from albion_aware.gather_store import GatherStore
 from albion_aware.gather_targets import GatherFilter, has_position, select_targets
-from albion_aware.zone_level import ZoneLevels, is_danger
+from albion_aware.zone_level import MISTS_PREFIX, ZoneLevels, is_danger, mist_level
 from albion_aware.i18n import I18n
 from albion_aware.hotkey_window import HOTKEY_ACTIONS, HotkeyWindow
 from albion_aware.icons import IconCache, ItemDatabase, draw_enchant_badge, enchant_level
@@ -68,6 +69,7 @@ from albion_aware.win32_ext import HotkeyListener
 SOUND_COOLDOWN_S = 2.0
 RADAR_RETRY_S = 15.0
 GATHER_REFRESH_S = 0.5
+MIST_CHOICE_TTL_S = 30.0
 
 
 def display_mode(danger: bool, has_strangers: bool) -> str:
@@ -179,6 +181,8 @@ class AlbionAwareApp:
         # 服务端连上不会补发当前地图，首个 ZoneChanged 前按安全区处理，避免在城里误报玩家
         self._zone_level = "safe"
         self._danger = False
+        self._mist_lethal: bool | None = None
+        self._mist_choice_at = 0.0
 
         self.window = OverlayWindow(
             i18n=self.i18n,
@@ -442,7 +446,7 @@ class AlbionAwareApp:
                 self._resource_targets = []
                 self._gather_last_at = 0.0
                 self.panel.hide()
-                self._zone_level = self._zone_levels.level(event.zone_id, self._zone_level)
+                self._zone_level = self._level_for_zone(event.zone_id)
                 self._danger = is_danger(self._zone_level) or self._zone_level == "unknown"
                 self._apply_sound_for_zone(self._zone_level)
                 in_roads = is_roads_zone(event.zone_id)
@@ -458,6 +462,9 @@ class AlbionAwareApp:
             elif isinstance(event, PartyEvent):
                 self.party.handle_event(event.parameters, self.store)
                 applied = True
+            elif isinstance(event, MistChoice):
+                self._mist_lethal = event.lethal
+                self._mist_choice_at = time.monotonic()
         self.party.resolve(self.store)
         if len(self.party.names) != party_names_before:
             self.party.save()
@@ -572,6 +579,20 @@ class AlbionAwareApp:
             self.config.set("overlay.sound", enabled)
             self.config.save()
         self.window.set_sound(enabled)
+
+    def _level_for_zone(self, zone_id: str) -> str:
+        """迷雾看入口选择，其他区查区域表；离开迷雾时丢弃未消费的选择。"""
+        if zone_id.upper().startswith(MISTS_PREFIX):
+            return mist_level(zone_id, self._zone_level, self._consume_mist_choice())
+        self._mist_lethal = None
+        return self._zone_levels.level(zone_id, self._zone_level)
+
+    def _consume_mist_choice(self) -> bool | None:
+        """取出 30 秒内的迷雾入口选择；没点过或已过期返回 None。"""
+        lethal, self._mist_lethal = self._mist_lethal, None
+        if lethal is None or time.monotonic() - self._mist_choice_at > MIST_CHOICE_TTL_S:
+            return None
+        return lethal
 
     # ---------- 采集 ----------
     def _update_gather(self, force: bool = False) -> None:
