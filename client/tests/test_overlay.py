@@ -1,6 +1,10 @@
-from albion_aware.overlay import (GLOW_LAYERS, GLOW_STEP, PAD, ROW_H, TOP_H, WIDTH,
-                                  OverlayWindow, filter_icon, format_ip, gather_icon,
-                                  ip_color, map_icon, sound_icon)
+import math
+
+from albion_aware.gather_targets import GatherTarget
+from albion_aware.models import View
+from albion_aware.overlay import (ARROW_SIZE, GLOW_LAYERS, GLOW_STEP, PAD, ROW_H, TOP_H,
+                                  WIDTH, OverlayWindow, arrow_points, filter_icon,
+                                  format_ip, gather_icon, ip_color, map_icon, sound_icon)
 
 
 class _FakeRoot:
@@ -302,3 +306,77 @@ def test_mode_click_invokes_callback_and_breaks():
     window._on_filter_click = lambda: calls.append("filter")
     assert window._filter_click() == "break"
     assert calls == ["mode", "filter"]
+
+
+class _ResourceInner:
+    def winfo_children(self):
+        return []
+
+
+def _resource_window():
+    window = OverlayWindow.__new__(OverlayWindow)
+    window.root = _DragRoot()
+    window._pos = None
+    window.inner = _ResourceInner()
+    window._resources_hash = None
+    window._images = []
+    window._drawn = []
+    window._add_resource_row = lambda target: window._drawn.append(target.harvestable_id)
+    return window
+
+
+def _target(harvestable_id=1, distance=23.0, bearing_deg=45.0):
+    return GatherTarget(harvestable_id=harvestable_id, kind="Log", tier=6, enchant=2, size=3,
+                        x=0.0, y=0.0, is_living=False, distance=distance,
+                        bearing_deg=bearing_deg)
+
+
+def test_render_resources_resizes_to_target_count():
+    window = _resource_window()
+    window.place_at(10, 20)
+    window.render_resources([_target(1), _target(2), _target(3)])
+    glow = GLOW_LAYERS * GLOW_STEP * 2
+    assert window.root.geometries[-1] == f"{WIDTH}x{PAD * 2 + 3 * ROW_H + TOP_H + glow}+10+20"
+    assert window._drawn == [1, 2, 3]
+
+
+def test_render_resources_skips_unchanged_batch():
+    window = _resource_window()
+    targets = [_target(1)]
+    window.render_resources(targets)
+    window.render_resources(targets)
+    assert window._drawn == [1]
+
+
+def test_render_resources_keeps_one_row_when_empty():
+    window = _resource_window()
+    window.render_resources([])
+    glow = GLOW_LAYERS * GLOW_STEP * 2
+    assert window.root.geometries[-1] == f"{WIDTH}x{PAD * 2 + ROW_H + TOP_H + glow}+0+0"
+
+
+def test_render_players_resets_resource_cache():
+    window = _resource_window()
+    targets = [_target(1)]
+    window.render_resources(targets)
+    window.render_resources(targets)
+    assert window._drawn == [1]
+    window.render(View(), lambda _player: None)
+    window.render_resources(targets)
+    assert window._drawn == [1, 1]
+
+
+def test_arrow_points_tip_follows_angle():
+    east = arrow_points(0)
+    assert len(east) == 6
+    assert east[0] > ARROW_SIZE / 2
+    assert abs(east[1] - ARROW_SIZE / 2) < 0.001
+    south = arrow_points(90)
+    assert abs(south[0] - ARROW_SIZE / 2) < 0.001
+    assert south[1] > ARROW_SIZE / 2
+
+
+def test_arrow_points_stay_inside_canvas():
+    for angle in list(range(0, 360, 15)) + [None, -135, 359.5]:
+        assert all(math.isfinite(value) for value in arrow_points(angle))
+        assert all(0 <= value <= ARROW_SIZE for value in arrow_points(angle))

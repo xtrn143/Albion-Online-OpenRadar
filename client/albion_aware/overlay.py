@@ -1,15 +1,29 @@
 """窄条置顶主窗：武器图标 + IP，行点击、闪烁、拖动、穿透。"""
+import math
 import tkinter as tk
 
 from PIL import Image, ImageDraw, ImageTk
 
 import albion_aware.win32_ext as win32
+from albion_aware.gather_targets import (format_distance, format_tier_enchant,
+                                         targets_hash)
 
 WIDTH = 102             # 78 内容宽 + 6 层红光内外边距（每层左右各 2px）
 ROW_H = 36
 TOP_H = 16               # 顶部图标行（提示音 / 穿透 / 连接状态）
 ICON_SIZE = 32
 PAD = 4
+ARROW_SIZE = 10
+RESOURCE_MUTED = "#9a9a9a"
+RESOURCE_ARROW = "#e6e6e6"
+KIND_COLORS = {
+    "Log": "#96693c",
+    "Rock": "#9696a0",
+    "Fiber": "#5fbe78",
+    "Hide": "#aa785a",
+    "Ore": "#6496c8",
+}
+KIND_FALLBACK = "#787878"
 BORDER = 2
 GLOW_LAYERS = 6          # 由外向内递减的红光层数
 GLOW_STEP = 2
@@ -37,6 +51,22 @@ GATHER_OFF = (107, 107, 107, 255)
 FILTER_ON = (232, 192, 74, 255)
 FILTER_OFF = (150, 150, 150, 255)
 CLICK_WARN = "#e8c04a"
+
+
+def arrow_points(angle_deg: float | None, size: int = ARROW_SIZE) -> list[float]:
+    """按屏幕空间角度生成箭头三角形顶点（Canvas 的 y 轴向下）。"""
+    if angle_deg is None or not math.isfinite(angle_deg):
+        angle_deg = 0.0
+    rad = math.radians(angle_deg)
+    center = size / 2
+    length = size / 2 - 1
+    tip = (center + length * math.cos(rad), center + length * math.sin(rad))
+    back = (center - length * 0.6 * math.cos(rad), center - length * 0.6 * math.sin(rad))
+    wing = length * 0.55
+    wing_rad = rad + math.pi / 2
+    left = (back[0] + wing * math.cos(wing_rad), back[1] + wing * math.sin(wing_rad))
+    right = (back[0] - wing * math.cos(wing_rad), back[1] - wing * math.sin(wing_rad))
+    return [tip[0], tip[1], left[0], left[1], right[0], right[1]]
 
 
 def gather_icon(mode: str) -> Image.Image:
@@ -192,6 +222,7 @@ class OverlayWindow:
         self._flash_job = None
         self._flash_step = 0
         self._images = []
+        self._resources_hash = None
         self._click_through = False
         self._opacity = 1.0
         self._paint_glow(GLOW_DIM)
@@ -221,6 +252,7 @@ class OverlayWindow:
 
     # ---------- 渲染 ----------
     def render(self, view, ip_getter) -> None:
+        self._resources_hash = None
         for child in self.inner.winfo_children():
             child.destroy()
         self._images.clear()
@@ -260,10 +292,64 @@ class OverlayWindow:
             widget.bind("<ButtonRelease-1>", lambda event, p=player: self._end_drag(event, p))
 
     def clear(self) -> None:
+        self._resources_hash = None
         for child in self.inner.winfo_children():
             child.destroy()
         self._images.clear()
         self._resize(1)
+
+    # ---------- 资源行 ----------
+    def render_resources(self, targets) -> None:
+        key = targets_hash(targets)
+        if key == self._resources_hash:
+            return
+        self._resources_hash = key
+        for child in self.inner.winfo_children():
+            child.destroy()
+        self._images.clear()
+        for target in targets:
+            self._add_resource_row(target)
+        self._resize(len(targets))
+
+    def invalidate_resources(self) -> None:
+        self._resources_hash = None
+
+    def _short_kind(self, kind: str) -> str:
+        key = f"gather.short.{kind}"
+        text = self.i18n.t(key)
+        return text if text != key else (kind[:2].upper() or "--")
+
+    def _add_resource_row(self, target) -> None:
+        row = tk.Frame(self.inner, bg=BG, height=ROW_H)
+        row.pack(fill="x", padx=PAD)
+        row.pack_propagate(False)
+
+        kind = tk.Label(row, text=self._short_kind(target.kind), bg=BG,
+                        fg=KIND_COLORS.get(target.kind, KIND_FALLBACK),
+                        font=("Segoe UI", 8, "bold"), anchor="w")
+        kind.pack(side="left")
+
+        detail = tk.Label(row, text=format_tier_enchant(target.tier, target.enchant),
+                          bg=BG, fg=IP_GREY, font=("Segoe UI", 8), anchor="w")
+        detail.pack(side="left", padx=(3, 0))
+
+        arrow = tk.Canvas(row, width=ARROW_SIZE, height=ARROW_SIZE, bg=BG,
+                          bd=0, highlightthickness=0)
+        arrow.pack(side="right")
+        if target.bearing_deg is None:
+            arrow.create_oval(3, 3, 7, 7, outline=RESOURCE_MUTED, fill="")
+        else:
+            arrow.create_polygon(arrow_points(target.bearing_deg), fill=RESOURCE_ARROW,
+                                 outline="")
+
+        if target.distance is not None:
+            tk.Label(row, text=format_distance(target.distance), bg=BG, fg=RESOURCE_MUTED,
+                     font=("Segoe UI", 8), anchor="e").pack(side="right", padx=(0, 2))
+
+        for widget in row.winfo_children() + [row]:
+            widget.bind("<ButtonPress-1>", self._start_drag)
+            widget.bind("<B1-Motion>", self._drag)
+            widget.bind("<ButtonRelease-1>", self._end_drag)
 
     # ---------- 闪烁 ----------
     def _paint_glow(self, colors) -> None:
