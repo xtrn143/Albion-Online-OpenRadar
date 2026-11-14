@@ -7,7 +7,7 @@
 当前客户端（`client/albion_aware`）有两个问题：
 
 1. **探查不区分区域**：任何区域都会把非队友玩家列进悬浮窗，任何新玩家都会触发红光与提示音。城市与蓝区里频繁误报。
-2. **资源显示在窗外**：gather 模式用独立的左侧 `GatheringPanel` 展示资源，多开一个窗口，拖动/穿透/透明度都要额外同步。
+2. **资源显示在窗外**：采集资源目前用独立的左侧 `GatheringPanel` 展示，多开一个窗口，拖动/穿透/透明度都要额外同步。
 
 本设计做两件事：
 
@@ -20,7 +20,7 @@
 |---|---|
 | 探查区域 | 仅红区、黑区；黄区与蓝区不探查 |
 | 资源区域 | 蓝/黄区也显示资源（采集不限于危险区） |
-| 资源与模式 | 资源行只在 gather 模式出现，roam 模式行为不变 |
+| 玩法模式 | **取消 gather/roam 双模式**，只保留一套逻辑（原 gather 逻辑），删除顶栏模式图标与切换入口 |
 | 资源行排版 | 文字资源名 + 层级.附魔 + 距离 + 方向箭头，宽度不变 |
 | 未知区域 | 按“危险”处理并展示玩家，但不自动修改提示音 |
 
@@ -101,20 +101,19 @@
 ### 5.1 内容优先级
 
 ```python
-def display_mode(mode: str, danger: bool, has_strangers: bool) -> str:
+def display_mode(danger: bool, has_strangers: bool) -> str:
     if danger and has_strangers:
         return "players"
-    if mode == "gather":
-        return "resources"
-    return "empty"
+    return "resources"
 ```
 
 | 状态 | 显示 |
 |---|---|
 | 探查区且有非队友玩家 | 玩家行：武器图标 + IP，最多 `max_rows`（默认 6）行，超出显示 `+N` |
-| 探查区且无玩家 | 资源行（gather 模式） |
-| 蓝/黄区（不探查） | 资源行（gather 模式） |
-| 任意区域 + roam 模式 + 无玩家 | 空窗，只保留顶栏图标行 |
+| 探查区且无玩家 | 资源行 |
+| 蓝/黄区（不探查） | 资源行 |
+
+用户不再需要关心当前处于哪种玩法模式：有危险先看人，没危险就看资源。
 
 “有非队友玩家”沿用 `PlayerStore.view` 的结果：已排除自己和 `PartyList` 中的队友，并按 `player_timeout`（默认 60 秒）超时清理。
 
@@ -128,8 +127,8 @@ def display_mode(mode: str, danger: bool, has_strangers: bool) -> str:
 
 ### 5.3 主循环
 
-- `_drain` 每 100ms 调用一次决策；状态（模式、危险、是否有玩家、资源哈希）未变化时不重绘。
-- 现有 `_update_gather` 保留 0.5 秒节流，产出 `targets` 后交给悬浮窗渲染（仅 gather 模式）。
+- `_drain` 每 100ms 调用一次决策；状态（危险等级、是否有玩家、资源哈希）未变化时不重绘。
+- 现有 `_update_gather` 保留 0.5 秒节流，产出 `targets` 后交给悬浮窗渲染。
 - 从 `resources` 切到 `players` 或反向切换时立即重绘，不等待节流。
 - 资源行点击不打开详情面板，仅支持拖动窗口；玩家行点击行为不变。
 
@@ -174,8 +173,9 @@ def display_mode(mode: str, danger: bool, has_strangers: bool) -> str:
 | 文件 | 变更 |
 |---|---|
 | `client/albion_aware/zone_level.py` | 新增：区域表加载与等级判定 |
-| `client/albion_aware/overlay.py` | 新增 `render_resources`；迁入 `arrow_points`、资源短名配色 |
-| `client/albion_aware/main.py` | 接入区域判定、自动提示音、显示决策；移除采集面板接线 |
+| `client/albion_aware/overlay.py` | 新增 `render_resources`；迁入 `arrow_points`、资源短名配色；删除 gather/roam 模式图标与点击回调 |
+| `client/albion_aware/main.py` | 接入区域判定、自动提示音、显示决策；移除采集面板接线、`_toggle_mode` / `_apply_mode` / `_mode` 状态与 `normalize_mode` |
+| `client/albion_aware/config.py` | 默认配置移除 `gather.mode`；老配置残留键保留不读，不升配置版本 |
 | `client/albion_aware/gather_panel.py` | 删除 |
 | `client/albion_aware/lang/zh-CN.json`、`en.json` | 新增 `gather.short.*`；删除面板专用 `gather.title`、`gather.empty`、`gather.no_position` |
 | `client/tools/sync_avalon_maps.py` | 额外生成 `client/data/zones.json` |
@@ -188,7 +188,7 @@ def display_mode(mode: str, danger: bool, has_strangers: bool) -> str:
 纯函数（便于单测，不依赖 Tk）：
 
 - `zone_level.level(zone_id, previous)` / `is_danger(level)`
-- `main.display_mode(mode, danger, has_strangers)`
+- `main.display_mode(danger, has_strangers)`
 - `main.sound_for_zone(level, current) -> bool`（`unknown` 返回 `current`）
 
 ## 8. 边界处理
@@ -202,7 +202,7 @@ def display_mode(mode: str, danger: bool, has_strangers: bool) -> str:
 | 未知新区域 | `unknown`：展示玩家、不自动改提示音（安全优先） |
 | 切区 | 现有逻辑清空玩家表与资源表，避免上一区残留 |
 | 无自身坐标 | 不渲染资源行，窗口保持最小 1 行高 |
-| roam 模式 + 无玩家 | 空窗，仅顶栏 |
+| 老配置残留 `gather.mode` | 忽略，不再读取；下次保存时自然写回默认结构 |
 | 手动关提示音后进入红区 | 自动重新打开（按 4.1 规则） |
 | 红区内手动关提示音 | 生效，直到下一次区域切换 |
 | 悬浮窗隐藏 | 资源与玩家都不渲染，F12 恢复后立即按当前状态重绘 |
@@ -213,17 +213,18 @@ def display_mode(mode: str, danger: bool, has_strangers: bool) -> str:
 单元测试：
 
 - `zone_level`：红/黑/黄/蓝命中、`TNL-001`、`@MISTS@` 继承、复合 ID、空 ID、未知 ID、空表。
-- `display_mode`：四种组合。
+- `display_mode`：危险/非危险 × 有/无陌生人四种组合。
 - `sound_for_zone`：三个明确等级 + `unknown` 保持原值。
 - `OverlayWindow.render_resources`：行数决定窗口高度；空列表保持 1 行；宽度恒为 102。
 - 箭头几何测试从 `test_gather_panel.py` 迁入 `test_overlay.py`。
 
 手动验证：
 
-- 进城（蓝区）：不列玩家、不响提示音、图标为灰；gather 模式显示资源。
+- 进城（蓝区）：不列玩家、不响提示音、图标为灰；显示资源行。
 - 进红/黑区：提示音图标自动点亮，出现陌生人立即列行 + 闪红 + 响铃。
 - 陌生人离开且超时：自动切回资源行。
 - 红区回蓝区：提示音自动关闭，玩家行消失。
+- 顶栏不再有模式图标，拖动位置、穿透、提示音、筛选、查图入口仍可用。
 - 拖到屏幕左缘时不再出现旧的左侧小窗。
 
 ## 10. 已知限制
