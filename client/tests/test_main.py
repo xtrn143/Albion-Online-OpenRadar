@@ -85,3 +85,59 @@ def test_sound_for_zone_follows_danger_levels():
     assert sound_for_zone("yellow", True) is False
     assert sound_for_zone("unknown", True) is True
     assert sound_for_zone("unknown", False) is False
+
+
+class _FakeConfig:
+    def __init__(self, sound=False):
+        self.sound = sound
+        self.saves = 0
+
+    def get(self, key, default=None):
+        return self.sound if key == "overlay.sound" else default
+
+    def set(self, key, value):
+        assert key == "overlay.sound"
+        self.sound = value
+
+    def save(self):
+        self.saves += 1
+
+
+class _FakeWindow:
+    def __init__(self):
+        self.sound = None
+
+    def set_sound(self, value):
+        self.sound = value
+
+
+def _sound_app(sound=False):
+    app = AlbionAwareApp.__new__(AlbionAwareApp)
+    app.config = _FakeConfig(sound)
+    app.window = _FakeWindow()
+    return app
+
+
+def test_apply_sound_for_zone_enables_and_saves_once():
+    app = _sound_app(False)
+    app._apply_sound_for_zone("red")
+    assert app.config.sound is True
+    assert app.window.sound is True
+    assert app.config.saves == 1
+    app._apply_sound_for_zone("black")
+    assert app.config.saves == 1
+
+
+def test_apply_sound_for_zone_disables_in_safe_and_keeps_unknown():
+    app = _sound_app(True)
+    app._apply_sound_for_zone("safe")
+    assert app.config.sound is False
+    assert app.window.sound is False
+    assert app.config.saves == 1
+
+    app.config.sound = True
+    app.config.saves = 0
+    app._apply_sound_for_zone("unknown")
+    assert app.config.sound is True
+    assert app.window.sound is True
+    assert app.config.saves == 0
