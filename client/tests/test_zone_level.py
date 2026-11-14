@@ -17,7 +17,7 @@ def test_build_level_map_keeps_four_levels_and_forces_tunnels_black():
                       "5001": "black", "5002": "black"}
 
 
-def test_load_roundtrip(tmp_path):
+def test_load_reads_levels_and_drops_bogus(tmp_path):
     path = tmp_path / "zones.json"
     path.write_text(json.dumps({"version": 1, "zones": {
         "3005": "red", "TNL-001": "black", "9": "bogus"}}), encoding="utf-8")
@@ -25,6 +25,13 @@ def test_load_roundtrip(tmp_path):
     assert levels.level("3005") == "red"
     assert levels.level("TNL-001") == "black"
     assert levels.level("9") == "unknown"
+
+
+def test_built_level_map_roundtrips_through_load(tmp_path):
+    levels = build_level_map({"3005": {"pvpType": "red", "type": "OPENPVP_RED"}})
+    path = tmp_path / "zones.json"
+    path.write_text(json.dumps({"version": 1, "zones": levels}), encoding="utf-8")
+    assert ZoneLevels.load(path).level("3005") == "red"
 
 
 def test_missing_file_is_empty():

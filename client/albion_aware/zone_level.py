@@ -2,7 +2,10 @@
 from __future__ import annotations
 
 import json
+import logging
 from pathlib import Path
+
+log = logging.getLogger(__name__)
 
 LEVELS = ("safe", "yellow", "red", "black")
 DANGER = frozenset({"red", "black"})
@@ -35,12 +38,18 @@ class ZoneLevels:
         try:
             raw = json.loads(Path(path).read_text(encoding="utf-8"))
         except (OSError, ValueError):
+            log.warning("zone level table unavailable: %s", path)
             return cls()
         zones = raw.get("zones") if isinstance(raw, dict) else None
         if not isinstance(zones, dict):
+            log.warning("zone level table unavailable: %s", path)
             return cls()
-        return cls({str(key).upper(): str(value) for key, value in zones.items()
-                    if str(value) in LEVELS})
+        levels: dict[str, str] = {}
+        for key, value in zones.items():
+            level = str(value).strip().lower()
+            if level in LEVELS:
+                levels[str(key).strip().upper()] = level
+        return cls(levels)
 
     def level(self, zone_id, previous: str = "safe") -> str:
         if previous not in LEVELS and previous != "unknown":
