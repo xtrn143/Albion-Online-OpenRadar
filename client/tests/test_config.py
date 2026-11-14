@@ -128,9 +128,11 @@ def test_gather_defaults_without_mode():
     assert "tier_max" not in cfg
     assert cfg["kinds"] == ["Log", "Rock", "Fiber", "Hide", "Ore"]
     assert cfg["show_living"] is True
-    assert len(cfg["qualities"]) == 40
-    assert cfg["qualities"][0] == "1.0"
-    assert cfg["qualities"][-1] == "8.4"
+    assert set(cfg["qualities"]) == {"Log", "Rock", "Fiber", "Hide", "Ore"}
+    for values in cfg["qualities"].values():
+        assert len(values) == 40
+        assert values[0] == "1.0"
+        assert values[-1] == "8.4"
     assert cfg["sort"] == "nearest"
     assert cfg["max_targets"] == 5
 
@@ -143,19 +145,21 @@ def test_v3_config_gains_gather_defaults(tmp_path):
     assert cfg.get("gather.kinds") == ["Log", "Rock", "Fiber", "Hide", "Ore"]
     assert cfg.get("overlay.opacity") == 0.7
     assert cfg.get("config_version") == CONFIG_VERSION
-    assert len(cfg.get("gather.qualities")) == 40
+    qualities = cfg.get("gather.qualities")
+    assert set(qualities) == {"Log", "Rock", "Fiber", "Hide", "Ore"}
+    assert all(len(values) == 40 for values in qualities.values())
 
 
 def test_current_version_keeps_custom_gather_settings(tmp_path):
     path = tmp_path / "config.json"
     path.write_text(json.dumps({"config_version": CONFIG_VERSION,
                                 "gather": {"kinds": ["Ore"],
-                                           "qualities": ["5.1", "5.2"],
+                                           "qualities": {"Ore": ["5.1"]},
                                            "max_targets": 3}}),
                     encoding="utf-8")
     cfg = Config(path)
     assert cfg.get("gather.kinds") == ["Ore"]
-    assert cfg.get("gather.qualities") == ["5.1", "5.2"]
+    assert cfg.get("gather.qualities")["Ore"] == ["5.1"]
     assert cfg.get("gather.max_targets") == 3
 
 
@@ -166,9 +170,11 @@ def test_v4_tier_range_expands_to_qualities(tmp_path):
                     encoding="utf-8")
     cfg = Config(path)
     qualities = cfg.get("gather.qualities")
-    assert len(qualities) == 10
-    assert qualities[0] == "5.0"
-    assert qualities[-1] == "6.4"
+    assert set(qualities) == {"Log", "Rock", "Fiber", "Hide", "Ore"}
+    for values in qualities.values():
+        assert len(values) == 10
+        assert values[0] == "5.0"
+        assert values[-1] == "6.4"
     assert "tier_min" not in cfg.get("gather")
     assert "tier_max" not in cfg.get("gather")
     assert cfg.get("config_version") == CONFIG_VERSION
@@ -181,6 +187,20 @@ def test_v4_swapped_tier_range_normalizes(tmp_path):
                     encoding="utf-8")
     cfg = Config(path)
     qualities = cfg.get("gather.qualities")
-    assert len(qualities) == 10
-    assert qualities[0] == "5.0"
-    assert qualities[-1] == "6.4"
+    assert all(len(values) == 10 for values in qualities.values())
+    assert qualities["Log"][0] == "5.0"
+    assert qualities["Log"][-1] == "6.4"
+
+
+def test_v5_flat_qualities_migrate_per_kind(tmp_path):
+    path = tmp_path / "config.json"
+    path.write_text(json.dumps({"config_version": 5,
+                                "gather": {"kinds": ["Fiber"],
+                                           "qualities": ["5.0", "5.1"]}}),
+                    encoding="utf-8")
+    cfg = Config(path)
+    qualities = cfg.get("gather.qualities")
+    assert qualities["Fiber"] == ["5.0", "5.1"]
+    for kind in ("Log", "Rock", "Hide", "Ore"):
+        assert len(qualities[kind]) == 40
+    assert cfg.get("config_version") == 6

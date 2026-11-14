@@ -1,6 +1,6 @@
 """采集目标的筛选、打分与屏幕空间方位（纯逻辑，不依赖 tkinter）。"""
 import math
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 MAX_RANGE = 80.0
 KIND_ORDER = ("Log", "Rock", "Fiber", "Hide", "Ore")
@@ -25,7 +25,8 @@ ALL_QUALITIES = frozenset(
 class GatherFilter:
     kinds: frozenset[str] = frozenset(KIND_ORDER)
     show_living: bool = True
-    qualities: frozenset[tuple[int, int]] = ALL_QUALITIES
+    qualities: dict[str, frozenset[tuple[int, int]]] = field(
+        default_factory=lambda: {kind: ALL_QUALITIES for kind in KIND_ORDER})
     sort: str = DEFAULT_SORT
     max_targets: int = DEFAULT_MAX_TARGETS
 
@@ -47,7 +48,9 @@ class GatherFilter:
         return {
             "kinds": [kind for kind in KIND_ORDER if kind in self.kinds],
             "show_living": self.show_living,
-            "qualities": [f"{tier}.{enchant}" for tier, enchant in sorted(self.qualities)],
+            "qualities": {kind: [f"{tier}.{enchant}" for tier, enchant
+                                 in sorted(self.qualities.get(kind, ALL_QUALITIES))]
+                          for kind in KIND_ORDER},
             "sort": self.sort,
             "max_targets": self.max_targets,
         }
@@ -70,12 +73,22 @@ def parse_quality(value) -> tuple[int, int] | None:
     return None
 
 
-def qualities_from_config(raw) -> frozenset[tuple[int, int]]:
-    """非法元素丢弃；为空或类型不对时回退全选。"""
+def _quality_set(raw) -> frozenset[tuple[int, int]]:
+    """解析单个种类的品质列表；非法元素丢弃，为空或类型不对时回退全选。"""
     if not isinstance(raw, (list, tuple)):
         return ALL_QUALITIES
     parsed = {quality for quality in (parse_quality(item) for item in raw) if quality}
     return frozenset(parsed) or ALL_QUALITIES
+
+
+def qualities_from_config(raw) -> dict[str, frozenset[tuple[int, int]]]:
+    """列表按旧格式应用到全部种类；字典按键解析，缺失/非法回退全选。"""
+    if isinstance(raw, dict):
+        return {kind: _quality_set(raw.get(kind)) for kind in KIND_ORDER}
+    if isinstance(raw, (list, tuple)):
+        shared = _quality_set(raw)
+        return {kind: shared for kind in KIND_ORDER}
+    return {kind: ALL_QUALITIES for kind in KIND_ORDER}
 
 
 @dataclass(frozen=True)
@@ -137,7 +150,8 @@ def select_targets(nodes, player_pos, filters: GatherFilter) -> list[GatherTarge
             continue
         if node.is_living and not filters.show_living:
             continue
-        if (node.tier, node.enchant or 0) not in filters.qualities:
+        if (node.tier, node.enchant or 0) not in filters.qualities.get(
+                node.kind, ALL_QUALITIES):
             continue
 
         distance = None

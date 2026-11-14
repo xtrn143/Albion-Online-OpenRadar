@@ -60,20 +60,71 @@ def test_living_toggle():
 
 
 def test_quality_filter_matches_tier_and_enchant():
-    filters = GatherFilter(qualities=frozenset({(5, 1), (5, 2), (6, 0)}))
+    filters = GatherFilter(qualities={
+        "Log": frozenset({(5, 1), (5, 2), (6, 0)}),
+        "Rock": ALL_QUALITIES, "Fiber": ALL_QUALITIES,
+        "Hide": ALL_QUALITIES, "Ore": ALL_QUALITIES,
+    })
     nodes = [node(1, 10, tier=5, enchant=1), node(2, 20, tier=5, enchant=0),
              node(3, 30, tier=6, enchant=0), node(4, 40, tier=5, enchant=3)]
     targets = select_targets(nodes, PLAYER, filters)
     assert [t.harvestable_id for t in targets] == [1, 3]
 
 
-def test_qualities_parsed_from_config_strings():
+def test_same_quality_selected_per_kind():
+    qualities = {"Fiber": frozenset({(5, 1)}), "Log": frozenset({(5, 1)}),
+                 "Rock": ALL_QUALITIES, "Hide": ALL_QUALITIES, "Ore": ALL_QUALITIES}
+    nodes = [node(1, 10, kind="Fiber", tier=5, enchant=1),
+             node(2, 20, kind="Log", tier=5, enchant=1)]
+
+    # Log 未启用：只有 Fiber 出现
+    fiber_only = GatherFilter(kinds=frozenset({"Fiber"}), qualities=qualities)
+    assert [t.harvestable_id for t in select_targets(nodes, PLAYER, fiber_only)] == [1]
+
+    # 两者都启用，但 Log 未勾选 (5,1)
+    both_enabled = GatherFilter(
+        kinds=frozenset({"Fiber", "Log"}),
+        qualities={"Fiber": frozenset({(5, 1)}), "Log": frozenset({(6, 0)}),
+                   "Rock": ALL_QUALITIES, "Hide": ALL_QUALITIES, "Ore": ALL_QUALITIES},
+    )
+    assert [t.harvestable_id for t in select_targets(nodes, PLAYER, both_enabled)] == [1]
+
+
+def test_disabled_kind_is_not_displayed():
+    filters = GatherFilter(
+        kinds=frozenset({"Log"}),
+        qualities={"Fiber": frozenset({(5, 1)}), "Log": ALL_QUALITIES,
+                   "Rock": ALL_QUALITIES, "Hide": ALL_QUALITIES, "Ore": ALL_QUALITIES},
+    )
+    nodes = [node(1, 10, kind="Fiber", tier=5, enchant=1)]
+    assert select_targets(nodes, PLAYER, filters) == []
+
+
+def test_missing_kind_key_falls_back_to_all_qualities():
+    filters = GatherFilter(qualities={"Fiber": frozenset({(5, 1)})})
+    nodes = [node(1, 10, kind="Log", tier=3, enchant=0)]
+    assert [t.harvestable_id for t in select_targets(nodes, PLAYER, filters)] == [1]
+
+
+def test_flat_qualities_apply_to_every_kind():
     class FakeConfig:
         def get(self, key, default=None):
-            return {"gather.qualities": ["5.1", "5.2", "6.0"]}.get(key, default)
+            return {"gather.qualities": ["5.1", "6.0"]}.get(key, default)
 
     filters = GatherFilter.from_config(FakeConfig())
-    assert filters.qualities == frozenset({(5, 1), (5, 2), (6, 0)})
+    expected = frozenset({(5, 1), (6, 0)})
+    assert set(filters.qualities) == {"Log", "Rock", "Fiber", "Hide", "Ore"}
+    assert all(values == expected for values in filters.qualities.values())
+
+
+def test_qualities_dict_from_config_is_parsed_per_kind():
+    class FakeConfig:
+        def get(self, key, default=None):
+            return {"gather.qualities": {"Fiber": ["5.1"]}}.get(key, default)
+
+    filters = GatherFilter.from_config(FakeConfig())
+    assert filters.qualities["Fiber"] == frozenset({(5, 1)})
+    assert filters.qualities["Log"] == ALL_QUALITIES
 
 
 def test_invalid_qualities_are_dropped():
@@ -82,7 +133,7 @@ def test_invalid_qualities_are_dropped():
             return {"gather.qualities": ["5.1", "bogus", "9.1", "2.9", 3.0]}.get(key, default)
 
     filters = GatherFilter.from_config(FakeConfig())
-    assert filters.qualities == frozenset({(5, 1)})
+    assert all(values == frozenset({(5, 1)}) for values in filters.qualities.values())
 
 
 def test_empty_qualities_fall_back_to_all():
@@ -90,7 +141,8 @@ def test_empty_qualities_fall_back_to_all():
         def get(self, key, default=None):
             return {"gather.qualities": []}.get(key, default)
 
-    assert GatherFilter.from_config(FakeConfig()).qualities == ALL_QUALITIES
+    filters = GatherFilter.from_config(FakeConfig())
+    assert all(values == ALL_QUALITIES for values in filters.qualities.values())
 
 
 def test_missing_position_sorts_by_tier_desc_and_nulls_distance():
@@ -131,14 +183,24 @@ def test_max_targets_clamped_from_config():
 
 
 def test_filter_round_trips_config_dict():
-    filters = GatherFilter(kinds=frozenset({"Ore", "Log"}),
-                           qualities=frozenset({(4, 0), (6, 2)}),
-                           sort="tier", max_targets=3, show_living=False)
+    filters = GatherFilter(
+        kinds=frozenset({"Ore", "Log"}),
+        qualities={"Log": frozenset({(4, 0), (6, 2)}), "Ore": ALL_QUALITIES,
+                   "Rock": ALL_QUALITIES, "Fiber": ALL_QUALITIES,
+                   "Hide": ALL_QUALITIES},
+        sort="tier", max_targets=3, show_living=False,
+    )
     data = filters.to_dict()
     assert data["kinds"] == ["Log", "Ore"]
-    assert data["qualities"] == ["4.0", "6.2"]
+    assert data["qualities"]["Log"] == ["4.0", "6.2"]
+    assert data["qualities"]["Ore"] == [f"{tier}.{enchant}"
+                                        for tier in range(1, 9)
+                                        for enchant in range(0, 5)]
+    assert set(data["qualities"]) == {"Log", "Rock", "Fiber", "Hide", "Ore"}
+    assert len(data["qualities"]["Rock"]) == 40
     assert filters.is_default() is False
     assert GatherFilter().is_default() is True
+    assert GatherFilter().to_dict()["qualities"]["Log"][-1] == "8.4"
 
 
 def test_formatting_helpers():

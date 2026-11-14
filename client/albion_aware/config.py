@@ -3,7 +3,9 @@ import copy
 import json
 from pathlib import Path
 
-CONFIG_VERSION = 5
+from albion_aware.gather_targets import KIND_ORDER
+
+CONFIG_VERSION = 6
 
 DEFAULT_CONFIG = {
     "config_version": CONFIG_VERSION,
@@ -26,7 +28,9 @@ DEFAULT_CONFIG = {
     "gather": {
         "kinds": ["Log", "Rock", "Fiber", "Hide", "Ore"],
         "show_living": True,
-        "qualities": [f"{tier}.{enchant}" for tier in range(1, 9) for enchant in range(0, 5)],
+        "qualities": {kind: [f"{tier}.{enchant}" for tier in range(1, 9)
+                             for enchant in range(0, 5)]
+                      for kind in KIND_ORDER},
         "sort": "nearest",
         "max_targets": 5,
     },
@@ -102,7 +106,7 @@ class Config:
 
     def _migrate(self, version) -> None:
         """老配置一次性升级：v2 起提示音默认关闭；v3 起换用新的默认热键布局；
-        v5 起把层级区间展开为 40 项品质集合。"""
+        v5 起把层级区间展开为 40 项品质集合；v6 起品质按资源种类独立保存。"""
         if isinstance(version, int) and version >= CONFIG_VERSION:
             return
         legacy = version if isinstance(version, int) else 0
@@ -113,6 +117,8 @@ class Config:
             self.data["hotkeys"] = copy.deepcopy(DEFAULT_CONFIG["hotkeys"])
         if legacy < 5:
             self._migrate_qualities()
+        if legacy < 6:
+            self._migrate_qualities_by_kind()
         self.data["config_version"] = CONFIG_VERSION
         self.save()
 
@@ -132,6 +138,22 @@ class Config:
                                for enchant in range(0, 5)]
         gather.pop("tier_min", None)
         gather.pop("tier_max", None)
+
+    def _migrate_qualities_by_kind(self) -> None:
+        """v5 扁平数组 → 按种类字典；已启用种类沿用旧值，其余填默认。"""
+        gather = self.data.get("gather")
+        if not isinstance(gather, dict):
+            return
+        raw = gather.get("qualities")
+        if not isinstance(raw, (list, tuple)):
+            return
+        defaults = DEFAULT_CONFIG["gather"]["qualities"]
+        enabled = gather.get("kinds")
+        enabled = set(enabled) if isinstance(enabled, list) else set(KIND_ORDER)
+        gather["qualities"] = {
+            kind: list(raw) if kind in enabled else list(defaults[kind])
+            for kind in KIND_ORDER
+        }
 
     def get(self, dotted: str, default=None):
         node = self.data
