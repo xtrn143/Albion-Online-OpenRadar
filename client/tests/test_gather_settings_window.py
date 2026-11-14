@@ -1,11 +1,13 @@
 from albion_aware.gather_settings_window import validate_settings
 
+KINDS = ("Log", "Rock", "Fiber", "Hide", "Ore")
+
 
 def values(**overrides):
     base = {
-        "kinds": ["Log", "Ore"],
+        "kinds": ["Fiber"],
         "show_living": True,
-        "qualities": ["1.0", "8.4"],
+        "qualities": {kind: ["1.0", "8.4"] for kind in KINDS},
         "sort": "nearest",
         "max_targets": 5,
     }
@@ -21,8 +23,22 @@ def test_requires_at_least_one_kind():
     assert validate_settings(values(kinds=[]))[0] == "gather.settings.no_kinds"
 
 
-def test_requires_at_least_one_quality():
-    assert validate_settings(values(qualities=[]))[0] == "gather.settings.no_qualities"
+def test_enabled_kind_requires_a_quality():
+    qualities = {kind: ["1.0"] for kind in KINDS}
+    qualities["Fiber"] = []
+    assert validate_settings(values(qualities=qualities)) == ("gather.settings.no_qualities",
+                                                              "Fiber")
+
+
+def test_disabled_kind_may_have_no_qualities():
+    qualities = {kind: ["1.0"] for kind in KINDS}
+    qualities["Log"] = []
+    assert validate_settings(values(qualities=qualities)) is None
+
+
+def test_missing_enabled_kind_qualities_fails():
+    qualities = {kind: ["1.0"] for kind in KINDS if kind != "Fiber"}
+    assert validate_settings(values(qualities=qualities))[0] == "gather.settings.no_qualities"
 
 
 def test_max_targets_range():
