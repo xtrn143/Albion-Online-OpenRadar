@@ -196,7 +196,7 @@ def _harvest_batch(p: dict) -> list[HarvestNode]:
             kind=harvest_kind(type_number),
             tier=tier if tier is not None else 0,
             enchant=None,          # 批量事件不携带附魔，nil 表示“不覆盖已有值”
-            size=size if size else 1,
+            size=size if size is not None else 1,
             x=x,
             y=y,
             is_living=False,

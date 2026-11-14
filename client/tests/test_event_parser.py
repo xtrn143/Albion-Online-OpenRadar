@@ -206,6 +206,19 @@ def test_harvest_batch_39_parses_ids_types_tiers_positions_sizes():
     assert second.kind == "Log"
 
 
+def test_harvest_batch_keeps_size_zero_for_depleted_nodes():
+    # 采空后再次进入区域，批量刷新会带 size=0，不能当成 1
+    events = parse_message(frame({
+        "252": 39,
+        "0": [11, 12],
+        "1": [23, 3],
+        "2": [4, 5],
+        "3": [100.0, 200.0, 300.0, 400.0],
+        "4": [0, 2],
+    }))
+    assert [node.size for node in events[0].nodes] == [0, 2]
+
+
 def test_harvest_batch_accepts_buffer_wrapped_arrays():
     events = parse_message(frame({
         "252": 39,
