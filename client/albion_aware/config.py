@@ -3,7 +3,7 @@ import copy
 import json
 from pathlib import Path
 
-CONFIG_VERSION = 4
+CONFIG_VERSION = 5
 
 DEFAULT_CONFIG = {
     "config_version": CONFIG_VERSION,
@@ -26,8 +26,7 @@ DEFAULT_CONFIG = {
     "gather": {
         "kinds": ["Log", "Rock", "Fiber", "Hide", "Ore"],
         "show_living": True,
-        "tier_min": 1,
-        "tier_max": 8,
+        "qualities": [f"{tier}.{enchant}" for tier in range(1, 9) for enchant in range(0, 5)],
         "sort": "nearest",
         "max_targets": 5,
     },
@@ -72,6 +71,14 @@ def _merge(base: dict, override: dict) -> dict:
     return base
 
 
+def _tier_value(value, fallback: int) -> int:
+    try:
+        parsed = int(value)
+    except (TypeError, ValueError):
+        return fallback
+    return max(1, min(8, parsed))
+
+
 class Config:
     def __init__(self, path: str | Path):
         self.path = Path(path)
@@ -94,10 +101,8 @@ class Config:
         return self.data
 
     def _migrate(self, version) -> None:
-        """老配置一次性升级：v2 起提示音默认关闭；v3 起换用新的默认热键布局。
-
-        v4 只新增 gather.*，_merge 已补齐默认值，无需改写用户数据。
-        """
+        """老配置一次性升级：v2 起提示音默认关闭；v3 起换用新的默认热键布局；
+        v5 起把层级区间展开为 40 项品质集合。"""
         if isinstance(version, int) and version >= CONFIG_VERSION:
             return
         legacy = version if isinstance(version, int) else 0
@@ -106,8 +111,27 @@ class Config:
             self.data["overlay"]["sound"] = False
         if legacy < 3:
             self.data["hotkeys"] = copy.deepcopy(DEFAULT_CONFIG["hotkeys"])
+        if legacy < 5:
+            self._migrate_qualities()
         self.data["config_version"] = CONFIG_VERSION
         self.save()
+
+    def _migrate_qualities(self) -> None:
+        """v4 及更早：把 tier_min~tier_max 展开为 [tier]×[0..4]，再删掉旧键。"""
+        gather = self.data.get("gather")
+        if not isinstance(gather, dict):
+            return
+        if "tier_min" not in gather and "tier_max" not in gather:
+            return
+        low = _tier_value(gather.get("tier_min"), 1)
+        high = _tier_value(gather.get("tier_max"), 8)
+        if low > high:
+            low, high = high, low
+        gather["qualities"] = [f"{tier}.{enchant}"
+                               for tier in range(low, high + 1)
+                               for enchant in range(0, 5)]
+        gather.pop("tier_min", None)
+        gather.pop("tier_max", None)
 
     def get(self, dotted: str, default=None):
         node = self.data

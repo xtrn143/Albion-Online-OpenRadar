@@ -16,12 +16,16 @@ MODE_WEIGHTS = {
 }
 
 
+ALL_QUALITIES = frozenset(
+    (tier, enchant) for tier in range(1, 9) for enchant in range(0, 5)
+)
+
+
 @dataclass(frozen=True)
 class GatherFilter:
     kinds: frozenset[str] = frozenset(KIND_ORDER)
     show_living: bool = True
-    tier_min: int = 1
-    tier_max: int = 8
+    qualities: frozenset[tuple[int, int]] = ALL_QUALITIES
     sort: str = DEFAULT_SORT
     max_targets: int = DEFAULT_MAX_TARGETS
 
@@ -29,16 +33,11 @@ class GatherFilter:
     def from_config(cls, config) -> "GatherFilter":
         raw_kinds = config.get("gather.kinds", list(KIND_ORDER)) or []
         kinds = frozenset(kind for kind in raw_kinds if kind in KIND_ORDER) or frozenset(KIND_ORDER)
-        tier_min = _clamp_int(config.get("gather.tier_min", 1), 1, 8, 1)
-        tier_max = _clamp_int(config.get("gather.tier_max", 8), 1, 8, 8)
-        if tier_min > tier_max:
-            tier_min, tier_max = tier_max, tier_min
         sort = config.get("gather.sort", DEFAULT_SORT)
         return cls(
             kinds=kinds,
             show_living=bool(config.get("gather.show_living", True)),
-            tier_min=tier_min,
-            tier_max=tier_max,
+            qualities=qualities_from_config(config.get("gather.qualities")),
             sort=sort if sort in SORT_MODES else DEFAULT_SORT,
             max_targets=_clamp_int(config.get("gather.max_targets", DEFAULT_MAX_TARGETS),
                                    1, 10, DEFAULT_MAX_TARGETS),
@@ -48,14 +47,35 @@ class GatherFilter:
         return {
             "kinds": [kind for kind in KIND_ORDER if kind in self.kinds],
             "show_living": self.show_living,
-            "tier_min": self.tier_min,
-            "tier_max": self.tier_max,
+            "qualities": [f"{tier}.{enchant}" for tier, enchant in sorted(self.qualities)],
             "sort": self.sort,
             "max_targets": self.max_targets,
         }
 
     def is_default(self) -> bool:
         return self == GatherFilter()
+
+
+def parse_quality(value) -> tuple[int, int] | None:
+    """把 "5.1" 解析成 (5, 1)；非法值返回 None。"""
+    if not isinstance(value, str) or "." not in value:
+        return None
+    tier_text, enchant_text = value.split(".", 1)
+    try:
+        tier, enchant = int(tier_text), int(enchant_text)
+    except ValueError:
+        return None
+    if 1 <= tier <= 8 and 0 <= enchant <= 4:
+        return (tier, enchant)
+    return None
+
+
+def qualities_from_config(raw) -> frozenset[tuple[int, int]]:
+    """非法元素丢弃；为空或类型不对时回退全选。"""
+    if not isinstance(raw, (list, tuple)):
+        return ALL_QUALITIES
+    parsed = {quality for quality in (parse_quality(item) for item in raw) if quality}
+    return frozenset(parsed) or ALL_QUALITIES
 
 
 @dataclass(frozen=True)
@@ -117,7 +137,7 @@ def select_targets(nodes, player_pos, filters: GatherFilter) -> list[GatherTarge
             continue
         if node.is_living and not filters.show_living:
             continue
-        if node.tier < filters.tier_min or node.tier > filters.tier_max:
+        if (node.tier, node.enchant or 0) not in filters.qualities:
             continue
 
         distance = None

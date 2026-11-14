@@ -2,6 +2,7 @@ import pytest
 
 from albion_aware.event_parser import HarvestNode
 from albion_aware.gather_targets import (
+    ALL_QUALITIES,
     GatherFilter,
     format_distance,
     format_tier_enchant,
@@ -58,12 +59,38 @@ def test_living_toggle():
     assert [t.harvestable_id for t in only_static] == [2]
 
 
-def test_tier_range_is_inclusive():
-    filters = GatherFilter(tier_min=4, tier_max=5)
-    targets = select_targets([node(1, 10, tier=3), node(2, 20, tier=4),
-                              node(3, 30, tier=5), node(4, 40, tier=6)],
-                             PLAYER, filters)
-    assert [t.harvestable_id for t in targets] == [2, 3]
+def test_quality_filter_matches_tier_and_enchant():
+    filters = GatherFilter(qualities=frozenset({(5, 1), (5, 2), (6, 0)}))
+    nodes = [node(1, 10, tier=5, enchant=1), node(2, 20, tier=5, enchant=0),
+             node(3, 30, tier=6, enchant=0), node(4, 40, tier=5, enchant=3)]
+    targets = select_targets(nodes, PLAYER, filters)
+    assert [t.harvestable_id for t in targets] == [1, 3]
+
+
+def test_qualities_parsed_from_config_strings():
+    class FakeConfig:
+        def get(self, key, default=None):
+            return {"gather.qualities": ["5.1", "5.2", "6.0"]}.get(key, default)
+
+    filters = GatherFilter.from_config(FakeConfig())
+    assert filters.qualities == frozenset({(5, 1), (5, 2), (6, 0)})
+
+
+def test_invalid_qualities_are_dropped():
+    class FakeConfig:
+        def get(self, key, default=None):
+            return {"gather.qualities": ["5.1", "bogus", "9.1", "2.9", 3.0]}.get(key, default)
+
+    filters = GatherFilter.from_config(FakeConfig())
+    assert filters.qualities == frozenset({(5, 1)})
+
+
+def test_empty_qualities_fall_back_to_all():
+    class FakeConfig:
+        def get(self, key, default=None):
+            return {"gather.qualities": []}.get(key, default)
+
+    assert GatherFilter.from_config(FakeConfig()).qualities == ALL_QUALITIES
 
 
 def test_missing_position_sorts_by_tier_desc_and_nulls_distance():
@@ -104,10 +131,12 @@ def test_max_targets_clamped_from_config():
 
 
 def test_filter_round_trips_config_dict():
-    filters = GatherFilter(kinds=frozenset({"Ore", "Log"}), tier_min=4, tier_max=6,
+    filters = GatherFilter(kinds=frozenset({"Ore", "Log"}),
+                           qualities=frozenset({(4, 0), (6, 2)}),
                            sort="tier", max_targets=3, show_living=False)
     data = filters.to_dict()
     assert data["kinds"] == ["Log", "Ore"]
+    assert data["qualities"] == ["4.0", "6.2"]
     assert filters.is_default() is False
     assert GatherFilter().is_default() is True
 

@@ -124,9 +124,13 @@ def test_current_version_keeps_custom_hotkeys(tmp_path):
 def test_gather_defaults_without_mode():
     cfg = default_config()["gather"]
     assert "mode" not in cfg
+    assert "tier_min" not in cfg
+    assert "tier_max" not in cfg
     assert cfg["kinds"] == ["Log", "Rock", "Fiber", "Hide", "Ore"]
     assert cfg["show_living"] is True
-    assert (cfg["tier_min"], cfg["tier_max"]) == (1, 8)
+    assert len(cfg["qualities"]) == 40
+    assert cfg["qualities"][0] == "1.0"
+    assert cfg["qualities"][-1] == "8.4"
     assert cfg["sort"] == "nearest"
     assert cfg["max_targets"] == 5
 
@@ -139,16 +143,32 @@ def test_v3_config_gains_gather_defaults(tmp_path):
     assert cfg.get("gather.kinds") == ["Log", "Rock", "Fiber", "Hide", "Ore"]
     assert cfg.get("overlay.opacity") == 0.7
     assert cfg.get("config_version") == CONFIG_VERSION
+    assert len(cfg.get("gather.qualities")) == 40
 
 
 def test_current_version_keeps_custom_gather_settings(tmp_path):
     path = tmp_path / "config.json"
     path.write_text(json.dumps({"config_version": CONFIG_VERSION,
                                 "gather": {"kinds": ["Ore"],
-                                           "tier_min": 5,
+                                           "qualities": ["5.1", "5.2"],
                                            "max_targets": 3}}),
                     encoding="utf-8")
     cfg = Config(path)
     assert cfg.get("gather.kinds") == ["Ore"]
-    assert cfg.get("gather.tier_min") == 5
+    assert cfg.get("gather.qualities") == ["5.1", "5.2"]
     assert cfg.get("gather.max_targets") == 3
+
+
+def test_v4_tier_range_expands_to_qualities(tmp_path):
+    path = tmp_path / "config.json"
+    path.write_text(json.dumps({"config_version": 4,
+                                "gather": {"tier_min": 5, "tier_max": 6}}),
+                    encoding="utf-8")
+    cfg = Config(path)
+    qualities = cfg.get("gather.qualities")
+    assert len(qualities) == 10
+    assert qualities[0] == "5.0"
+    assert qualities[-1] == "6.4"
+    assert "tier_min" not in cfg.get("gather")
+    assert "tier_max" not in cfg.get("gather")
+    assert cfg.get("config_version") == CONFIG_VERSION
