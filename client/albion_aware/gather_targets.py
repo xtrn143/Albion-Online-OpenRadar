@@ -73,18 +73,21 @@ def parse_quality(value) -> tuple[int, int] | None:
     return None
 
 
-def _quality_set(raw) -> frozenset[tuple[int, int]]:
-    """解析单个种类的品质列表；非法元素丢弃，为空或类型不对时回退全选。"""
+def _quality_set(raw, empty_falls_back: bool = True) -> frozenset[tuple[int, int]]:
+    """解析单个种类的品质列表；非法元素丢弃，为空时按调用方语义决定是否回退全选。"""
     if not isinstance(raw, (list, tuple)):
         return ALL_QUALITIES
     parsed = {quality for quality in (parse_quality(item) for item in raw) if quality}
-    return frozenset(parsed) or ALL_QUALITIES
+    if parsed:
+        return frozenset(parsed)
+    return ALL_QUALITIES if empty_falls_back else frozenset()
 
 
 def qualities_from_config(raw) -> dict[str, frozenset[tuple[int, int]]]:
-    """列表按旧格式应用到全部种类；字典按键解析，缺失/非法回退全选。"""
+    """列表按旧格式应用到全部种类；字典按键解析，缺失/非法回退全选，空选保留为空。"""
     if isinstance(raw, dict):
-        return {kind: _quality_set(raw.get(kind)) for kind in KIND_ORDER}
+        return {kind: _quality_set(raw.get(kind), empty_falls_back=False)
+                for kind in KIND_ORDER}
     if isinstance(raw, (list, tuple)):
         shared = _quality_set(raw)
         return {kind: shared for kind in KIND_ORDER}

@@ -149,9 +149,11 @@ class Config:
             return
         defaults = DEFAULT_CONFIG["gather"]["qualities"]
         enabled = gather.get("kinds")
-        enabled = set(enabled) if isinstance(enabled, list) else set(KIND_ORDER)
+        enabled = ({kind for kind in enabled if isinstance(kind, str)}
+                   if isinstance(enabled, list) else set(KIND_ORDER))
+        values = list(raw)
         gather["qualities"] = {
-            kind: list(raw) if kind in enabled else list(defaults[kind])
+            kind: list(values) if values and kind in enabled else list(defaults[kind])
             for kind in KIND_ORDER
         }
 

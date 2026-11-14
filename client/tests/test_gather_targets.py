@@ -145,6 +145,24 @@ def test_empty_qualities_fall_back_to_all():
     assert all(values == ALL_QUALITIES for values in filters.qualities.values())
 
 
+def test_empty_selection_of_kind_round_trips_as_empty():
+    filters = GatherFilter(
+        kinds=frozenset({"Fiber"}),
+        qualities={"Fiber": frozenset(), "Log": ALL_QUALITIES, "Rock": ALL_QUALITIES,
+                   "Hide": ALL_QUALITIES, "Ore": ALL_QUALITIES},
+    )
+    data = filters.to_dict()
+    assert data["qualities"]["Fiber"] == []
+
+    class FakeConfig:
+        def get(self, key, default=None):
+            return {f"gather.{name}": value for name, value in data.items()}.get(key, default)
+
+    reloaded = GatherFilter.from_config(FakeConfig())
+    assert reloaded.qualities["Fiber"] == frozenset()
+    assert reloaded.is_default() is False
+
+
 def test_missing_position_sorts_by_tier_desc_and_nulls_distance():
     targets = select_targets([node(1, 10, tier=2), node(2, 10, tier=8)], None, GatherFilter())
     assert [t.harvestable_id for t in targets] == [2, 1]

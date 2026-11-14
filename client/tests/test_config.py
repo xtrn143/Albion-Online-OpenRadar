@@ -204,3 +204,26 @@ def test_v5_flat_qualities_migrate_per_kind(tmp_path):
     for kind in ("Log", "Rock", "Hide", "Ore"):
         assert len(qualities[kind]) == 40
     assert cfg.get("config_version") == 6
+
+
+def test_v5_empty_flat_qualities_migrate_to_defaults(tmp_path):
+    path = tmp_path / "config.json"
+    path.write_text(json.dumps({"config_version": 5,
+                                "gather": {"kinds": ["Fiber"], "qualities": []}}),
+                    encoding="utf-8")
+    cfg = Config(path)
+    qualities = cfg.get("gather.qualities")
+    assert set(qualities) == {"Log", "Rock", "Fiber", "Hide", "Ore"}
+    for values in qualities.values():
+        assert len(values) == 40
+
+
+def test_v5_without_kinds_migrates_to_all_kinds(tmp_path):
+    path = tmp_path / "config.json"
+    path.write_text(json.dumps({"config_version": 5,
+                                "gather": {"qualities": ["5.1"]}}),
+                    encoding="utf-8")
+    cfg = Config(path)
+    qualities = cfg.get("gather.qualities")
+    assert set(qualities) == {"Log", "Rock", "Fiber", "Hide", "Ore"}
+    assert all(values == ["5.1"] for values in qualities.values())

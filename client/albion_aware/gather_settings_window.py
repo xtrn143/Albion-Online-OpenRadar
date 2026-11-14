@@ -212,8 +212,9 @@ class GatherSettingsWindow:
 
     def _reset(self) -> None:
         defaults = DEFAULT_CONFIG["gather"]
+        default_kinds = set(defaults["kinds"])
         for kind, var in self.kind_vars.items():
-            var.set(True)
+            var.set(kind in default_kinds)
         self.living_var.set(defaults["show_living"])
         for kind in KIND_ORDER:
             self._set_all_qualities(kind, True)
