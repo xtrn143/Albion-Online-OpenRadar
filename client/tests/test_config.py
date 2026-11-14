@@ -1,6 +1,6 @@
 import json
 
-from albion_aware.config import Config, default_config, resolve_language
+from albion_aware.config import CONFIG_VERSION, Config, default_config, resolve_language
 
 
 def test_missing_file_yields_defaults(tmp_path):
@@ -66,11 +66,11 @@ def test_legacy_config_forces_sound_off_once(tmp_path):
     path.write_text(json.dumps({"overlay": {"sound": True}}), encoding="utf-8")
     cfg = Config(path)
     assert cfg.get("overlay.sound") is False
-    assert cfg.get("config_version") == 3
+    assert cfg.get("config_version") == CONFIG_VERSION
     # 迁移结果写入磁盘，用户之后手动打开提示音不会被覆盖
     raw = json.loads(path.read_text(encoding="utf-8"))
     assert raw["overlay"]["sound"] is False
-    assert raw["config_version"] == 3
+    assert raw["config_version"] == CONFIG_VERSION
 
 
 def test_migrated_config_keeps_user_sound_choice(tmp_path):
@@ -109,13 +109,49 @@ def test_v2_config_gets_new_hotkey_layout(tmp_path):
     cfg = Config(path)
     assert cfg.get("hotkeys.map_lookup") == "F9"
     assert cfg.get("hotkeys.toggle_visible") == "F12"
-    assert cfg.get("config_version") == 3
+    assert cfg.get("config_version") == CONFIG_VERSION
 
 
 def test_current_version_keeps_custom_hotkeys(tmp_path):
     path = tmp_path / "config.json"
-    path.write_text(json.dumps({"config_version": 3,
+    path.write_text(json.dumps({"config_version": CONFIG_VERSION,
                                 "hotkeys": {"map_lookup": "Ctrl+F6"}}),
                     encoding="utf-8")
     cfg = Config(path)
     assert cfg.get("hotkeys.map_lookup") == "Ctrl+F6"
+
+
+def test_gather_defaults_to_roam_mode():
+    cfg = default_config()["gather"]
+    assert cfg["mode"] == "roam"
+    assert cfg["kinds"] == ["Log", "Rock", "Fiber", "Hide", "Ore"]
+    assert cfg["show_living"] is True
+    assert (cfg["tier_min"], cfg["tier_max"]) == (1, 8)
+    assert cfg["sort"] == "nearest"
+    assert cfg["max_targets"] == 5
+
+
+def test_v3_config_gains_gather_defaults(tmp_path):
+    path = tmp_path / "config.json"
+    path.write_text(json.dumps({"config_version": 3, "overlay": {"opacity": 0.7}}),
+                    encoding="utf-8")
+    cfg = Config(path)
+    assert cfg.get("gather.mode") == "roam"
+    assert cfg.get("gather.kinds") == ["Log", "Rock", "Fiber", "Hide", "Ore"]
+    assert cfg.get("overlay.opacity") == 0.7
+    assert cfg.get("config_version") == CONFIG_VERSION
+
+
+def test_current_version_keeps_custom_gather_settings(tmp_path):
+    path = tmp_path / "config.json"
+    path.write_text(json.dumps({"config_version": CONFIG_VERSION,
+                                "gather": {"mode": "gather",
+                                           "kinds": ["Ore"],
+                                           "tier_min": 5,
+                                           "max_targets": 3}}),
+                    encoding="utf-8")
+    cfg = Config(path)
+    assert cfg.get("gather.mode") == "gather"
+    assert cfg.get("gather.kinds") == ["Ore"]
+    assert cfg.get("gather.tier_min") == 5
+    assert cfg.get("gather.max_targets") == 3

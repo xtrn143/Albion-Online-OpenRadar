@@ -32,7 +32,35 @@ SOUND_OFF = (107, 107, 107, 255)
 SOUND_SLASH = (255, 75, 62, 255)
 MAP_ON = (230, 230, 230, 255)
 MAP_HOT = (232, 192, 74, 255)
+GATHER_ON = (95, 200, 120, 255)
+GATHER_OFF = (107, 107, 107, 255)
+FILTER_ON = (232, 192, 74, 255)
+FILTER_OFF = (150, 150, 150, 255)
 CLICK_WARN = "#e8c04a"
+
+
+def gather_icon(mode: str) -> Image.Image:
+    """12px 模式图标：采集态绿色镐头，常规态灰色罗盘。"""
+    image = Image.new("RGBA", (12, 12), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(image)
+    if mode == "gather":
+        draw.line((2, 10, 7, 5), fill=GATHER_ON, width=2)
+        draw.line((5, 2, 10, 4), fill=GATHER_ON, width=2)
+        draw.line((10, 4, 9, 7), fill=GATHER_ON)
+    else:
+        draw.ellipse((1, 1, 10, 10), outline=GATHER_OFF)
+        draw.line((6, 6, 9, 3), fill=GATHER_OFF)
+        draw.line((6, 6, 3, 9), fill=GATHER_OFF)
+    return image
+
+
+def filter_icon(active: bool = False) -> Image.Image:
+    """12px 漏斗图标：筛选偏离默认值时变金色。"""
+    image = Image.new("RGBA", (12, 12), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(image)
+    draw.polygon([(1, 2), (11, 2), (7, 6), (7, 10), (5, 10), (5, 6)],
+                 fill=FILTER_ON if active else FILTER_OFF)
+    return image
 
 
 def sound_icon(on: bool) -> Image.Image:
@@ -77,7 +105,8 @@ def format_ip(item_power: int | None) -> str:
 
 class OverlayWindow:
     def __init__(self, i18n, icon_loader, on_row_click, on_more_click, on_drag_end,
-                 on_sound_click=None, on_map_click=None):
+                 on_sound_click=None, on_map_click=None, on_mode_click=None,
+                 on_filter_click=None):
         self.i18n = i18n
         self._icon_loader = icon_loader          # (Player) -> ImageTk.PhotoImage | None
         self._on_row_click = on_row_click
@@ -85,6 +114,8 @@ class OverlayWindow:
         self._on_drag_end = on_drag_end
         self._on_sound_click = on_sound_click
         self._on_map_click = on_map_click
+        self._on_mode_click = on_mode_click
+        self._on_filter_click = on_filter_click
 
         self.root = tk.Tk()
         self.root.title(i18n.t("app.title"))
@@ -106,6 +137,22 @@ class OverlayWindow:
         self.top_row = tk.Frame(self.border, bg=BG, height=TOP_H)
         self.top_row.pack(fill="x")
         self.top_row.pack_propagate(False)
+
+        self._mode = "roam"
+        self._mode_images = {mode: ImageTk.PhotoImage(gather_icon(mode), master=self.root)
+                             for mode in ("gather", "roam")}
+        self.mode_icon = tk.Label(self.top_row, bg=BG, bd=0,
+                                  image=self._mode_images[self._mode])
+        self.mode_icon.pack(side="left", padx=(0, 0))
+        self.mode_icon.bind("<Button-1>", self._mode_click)
+
+        self._filter_active = False
+        self._filter_images = {active: ImageTk.PhotoImage(filter_icon(active), master=self.root)
+                               for active in (True, False)}
+        self.filter_icon = tk.Label(self.top_row, bg=BG, bd=0,
+                                    image=self._filter_images[False])
+        self.filter_icon.pack(side="left", padx=(2, 0))
+        self.filter_icon.bind("<Button-1>", self._filter_click)
 
         self._sound_images = {state: ImageTk.PhotoImage(sound_icon(state), master=self.root)
                               for state in (True, False)}
@@ -270,6 +317,39 @@ class OverlayWindow:
     def set_sound(self, enabled: bool) -> None:
         self._sound_on = bool(enabled)
         self.sound_icon.configure(image=self._sound_images[self._sound_on])
+
+    def set_mode(self, mode: str) -> None:
+        self._mode = "gather" if mode == "gather" else "roam"
+        self.mode_icon.configure(image=self._mode_images[self._mode])
+
+    @property
+    def mode(self) -> str:
+        return self._mode
+
+    def set_filter_active(self, active: bool) -> None:
+        self._filter_active = bool(active)
+        self.filter_icon.configure(image=self._filter_images[self._filter_active])
+
+    @property
+    def filter_active(self) -> bool:
+        return self._filter_active
+
+    @property
+    def position(self) -> tuple[int, int]:
+        """拖动中 winfo_x 会滞后，优先使用记录的位置。"""
+        if self._pos is not None:
+            return self._pos
+        return (self.root.winfo_x(), self.root.winfo_y())
+
+    def _mode_click(self, _event=None):
+        if self._on_mode_click is not None:
+            self._on_mode_click()
+        return "break"
+
+    def _filter_click(self, _event=None):
+        if self._on_filter_click is not None:
+            self._on_filter_click()
+        return "break"
 
     @property
     def sound_on(self) -> bool:

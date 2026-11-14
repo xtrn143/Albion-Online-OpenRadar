@@ -23,6 +23,11 @@ from albion_aware.diagnostics import (
     running_tasklist,
 )
 from albion_aware.event_parser import (
+    HarvestableBatchSpawned,
+    HarvestableLeft,
+    HarvestableSpawned,
+    HarvestableStateChanged,
+    LocalPlayerMoved,
     PartyEvent,
     PlayerLeft,
     PlayerSeen,
@@ -30,6 +35,10 @@ from albion_aware.event_parser import (
     ZoneChanged,
     parse_message,
 )
+from albion_aware.gather_panel import GatheringPanel
+from albion_aware.gather_settings_window import GatherSettingsWindow
+from albion_aware.gather_store import GatherStore
+from albion_aware.gather_targets import GatherFilter, has_position, select_targets
 from albion_aware.i18n import I18n
 from albion_aware.hotkey_window import HOTKEY_ACTIONS, HotkeyWindow
 from albion_aware.icons import IconCache, ItemDatabase, draw_enchant_badge, enchant_level
@@ -58,6 +67,11 @@ from albion_aware.win32_ext import HotkeyListener
 
 SOUND_COOLDOWN_S = 2.0
 RADAR_RETRY_S = 15.0
+GATHER_REFRESH_S = 0.5
+
+
+def normalize_mode(value) -> str:
+    return "gather" if value == "gather" else "roam"
 
 
 def has_new_stranger(before_ids: set[int], after_ids: set[int]) -> bool:
@@ -143,6 +157,14 @@ class AlbionAwareApp:
         self._map_history = ([str(name) for name in stored_history[:10]]
                              if isinstance(stored_history, list) else [])
 
+        # 采集状态必须先于 OverlayWindow 创建：窗口构造/reset_position 会回调 _save_position
+        self.gather = GatherStore()
+        self.player_pos: tuple[float, float] | None = None
+        self._mode = normalize_mode(self.config.get("gather.mode", "roam"))
+        self._gather_filters = GatherFilter.from_config(self.config)
+        self._gather_panel = None
+        self._gather_last_at = 0.0
+
         self.window = OverlayWindow(
             i18n=self.i18n,
             icon_loader=self._row_icon,
@@ -151,6 +173,8 @@ class AlbionAwareApp:
             on_drag_end=self._save_position,
             on_sound_click=self._toggle_sound,
             on_map_click=self._open_maps,
+            on_mode_click=self._toggle_mode,
+            on_filter_click=self._open_gather_settings,
         )
         self.window.set_sound(bool(self.config.get("overlay.sound", False)))
         self.window.render(View(), self._item_power)
@@ -165,6 +189,18 @@ class AlbionAwareApp:
 
         self.panel = DetailPanel(self.window.root, self.i18n, self._detail_icon,
                                  self._on_mark_party, lambda _player: None)
+
+        self.gather = GatherStore()
+        self.player_pos: tuple[float, float] | None = None
+        self._mode = normalize_mode(self.config.get("gather.mode", "roam"))
+        self._gather_filters = GatherFilter.from_config(self.config)
+        self._gather_panel = GatheringPanel(self.window.root, self.i18n)
+        self._gather_last_at = 0.0
+        self.window.set_mode(self._mode)
+        self.window.set_filter_active(not self._gather_filters.is_default())
+        if self._mode == "gather":
+            self._gather_panel.attach(*self.window.position)
+            self._gather_panel.show()
 
         self.client = RadarClient(self.config.get("radar.ws_url", "ws://localhost:5001/ws"),
                                   on_frames=self._on_frames, on_state=self._on_state)
@@ -254,6 +290,8 @@ class AlbionAwareApp:
             self.window.set_status(self._state == "connected")
             if dirty:
                 self._refresh()
+            if self._mode == "gather":
+                self._update_gather()
             self._check_silence()
         except Exception:
             pass
@@ -380,11 +418,24 @@ class AlbionAwareApp:
             elif isinstance(event, PlayerUpdated):
                 applied = self.store.update_existing(event.player_id, event.fields) or applied
             elif isinstance(event, PlayerLeft):
-                self.store.remove(event.player_id)
+                applied = self.store.remove(event.player_id) or applied
+            elif isinstance(event, HarvestableBatchSpawned):
+                applied = self.gather.apply_batch(event.nodes) or applied
+            elif isinstance(event, HarvestableSpawned):
+                self.gather.upsert(event.node)
                 applied = True
+            elif isinstance(event, HarvestableStateChanged):
+                applied = self.gather.apply_state(event.harvestable_id, event.size,
+                                                  event.enchant) or applied
+            elif isinstance(event, HarvestableLeft):
+                applied = self.gather.remove(event.harvestable_id) or applied
+            elif isinstance(event, LocalPlayerMoved):
+                self.player_pos = (event.x, event.y)
             elif isinstance(event, ZoneChanged):
                 self._zone_id = event.zone_id
                 self.store.clear()
+                self.gather.clear()
+                self.player_pos = None
                 self.panel.hide()
                 in_roads = is_roads_zone(event.zone_id)
                 if in_roads:
@@ -502,6 +553,49 @@ class AlbionAwareApp:
         self.config.set("overlay.x", int(x))
         self.config.set("overlay.y", int(y))
         self.config.save()
+        panel = getattr(self, "_gather_panel", None)
+        if getattr(self, "_mode", "roam") == "gather" and panel is not None:
+            panel.attach(x, y)
+
+    # ---------- 采集模式 ----------
+    def _toggle_mode(self) -> None:
+        self._apply_mode("roam" if self._mode == "gather" else "gather")
+        self.config.set("gather.mode", self._mode)
+        self.config.save()
+
+    def _apply_mode(self, mode: str) -> None:
+        self._mode = normalize_mode(mode)
+        self.window.set_mode(self._mode)
+        if self._mode == "gather":
+            self._gather_panel.attach(*self.window.position)
+            self._gather_panel.show()
+            self._update_gather(force=True)
+        else:
+            self._gather_panel.hide()
+
+    def _update_gather(self, force: bool = False) -> None:
+        now = time.monotonic()
+        if not force and now - self._gather_last_at < GATHER_REFRESH_S:
+            return
+        self._gather_last_at = now
+        targets = select_targets(self.gather.snapshot(), self.player_pos,
+                                 self._gather_filters)
+        status = "" if has_position(self.player_pos) else self.i18n.t("gather.no_position")
+        self._gather_panel.attach(*self.window.position)
+        self._gather_panel.update(targets, status)
+
+    def _open_gather_settings(self) -> None:
+        GatherSettingsWindow(self.window.root, self.i18n,
+                             self._gather_filters.to_dict(),
+                             self._apply_gather_settings)
+
+    def _apply_gather_settings(self, values: dict) -> None:
+        for key, value in values.items():
+            self.config.set(f"gather.{key}", value)
+        self.config.save()
+        self._gather_filters = GatherFilter.from_config(self.config)
+        self.window.set_filter_active(not self._gather_filters.is_default())
+        self._update_gather(force=True)
 
     def _set_opacity(self, value: float) -> None:
         self.window.set_opacity(value)
@@ -533,7 +627,13 @@ class AlbionAwareApp:
         threading.Thread(target=beep, daemon=True).start()
 
     def _toggle_visible(self) -> None:
-        self.window.toggle_visible()
+        visible = self.window.toggle_visible()
+        if visible and self._mode == "gather":
+            self._gather_panel.attach(*self.window.position)
+            self._gather_panel.show()
+            self._update_gather(force=True)
+        else:
+            self._gather_panel.hide()
 
     def _toggle_click_through(self) -> None:
         self.window.set_click_through(not self.window.click_through)
@@ -552,6 +652,7 @@ class AlbionAwareApp:
         self.i18n = I18n(self.config.language())
         self.window.i18n = self.i18n
         self.panel.i18n = self.i18n
+        self._gather_panel.set_i18n(self.i18n)
         if self._diag_window is not None:
             self._diag_window.close()
             self._diag_window = None
@@ -595,6 +696,7 @@ class AlbionAwareApp:
         if self._map_window is not None:
             self._map_window.destroy()
             self._map_window = None
+        self._gather_panel.destroy()
         self.client.stop()
         self.hotkeys.stop()
         try:

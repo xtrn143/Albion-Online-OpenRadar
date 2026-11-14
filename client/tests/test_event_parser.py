@@ -1,9 +1,15 @@
 from albion_aware.event_parser import (
+    HarvestableBatchSpawned,
+    HarvestableLeft,
+    HarvestableSpawned,
+    HarvestableStateChanged,
+    LocalPlayerMoved,
     PartyEvent,
     PlayerLeft,
     PlayerSeen,
     PlayerUpdated,
     ZoneChanged,
+    harvest_kind,
     parse_message,
 )
 
@@ -113,3 +119,121 @@ def test_dictionary_may_be_json_string():
 
 def test_malformed_dictionary_does_not_raise():
     assert parse_message({"code": "event", "dictionary": "{not json"}) == []
+
+
+def test_leave_also_removes_harvestable():
+    events = parse_message(frame({"252": 1, "0": 77}))
+    assert isinstance(events[1], HarvestableLeft)
+    assert events[1].harvestable_id == 77
+
+
+def test_harvest_batch_39_parses_ids_types_tiers_positions_sizes():
+    events = parse_message(frame({
+        "252": 39,
+        "0": [11, 12],
+        "1": [23, 3],
+        "2": [4, 5],
+        "3": [100.0, 200.0, 300.0, 400.0],
+        "4": [3, 2],
+    }))
+    assert isinstance(events[0], HarvestableBatchSpawned)
+    first, second = events[0].nodes
+    assert first.harvestable_id == 11
+    assert first.kind == "Ore"
+    assert first.tier == 4
+    assert (first.x, first.y) == (100.0, 200.0)
+    assert first.size == 3
+    assert first.enchant is None
+    assert second.kind == "Log"
+
+
+def test_harvest_batch_accepts_buffer_wrapped_arrays():
+    events = parse_message(frame({
+        "252": 39,
+        "0": {"type": "Buffer", "data": [5]},
+        "1": [0],
+        "2": [4],
+        "3": [10, 20],
+        "4": [1],
+    }))
+    assert events[0].nodes[0].harvestable_id == 5
+
+
+def test_harvest_batch_drops_nodes_without_position():
+    events = parse_message(frame({
+        "252": 39,
+        "0": [1, 2],
+        "1": [0, 0],
+        "2": [4, 4],
+        "3": [10, 20],
+        "4": [1, 1],
+    }))
+    assert [node.harvestable_id for node in events[0].nodes] == [1]
+
+
+def test_harvest_batch_ignores_38_without_array():
+    assert parse_message(frame({"252": 38, "0": 7})) == []
+
+
+def test_harvest_single_40_marks_living_and_enchant():
+    events = parse_message(frame({
+        "252": 40, "0": 900, "5": 11, "6": 4321, "7": 5,
+        "8": [12.5, 34.5], "10": 2, "11": 3,
+    }))
+    node = events[0].node
+    assert isinstance(events[0], HarvestableSpawned)
+    assert node.kind == "Fiber"
+    assert node.is_living is True
+    assert node.tier == 5
+    assert node.enchant == 3
+    assert node.size == 2
+    assert (node.x, node.y) == (12.5, 34.5)
+
+
+def test_harvest_single_40_static_sentinels():
+    for sentinel in (65535, -1, None):
+        params = {"252": 40, "0": 901, "5": 23, "7": 4, "8": [1.0, 2.0], "10": 1}
+        if sentinel is not None:
+            params["6"] = sentinel
+        node = parse_message(frame(params))[0].node
+        assert node.is_living is False
+        assert node.kind == "Ore"
+
+
+def test_harvest_state_46_keeps_enchant_when_absent():
+    events = parse_message(frame({"252": 46, "0": 55, "1": 2}))
+    assert isinstance(events[0], HarvestableStateChanged)
+    assert events[0].harvestable_id == 55
+    assert events[0].size == 2
+    assert events[0].enchant is None
+
+
+def test_local_player_moved_from_request_array():
+    events = parse_message(frame({"253": 21, "1": [1000.5, 800.25]}, kind="request"))
+    assert isinstance(events[0], LocalPlayerMoved)
+    assert events[0].x == 1000.5
+    assert events[0].y == 800.25
+
+
+def test_local_player_moved_from_buffer_float32():
+    import struct
+    data = list(struct.pack("<ff", 640.0, 480.0))
+    events = parse_message(frame({"253": 22, "1": {"type": "Buffer", "data": data}},
+                                kind="request"))
+    assert isinstance(events[0], LocalPlayerMoved)
+    assert (events[0].x, events[0].y) == (640.0, 480.0)
+
+
+def test_harvest_kind_boundaries():
+    assert harvest_kind(0) == "Log"
+    assert harvest_kind(5) == "Log"
+    assert harvest_kind(6) == "Rock"
+    assert harvest_kind(10) == "Rock"
+    assert harvest_kind(11) == "Fiber"
+    assert harvest_kind(15) == "Fiber"
+    assert harvest_kind(16) == "Hide"
+    assert harvest_kind(22) == "Hide"
+    assert harvest_kind(23) == "Ore"
+    assert harvest_kind(27) == "Ore"
+    assert harvest_kind(28) == ""
+    assert harvest_kind(None) == ""

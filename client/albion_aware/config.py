@@ -3,7 +3,7 @@ import copy
 import json
 from pathlib import Path
 
-CONFIG_VERSION = 3
+CONFIG_VERSION = 4
 
 DEFAULT_CONFIG = {
     "config_version": CONFIG_VERSION,
@@ -23,6 +23,15 @@ DEFAULT_CONFIG = {
     "overlay": {"x": None, "y": None, "opacity": 0.9, "sound": False,
                 "map_x": None, "map_y": None},
     "map_history": [],
+    "gather": {
+        "mode": "roam",
+        "kinds": ["Log", "Rock", "Fiber", "Hide", "Ore"],
+        "show_living": True,
+        "tier_min": 1,
+        "tier_max": 8,
+        "sort": "nearest",
+        "max_targets": 5,
+    },
     "radar": {
         "base_url": "http://localhost:5001",
         "ws_url": "ws://localhost:5001/ws",
@@ -86,7 +95,10 @@ class Config:
         return self.data
 
     def _migrate(self, version) -> None:
-        """老配置一次性升级：v2 起提示音默认关闭；v3 起换用新的默认热键布局。"""
+        """老配置一次性升级：v2 起提示音默认关闭；v3 起换用新的默认热键布局。
+
+        v4 只新增 gather.*，_merge 已补齐默认值，无需改写用户数据。
+        """
         if isinstance(version, int) and version >= CONFIG_VERSION:
             return
         legacy = version if isinstance(version, int) else 0
