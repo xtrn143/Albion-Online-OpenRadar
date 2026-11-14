@@ -190,7 +190,7 @@ class AlbionAwareApp:
             on_map_click=self._open_maps,
             on_filter_click=self._open_gather_settings,
         )
-        self.window.set_sound(bool(self.config.get("overlay.sound", False)))
+        self._apply_sound_for_zone(self._zone_level)
         self.window.render(View(), self._item_power)
 
         saved_x = self.config.get("overlay.x")
