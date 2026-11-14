@@ -176,8 +176,9 @@ class AlbionAwareApp:
         self._gather_last_at = 0.0
         self._resource_targets: list = []
         self._zone_levels = ZoneLevels.load(resource_dir / "data" / "zones.json")
-        self._zone_level = "safe"
-        self._danger = False
+        # 首个 ZoneChanged 前按未知区 fail-open：仍展示玩家，但不自动改提示音
+        self._zone_level = "unknown"
+        self._danger = True
 
         self.window = OverlayWindow(
             i18n=self.i18n,

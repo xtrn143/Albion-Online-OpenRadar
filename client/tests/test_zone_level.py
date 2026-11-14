@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 from albion_aware.zone_level import ZoneLevels, build_level_map, is_danger
 
@@ -76,6 +77,15 @@ def test_corrupt_or_malformed_table_is_empty(tmp_path):
 def test_invalid_previous_falls_back_to_safe_but_unknown_is_kept():
     assert ZoneLevels().level("", "bogus") == "safe"
     assert ZoneLevels().level("@MISTS@1", "unknown") == "unknown"
+
+
+def test_bundled_zone_table_loads_real_levels():
+    path = Path(__file__).resolve().parents[1] / "data" / "zones.json"
+    assert json.loads(path.read_text(encoding="utf-8"))["zones"]
+    levels = ZoneLevels.load(path)
+    assert levels.level("0000") == "safe"
+    assert levels.level("0311") == "black"
+    assert levels.level("TNL-001") == "black"
 
 
 def test_is_danger_only_red_and_black():

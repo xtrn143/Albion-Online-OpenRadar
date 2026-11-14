@@ -267,7 +267,13 @@ def parse_message(message: dict) -> list[DomainEvent]:
         if op in (41, 2):
             zone = p.get("0" if op == 41 else "8")
             if isinstance(zone, (str, int)) and str(zone).strip():
-                return [ZoneChanged(str(zone))]
+                events: list[DomainEvent] = [ZoneChanged(str(zone))]
+                if op == 2:
+                    # JoinMap 的 p9 是初始坐标，必须排在 ZoneChanged 之后才不会被清空
+                    position = _as_position(p.get("9"))
+                    if position is not None:
+                        events.append(LocalPlayerMoved(*position))
+                return events
         return []
 
     if code == "request":

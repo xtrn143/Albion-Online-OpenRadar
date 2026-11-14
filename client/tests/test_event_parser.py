@@ -71,7 +71,35 @@ def test_zone_change_from_response_op41():
 
 def test_join_response_op2_uses_param8():
     events = parse_message({"code": "response", "dictionary": {"parameters": {"253": 2, "8": "0311"}}})
+    assert len(events) == 1
     assert events[0].zone_id == "0311"
+
+
+def test_join_response_op2_restores_position_after_zone_change():
+    # 切图响应里 param9 是初始坐标，必须排在 ZoneChanged 之后，否则会被清空
+    events = parse_message({"code": "response", "dictionary": {"parameters": {
+        "253": 2, "8": "0311", "9": [100.5, 200.25]}}})
+    assert isinstance(events[0], ZoneChanged)
+    assert events[0].zone_id == "0311"
+    assert isinstance(events[1], LocalPlayerMoved)
+    assert (events[1].x, events[1].y) == (100.5, 200.25)
+
+
+def test_join_response_op2_restores_position_from_buffer():
+    import struct
+    data = list(struct.pack("<ff", 640.0, 480.0))
+    events = parse_message({"code": "response", "dictionary": {"parameters": {
+        "253": 2, "8": "0311", "9": {"type": "Buffer", "data": data}}}})
+    assert isinstance(events[0], ZoneChanged)
+    assert isinstance(events[1], LocalPlayerMoved)
+    assert (events[1].x, events[1].y) == (640.0, 480.0)
+
+
+def test_join_response_op2_ignores_unparsable_position():
+    events = parse_message({"code": "response", "dictionary": {"parameters": {
+        "253": 2, "8": "0311", "9": "not-a-position"}}})
+    assert len(events) == 1
+    assert isinstance(events[0], ZoneChanged)
 
 
 def test_party_event_is_forwarded_raw():
