@@ -16,11 +16,12 @@ def build_level_map(zones: dict) -> dict[str, str]:
     for zone_id, zone in (zones or {}).items():
         if not isinstance(zone, dict):
             continue
+        if str(zone.get("type") or "").startswith("TUNNEL_"):
+            levels[str(zone_id).strip().upper()] = "black"
+            continue
         level = str(zone.get("pvpType") or "").strip().lower()
         if level not in LEVELS:
             continue
-        if str(zone.get("type") or "").startswith("TUNNEL_"):
-            level = "black"
         levels[str(zone_id).strip().upper()] = level
     return levels
 

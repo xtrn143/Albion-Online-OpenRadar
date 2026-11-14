@@ -9,10 +9,12 @@ def test_build_level_map_keeps_four_levels_and_forces_tunnels_black():
         "1007": {"pvpType": "yellow", "type": "OPENPVP_YELLOW"},
         "3005": {"pvpType": "red", "type": "OPENPVP_RED"},
         "5001": {"pvpType": "safe", "type": "TUNNEL_ROYAL"},
+        "5002": {"pvpType": "", "type": "TUNNEL_BLACK"},
         "6000": {"pvpType": "weird", "type": "OPENPVP"},
         "6001": "not-a-dict",
     })
-    assert levels == {"1000": "safe", "1007": "yellow", "3005": "red", "5001": "black"}
+    assert levels == {"1000": "safe", "1007": "yellow", "3005": "red",
+                      "5001": "black", "5002": "black"}
 
 
 def test_load_roundtrip(tmp_path):
@@ -52,6 +54,21 @@ def test_empty_id_keeps_previous():
 
 def test_unknown_id_is_unknown():
     assert ZoneLevels({"1000": "safe"}).level("7777") == "unknown"
+
+
+def test_corrupt_or_malformed_table_is_empty(tmp_path):
+    corrupt = tmp_path / "corrupt.json"
+    corrupt.write_text("{broken", encoding="utf-8")
+    assert ZoneLevels.load(corrupt).level("3005") == "unknown"
+
+    malformed = tmp_path / "malformed.json"
+    malformed.write_text(json.dumps({"zones": ["3005"]}), encoding="utf-8")
+    assert ZoneLevels.load(malformed).level("3005") == "unknown"
+
+
+def test_invalid_previous_falls_back_to_safe_but_unknown_is_kept():
+    assert ZoneLevels().level("", "bogus") == "safe"
+    assert ZoneLevels().level("@MISTS@1", "unknown") == "unknown"
 
 
 def test_is_danger_only_red_and_black():
