@@ -1,7 +1,11 @@
 ; client/packaging/albion_aware.iss
 #define MyAppName "AlbionAware"
-#define MyAppVersion "0.2.1"
+#define MyAppVersion "0.3.0"
 #define MyAppPublisher "portaler.pages.dev"
+; 运行中的客户端会锁住 dist，构建时可用 /DDistDir=..\dist_new\AlbionAware 指定源目录
+#ifndef DistDir
+  #define DistDir "..\dist\AlbionAware"
+#endif
 
 [Setup]
 AppId={{8F2B7C9E-2D4A-4C3B-9E7F-1A6C5D8B0E21}
@@ -26,7 +30,7 @@ Name: "chinesesimplified"; MessagesFile: "Languages\ChineseSimplified.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
 
 [Files]
-Source: "..\dist\AlbionAware\*"; DestDir: "{app}"; Excludes: "*.bak-*,logs\*,logs"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#DistDir}\*"; DestDir: "{app}"; Excludes: "*.bak-*,logs\*,logs"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\data\items.min.json"; DestDir: "{app}\data"; Flags: ignoreversion
 Source: "LICENSES\*"; DestDir: "{app}\LICENSES"; Flags: ignoreversion
 Source: "NOTICE.txt"; DestDir: "{app}"; Flags: ignoreversion
