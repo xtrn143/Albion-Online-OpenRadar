@@ -212,3 +212,69 @@ def test_unknown_item_uses_placeholder(tmp_path):
     db = make_db(tmp_path)
     cache = IconCache(tmp_path / "cache", db, fetch=lambda url, dest: False)
     assert cache.get(0).name.startswith("_placeholder_")
+
+
+def gear_db(tmp_path):
+    path = tmp_path / "gear.json"
+    items = [
+        None,
+        {"n": "T8_SWORD", "p": 1100, "t": "weapon", "cat": "weapons"},
+        {"n": "T8_SHIELD", "p": 1100, "t": "equipmentitem", "cat": "offhands"},
+        {"n": "T8_HEAD", "p": 1100, "t": "equipmentitem", "cat": "head"},
+        {"n": "T8_ARMOR", "p": 1100, "t": "equipmentitem", "cat": "armors"},
+        {"n": "T8_SHOES", "p": 1100, "t": "equipmentitem", "cat": "shoes"},
+        {"n": "T8_CAPE", "p": 1100, "t": "equipmentitem", "cat": "capes"},
+        {"n": "T8_2H_SWORD", "p": 1100, "h2": True, "t": "weapon", "cat": "weapons"},
+        {"n": "T5_MAIN_SWORD@2", "p": 1000, "t": "weapon", "cat": "weapons"},
+        {"n": "T5_HEAD", "p": 800, "t": "equipmentitem", "cat": "head"},
+        {"n": "T5_ARMOR", "p": 800, "t": "equipmentitem", "cat": "armors"},
+        {"n": "T5_SHOES", "p": 800, "t": "equipmentitem", "cat": "shoes"},
+        {"n": "T5_OFFHAND", "p": 800, "t": "equipmentitem", "cat": "offhands"},
+        {"n": "T5_CAPE", "p": 800, "t": "equipmentitem", "cat": "capes"},
+        {"n": "UNIQUE_ITEM", "p": 900, "t": "equipmentitem", "cat": "armors"},
+        {"n": "T8_SWORD@4", "p": 1500, "t": "weapon", "cat": "weapons"},
+    ]
+    path.write_text(json.dumps(items), encoding="utf-8")
+    return ItemDatabase.load(path)
+
+
+def test_gear_level_combines_tier_and_enchant(tmp_path):
+    db = gear_db(tmp_path)
+    assert db.gear_level(1) == 8.0
+    assert db.gear_level(8) == 7.0        # T5_MAIN_SWORD@2
+    assert db.gear_level(15) == 12.0      # T8_SWORD@4
+    # 唯一名没有层级时按 p 回退：(900 - 300) / 100
+    assert db.gear_level(14) == 6.0
+    assert db.gear_level(0) is None
+
+
+def test_gear_average_uses_six_slots_and_counts_two_handed_twice(tmp_path):
+    db = gear_db(tmp_path)
+    # 主手/副手/头/衣/鞋/披风 全 T8.0
+    assert db.gear_average([1, 2, 3, 4, 5, 0, 6, 0, 0, 0]) == 8.0
+    # 双手武器占主手+副手两个槽
+    assert db.gear_average([7, 0, 3, 4, 5, 0, 6, 0, 0, 0]) == 8.0
+
+
+def test_gear_average_treats_empty_slots_as_zero(tmp_path):
+    db = gear_db(tmp_path)
+    # 缺披风：5 件 T8.0 / 6
+    assert db.gear_average([1, 2, 3, 4, 5]) == 6.7
+    # 只有头衣鞋：3 件 T8.0 / 6
+    assert db.gear_average([0, 0, 3, 4, 5]) == 4.0
+    # T5.2 武器 + 副手/头/衣/鞋/披风 各 T5.0 = (7 + 5 * 5) / 6
+    assert db.gear_average([8, 12, 9, 10, 11, 0, 13, 0, 0, 0]) == 5.3
+
+
+def test_gear_average_matches_base_ip_scale(tmp_path):
+    db = gear_db(tmp_path)
+    equip = [1, 2, 3, 4, 5, 0, 6, 0, 0, 0]
+    assert db.gear_average(equip) == (db.average_ip(equip) - 300) / 100
+
+
+def test_gear_average_returns_none_without_combat_items(tmp_path):
+    db = gear_db(tmp_path)
+    assert db.gear_average([0] * 10) is None
+    assert db.gear_average([]) is None
+    # 只有背包槽（下标 5）有装备，不算战斗槽
+    assert db.gear_average([0, 0, 0, 0, 0, 1, 0, 0, 0, 0]) is None

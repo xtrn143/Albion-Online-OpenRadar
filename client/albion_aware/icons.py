@@ -13,6 +13,8 @@ RENDER_URL = "https://render.albiononline.com/v1/item/{name}.png"
 # 层级前缀（T6_）与附魔后缀（@3）
 _TIER = re.compile(r"^T\d+_")
 _ENCHANT = re.compile(r"@(\d+)$")
+# 层级数字（T8_ -> 8）
+_TIER_NUM = re.compile(r"^T(\d+)_")
 
 # 附魔等级角标配色：1 绿、2 蓝、3 紫、4 橙
 ENCHANT_COLORS = {
@@ -27,6 +29,20 @@ def enchant_level(unique: str | None) -> int:
     """从唯一名解析附魔等级，如 T6_MAIN_SWORD@3 -> 3。"""
     match = _ENCHANT.search(unique or "")
     return int(match.group(1)) if match else 0
+
+
+def item_gear_level(unique: str | None, item_power: float | None = None) -> float | None:
+    """单件装备档位 = T级 + 附魔；名字无法解析时按物品基础强度换算。
+
+    物品库的 p 满足 ``p = 300 + 100 × (T级 + 附魔)``（T4.0=700、T5.2=1000）。
+    """
+    if unique:
+        tier = _TIER_NUM.search(unique)
+        if tier:
+            return float(int(tier.group(1)) + enchant_level(unique))
+    if item_power:
+        return round((float(item_power) - 300) / 100, 1)
+    return None
 
 
 @lru_cache(maxsize=32)
@@ -136,6 +152,30 @@ class ItemDatabase:
                 total += int(main.get("p") or 0)
         # 官方算法固定除以 6 个槽，空槽按 0；全空时没有有效 IP
         return round(total / len(COMBAT_SLOTS)) if total > 0 else None
+
+    def gear_level(self, item_id: int) -> float | None:
+        item = self.get(item_id)
+        if not item:
+            return None
+        return item_gear_level(item.get("n"), item.get("p"))
+
+    def gear_average(self, equip: list[int]) -> float | None:
+        """6 个战斗槽的平均档位：空槽按 0，双手武器计两次，无装备返回 None。"""
+        total = 0.0
+        found = False
+        for index in COMBAT_SLOTS:
+            level = 0.0
+            if index < len(equip):
+                level = self.gear_level(equip[index]) or 0.0
+            if level:
+                found = True
+            total += level
+        main = self.get(equip[0]) if equip else None
+        if found and main and main.get("h2") and main.get("cat") == "weapons" \
+                and main.get("t") == "weapon":
+            # 双手武器同时占主手与副手，副手按同一件装备再计一次
+            total += self.gear_level(equip[0]) or 0.0
+        return round(total / len(COMBAT_SLOTS), 1) if found else None
 
 
 class IconCache:
