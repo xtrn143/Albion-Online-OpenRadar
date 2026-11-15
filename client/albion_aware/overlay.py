@@ -131,7 +131,7 @@ def gear_color(gear: float | None, self_gear: float | None) -> str:
         if gear > 7.0:
             return IP_ORANGE
         return IP_YELLOW if gear >= 5.0 else GEAR_GREEN
-    diff = gear - self_gear
+    diff = round(gear - self_gear, 1)
     if diff >= 1.0:
         return GEAR_RED
     if diff >= 0.5:

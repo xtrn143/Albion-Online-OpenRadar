@@ -153,6 +153,19 @@ def test_self_gear_stays_none_without_self_player():
     assert app._self_gear is None
 
 
+def test_reload_from_config_resets_self_gear():
+    from types import SimpleNamespace
+    from albion_aware.player_store import PlayerStore
+    app = SimpleNamespace(config=SimpleNamespace(language=lambda: "zh-CN",
+                                                 get=lambda _key, _default: "New"),
+                          window=SimpleNamespace(),
+                          store=PlayerStore(self_name="Old"),
+                          _self_gear=7.5,
+                          _refresh=lambda: None)
+    AlbionAwareApp._reload_from_config(app)
+    assert app._self_gear is None
+
+
 def test_sound_cooldown_blocks_bursts():
     assert sound_cooldown_ok(None, 100.0, cooldown=2.0) is True
     assert sound_cooldown_ok(100.0, 101.5, cooldown=2.0) is False

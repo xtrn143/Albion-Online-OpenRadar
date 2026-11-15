@@ -55,6 +55,10 @@ def test_gear_color_compares_with_self():
     assert gear_color(6.6, 7.0) == IP_YELLOW
     assert gear_color(6.5, 7.0) == GEAR_GREEN
     assert gear_color(5.0, 7.0) == GEAR_GREEN
+    # 一位小数的浮点差值也要落在正确边界
+    assert gear_color(8.2, 7.7) == IP_ORANGE
+    assert gear_color(8.2, 7.2) == GEAR_RED
+    assert gear_color(6.8, 7.3) == GEAR_GREEN
 
 
 def test_gear_color_falls_back_to_absolute_without_self():

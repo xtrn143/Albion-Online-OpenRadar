@@ -751,6 +751,8 @@ class AlbionAwareApp:
         self.i18n = I18n(self.config.language())
         self.window.i18n = self.i18n
         self.store.set_self_name(self.config.get("self_name", ""))
+        # 自己变了，旧基准立即作废；下一批事件会重新识别
+        self._self_gear = None
         self._refresh()
 
     def _quit(self) -> None:
