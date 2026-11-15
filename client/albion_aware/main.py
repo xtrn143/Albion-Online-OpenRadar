@@ -59,7 +59,7 @@ from albion_aware.launcher import (
 from albion_aware.map_index import AvalonMapIndex, is_roads_zone
 from albion_aware.map_window import MapWindow
 from albion_aware.models import View
-from albion_aware.overlay import ICON_SIZE, OverlayWindow
+from albion_aware.overlay import ICON_SIZE, OverlayWindow, format_gear, gear_color
 from albion_aware.party import PartyList
 from albion_aware.player_store import PlayerStore
 from albion_aware.radar_client import RadarClient
@@ -158,6 +158,8 @@ class AlbionAwareApp:
         self._icon_pending: set[int] = set()
         # 查看装备(op143)缓存：GUID → 游戏真实平均 IP（含专精）
         self._real_ip: dict[str, float] = {}
+        # 自己的平均档位：认出自己后缓存，换图清空玩家表也保留
+        self._self_gear: float | None = None
         self._state = "connecting"
         self._flash_pending = False
         self._events: list[list] = []
@@ -205,7 +207,7 @@ class AlbionAwareApp:
             on_filter_click=self._open_gather_settings,
         )
         self._apply_sound_for_zone(self._zone_level)
-        self.window.render(View(), self._item_power)
+        self.window.render(View(), self._gear_metric)
 
         saved_x = self.config.get("overlay.x")
         saved_y = self.config.get("overlay.y")
@@ -479,6 +481,7 @@ class AlbionAwareApp:
             elif isinstance(event, EquipmentInspect):
                 if event.item_power is not None:
                     self._real_ip[event.guid] = event.item_power
+        self._refresh_self_gear()
         self.party.resolve(self.store)
         if len(self.party.names) != party_names_before:
             self.party.save()
@@ -499,7 +502,7 @@ class AlbionAwareApp:
                                ip_getter=self._item_power)
         self._rows = view.rows
         if display_mode(self._scanning(), bool(view.rows)) == "players":
-            self.window.render(view, self._item_power)
+            self.window.render(view, self._gear_metric)
         else:
             self.window.render_resources(self._resource_targets)
         if self._flash_pending:
@@ -513,6 +516,19 @@ class AlbionAwareApp:
         if real is not None:
             return round(real)
         return self.db.average_ip(player.equip)
+
+    def _refresh_self_gear(self) -> None:
+        """认出自己就刷新基准；暂时看不到自己时保留上次的值。"""
+        player = self.store.self_player()
+        if player is None:
+            return
+        average = self.db.gear_average(player.equip)
+        if average is not None:
+            self._self_gear = average
+
+    def _gear_metric(self, player) -> tuple[str, str]:
+        average = self.db.gear_average(player.equip)
+        return format_gear(average), gear_color(average, self._self_gear)
 
     # ---------- 图标 ----------
     def _row_icon(self, player):
@@ -566,7 +582,9 @@ class AlbionAwareApp:
                         self.party.contains_name(player.nickname),
                         equipment_entries(player, self.db),
                         max(self.window.root.winfo_x() - 226, 0),
-                        self.window.root.winfo_y())
+                        self.window.root.winfo_y(),
+                        gear=self.db.gear_average(player.equip),
+                        self_gear=self._self_gear)
 
     def _on_more_click(self) -> None:
         self._expanded = not self._expanded

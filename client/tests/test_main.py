@@ -110,6 +110,49 @@ def test_item_power_falls_back_to_base_ip_without_inspect():
     assert AlbionAwareApp._item_power(app, Player(id=1, guid="cafe" * 4)) == 808
 
 
+def test_gear_metric_compares_with_self_baseline():
+    from types import SimpleNamespace
+    from albion_aware.models import Player
+    from albion_aware.overlay import GEAR_RED
+    app = SimpleNamespace(db=SimpleNamespace(gear_average=lambda _equip: 8.0),
+                          _self_gear=7.0)
+    assert AlbionAwareApp._gear_metric(app, Player(id=1, equip=[1])) == ("8.0", GEAR_RED)
+
+
+def test_gear_metric_without_equipment_is_dash():
+    from types import SimpleNamespace
+    from albion_aware.models import Player
+    from albion_aware.overlay import IP_GREY
+    app = SimpleNamespace(db=SimpleNamespace(gear_average=lambda _equip: None),
+                          _self_gear=7.0)
+    assert AlbionAwareApp._gear_metric(app, Player(id=1)) == ("-", IP_GREY)
+
+
+def test_self_gear_survives_zone_clear():
+    from types import SimpleNamespace
+    from albion_aware.player_store import PlayerStore
+    store = PlayerStore(self_name="Me")
+    store.upsert(1, {"nickname": "me", "equip": [1]})
+    app = SimpleNamespace(store=store, db=SimpleNamespace(gear_average=lambda _equip: 7.5),
+                          _self_gear=None)
+    AlbionAwareApp._refresh_self_gear(app)
+    assert app._self_gear == 7.5
+    # 换图 store.clear() 后缓存仍在
+    store.clear()
+    AlbionAwareApp._refresh_self_gear(app)
+    assert app._self_gear == 7.5
+
+
+def test_self_gear_stays_none_without_self_player():
+    from types import SimpleNamespace
+    from albion_aware.player_store import PlayerStore
+    app = SimpleNamespace(store=PlayerStore(self_name="Me"),
+                          db=SimpleNamespace(gear_average=lambda _equip: 7.5),
+                          _self_gear=None)
+    AlbionAwareApp._refresh_self_gear(app)
+    assert app._self_gear is None
+
+
 def test_sound_cooldown_blocks_bursts():
     assert sound_cooldown_ok(None, 100.0, cooldown=2.0) is True
     assert sound_cooldown_ok(100.0, 101.5, cooldown=2.0) is False
