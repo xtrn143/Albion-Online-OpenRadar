@@ -1,4 +1,4 @@
-"""窄条置顶主窗：武器图标 + IP，行点击、闪烁、拖动、穿透。"""
+"""窄条置顶主窗：武器图标 + 平均档位，行点击、闪烁、拖动、穿透。"""
 import math
 import tkinter as tk
 
@@ -39,6 +39,8 @@ DRAG_THRESHOLD = 4      # 位移小于该像素仍视为点击
 IP_GREY = "#d6d6d6"
 IP_YELLOW = "#e8c04a"
 IP_ORANGE = "#ff7a45"
+GEAR_RED = "#ff4b3e"
+GEAR_GREEN = "#5fbe78"
 STATUS_ON = "#3fb950"
 STATUS_OFF = "#6b6b6b"
 SOUND_ON = (230, 230, 230, 255)
@@ -119,6 +121,28 @@ def ip_color(item_power: int | None) -> str:
 
 def format_ip(item_power: int | None) -> str:
     return "-" if item_power is None else str(int(item_power))
+
+
+def gear_color(gear: float | None, self_gear: float | None) -> str:
+    """平均档位配色：有自身基准按差距，否则按绝对档位。"""
+    if gear is None:
+        return IP_GREY
+    if self_gear is None:
+        if gear > 7.0:
+            return IP_ORANGE
+        return IP_YELLOW if gear >= 5.0 else GEAR_GREEN
+    diff = gear - self_gear
+    if diff >= 1.0:
+        return GEAR_RED
+    if diff >= 0.5:
+        return IP_ORANGE
+    if diff <= -0.5:
+        return GEAR_GREEN
+    return IP_YELLOW
+
+
+def format_gear(gear: float | None) -> str:
+    return "-" if gear is None else f"{gear:.1f}"
 
 
 class OverlayWindow:
@@ -235,12 +259,12 @@ class OverlayWindow:
             child.destroy()
         self._images.clear()
 
-    def render(self, view, ip_getter) -> None:
+    def render(self, view, metric_getter) -> None:
         self._resources_hash = None
         self._clear_rows()
 
         for player in view.rows:
-            self._add_row(player, ip_getter)
+            self._add_row(player, metric_getter)
 
         if view.hidden:
             more = tk.Label(self.inner, text=self.i18n.t("overlay.more", count=view.hidden),
@@ -250,7 +274,7 @@ class OverlayWindow:
 
         self._resize(len(view.rows) + (1 if view.hidden else 0))
 
-    def _add_row(self, player, ip_getter) -> None:
+    def _add_row(self, player, metric_getter) -> None:
         row = tk.Frame(self.inner, bg=BG, height=ROW_H)
         row.pack(fill="x", padx=PAD)
         row.pack_propagate(False)
@@ -263,8 +287,8 @@ class OverlayWindow:
             icon_label = tk.Label(row, bg=BG, text="?", fg=IP_GREY, font=("Segoe UI", 9))
         icon_label.pack(side="left")
 
-        power = ip_getter(player)
-        text_label = tk.Label(row, bg=BG, text=format_ip(power), fg=ip_color(power),
+        text, color = metric_getter(player)
+        text_label = tk.Label(row, bg=BG, text=text, fg=color,
                               font=("Segoe UI", 9, "bold"), anchor="e")
         text_label.pack(side="right", fill="x", expand=True)
 

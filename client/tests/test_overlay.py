@@ -6,9 +6,10 @@ import pytest
 
 from albion_aware.gather_targets import GatherTarget
 from albion_aware.models import View
-from albion_aware.overlay import (ARROW_SIZE, GLOW_LAYERS, GLOW_STEP, PAD, ROW_H, TOP_H,
-                                  WIDTH, OverlayWindow, arrow_parts, filter_icon,
-                                  format_ip, ip_color, map_icon, sound_icon)
+from albion_aware.overlay import (ARROW_SIZE, GEAR_GREEN, GEAR_RED, GLOW_LAYERS, GLOW_STEP,
+                                  PAD, ROW_H, TOP_H, WIDTH, IP_GREY, IP_ORANGE, IP_YELLOW,
+                                  OverlayWindow, arrow_parts, filter_icon, format_gear,
+                                  format_ip, gear_color, ip_color, map_icon, sound_icon)
 
 
 class _FakeRoot:
@@ -43,6 +44,31 @@ def test_format_ip():
     assert format_ip(None) == "-"
     assert format_ip(1250) == "1250"
     assert format_ip(900) == "900"
+
+
+def test_gear_color_compares_with_self():
+    assert gear_color(8.9, 7.0) == GEAR_RED
+    assert gear_color(8.0, 7.0) == GEAR_RED
+    assert gear_color(7.9, 7.0) == IP_ORANGE
+    assert gear_color(7.5, 7.0) == IP_ORANGE
+    assert gear_color(7.4, 7.0) == IP_YELLOW
+    assert gear_color(6.6, 7.0) == IP_YELLOW
+    assert gear_color(6.5, 7.0) == GEAR_GREEN
+    assert gear_color(5.0, 7.0) == GEAR_GREEN
+
+
+def test_gear_color_falls_back_to_absolute_without_self():
+    assert gear_color(7.1, None) == IP_ORANGE
+    assert gear_color(7.0, None) == IP_YELLOW
+    assert gear_color(5.0, None) == IP_YELLOW
+    assert gear_color(4.9, None) == GEAR_GREEN
+    assert gear_color(None, 7.0) == IP_GREY
+
+
+def test_format_gear_keeps_one_decimal():
+    assert format_gear(None) == "-"
+    assert format_gear(7.0) == "7.0"
+    assert format_gear(5.3) == "5.3"
 
 
 class _Event:
@@ -340,7 +366,7 @@ def test_render_players_resets_resource_cache():
     window.render_resources(targets)
     window.render_resources(targets)
     assert window._drawn == [1]
-    window.render(View(), lambda _player: None)
+    window.render(View(), lambda _player: ("-", "#d6d6d6"))
     window.render_resources(targets)
     assert window._drawn == [1, 1]
 
