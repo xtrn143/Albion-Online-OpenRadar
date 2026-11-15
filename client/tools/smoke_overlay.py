@@ -7,7 +7,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from albion_aware.i18n import I18n
 from albion_aware.party import PartyList
 from albion_aware.player_store import PlayerStore
-from albion_aware.overlay import OverlayWindow
+from albion_aware.overlay import OverlayWindow, format_gear, gear_color
 
 
 def main() -> None:
@@ -24,7 +24,12 @@ def main() -> None:
         on_drag_end=lambda x, y: print("dragged", x, y),
     )
     view = store.view(PartyList(), max_rows=6)
-    window.render(view, lambda _player: 900)
+
+    def metric(player):
+        gear = 6.0 + (player.id - 1000) * 0.25
+        return format_gear(gear), gear_color(gear, 7.0)
+
+    window.render(view, metric)
     window.flash()
     window.run()
 
