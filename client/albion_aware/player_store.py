@@ -65,6 +65,13 @@ class PlayerStore:
             return False
         return player.nickname.strip().lower() == self._self_name
 
+    def self_player(self) -> Player | None:
+        """自己的玩家记录：自己只是不显示，数据仍保留在表里。"""
+        for player in self._players.values():
+            if self.is_self(player):
+                return player
+        return None
+
     def known_names(self) -> dict[str, int]:
         """小写昵称 → 玩家 id，供队友事件的名称匹配使用。"""
         return {p.nickname.strip().lower(): p.id for p in self._players.values() if p.nickname}

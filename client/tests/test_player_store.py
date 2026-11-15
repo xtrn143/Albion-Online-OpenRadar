@@ -117,3 +117,20 @@ def test_upsert_ignores_unknown_and_reserved_fields():
     assert player.id == 1
     assert player.guild == "Hoard"
     assert not hasattr(player, "password")
+
+
+def test_self_player_returns_matching_record():
+    store = PlayerStore(self_name="MyCharacter")
+    store.upsert(1, {"nickname": "Other"})
+    store.upsert(2, {"nickname": "mycharacter", "equip": [1]})
+    player = store.self_player()
+    assert player is not None
+    assert player.id == 2
+
+
+def test_self_player_is_none_without_name_or_match():
+    store = PlayerStore()
+    store.upsert(1, {"nickname": "Any"})
+    assert store.self_player() is None
+    store.set_self_name("Nobody")
+    assert store.self_player() is None
