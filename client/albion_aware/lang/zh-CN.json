@@ -36,6 +36,8 @@
   "detail.unmark_party": "取消队友",
   "detail.copy_name": "复制名字",
   "detail.item_power": "IP",
+  "detail.gear_average": "平均档位",
+  "detail.gear_self": "你",
   "detail.guild": "公会",
   "detail.alliance": "联盟",
   "detail.first_seen": "首次发现",

@@ -46,3 +46,12 @@ def test_map_texts_exist_in_both_languages():
                 "map.count", "map.tier", "tray.map_lookup"):
         assert zh.get(key), key
         assert en.get(key), key
+
+
+def test_gear_labels_exist_in_both_languages():
+    zh = json.loads((LANG_DIR / "zh-CN.json").read_text(encoding="utf-8"))
+    en = json.loads((LANG_DIR / "en.json").read_text(encoding="utf-8"))
+    assert zh.get("detail.gear_average") == "平均档位"
+    assert en.get("detail.gear_average") == "Avg. gear"
+    assert zh.get("detail.gear_self") == "你"
+    assert en.get("detail.gear_self") == "You"

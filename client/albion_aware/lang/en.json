@@ -36,6 +36,8 @@
   "detail.unmark_party": "Unmark party",
   "detail.copy_name": "Copy name",
   "detail.item_power": "IP",
+  "detail.gear_average": "Avg. gear",
+  "detail.gear_self": "You",
   "detail.guild": "Guild",
   "detail.alliance": "Alliance",
   "detail.first_seen": "First seen",

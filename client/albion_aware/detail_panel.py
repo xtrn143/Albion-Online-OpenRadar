@@ -4,7 +4,7 @@ import time
 import tkinter as tk
 
 from albion_aware.icons import EQUIP_SLOTS
-from albion_aware.overlay import format_ip
+from albion_aware.overlay import format_gear, format_ip
 
 PANEL_WIDTH = 220
 BG = "#1b1b1b"
@@ -55,7 +55,8 @@ class DetailPanel:
         self.body = tk.Frame(self.top, bg=BG, padx=10, pady=8, width=PANEL_WIDTH)
         self.body.pack(fill="both", expand=True)
 
-    def show(self, player, item_power, is_party: bool, entries, x: int, y: int) -> None:
+    def show(self, player, item_power, is_party: bool, entries, x: int, y: int,
+             gear: float | None = None, self_gear: float | None = None) -> None:
         self.current = player
         for child in self.body.winfo_children():
             child.destroy()
@@ -69,6 +70,10 @@ class DetailPanel:
                  bg=BG, fg=MUTED, font=("Segoe UI", 8), anchor="w").pack(fill="x")
         tk.Label(self.body, text=f"{self.i18n.t('detail.item_power')}: {format_ip(item_power)}",
                  bg=BG, fg=FG, font=("Segoe UI", 9), anchor="w").pack(fill="x", pady=(2, 0))
+        tk.Label(self.body,
+                 text=f"{self.i18n.t('detail.gear_average')}: {format_gear(gear)}   "
+                      f"{self.i18n.t('detail.gear_self')}: {format_gear(self_gear)}",
+                 bg=BG, fg=MUTED, font=("Segoe UI", 8), anchor="w").pack(fill="x")
         now = time.time()
         tk.Label(self.body,
                  text=f"{self.i18n.t('detail.first_seen')}: {time_ago(now, player.first_seen)}   "
